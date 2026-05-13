@@ -683,6 +683,16 @@
     <!-- Slide 5: The Hook -->
     <section class="slide">
       <p class="big-text">What if you could run <span class="accent">5 agents</span> at once, each in its own <span class="accent2">isolated branch</span>, and <span class="accent3">merge them all</span>?</p>
+      <div style="display:flex; gap:0.6rem; margin-top:2.5rem; align-items:center;">
+        <div style="width:40px; height:40px; border-radius:50%; background:var(--accent); opacity:0.8; display:flex; align-items:center; justify-content:center; font-size:0.75rem; font-weight:700; color:var(--bg);">1</div>
+        <div style="width:40px; height:40px; border-radius:50%; background:var(--accent2); opacity:0.8; display:flex; align-items:center; justify-content:center; font-size:0.75rem; font-weight:700; color:var(--bg);">2</div>
+        <div style="width:40px; height:40px; border-radius:50%; background:var(--accent3); opacity:0.8; display:flex; align-items:center; justify-content:center; font-size:0.75rem; font-weight:700; color:var(--bg);">3</div>
+        <div style="width:40px; height:40px; border-radius:50%; background:var(--accent4); opacity:0.8; display:flex; align-items:center; justify-content:center; font-size:0.75rem; font-weight:700; color:var(--bg);">4</div>
+        <div style="width:40px; height:40px; border-radius:50%; background:var(--accent5); opacity:0.8; display:flex; align-items:center; justify-content:center; font-size:0.75rem; font-weight:700; color:var(--bg);">5</div>
+        <span style="font-size:1.5rem; color:var(--text-muted); margin:0 0.5rem;">&rarr;</span>
+        <div style="font-family:var(--font-mono); font-size:0.9rem; color:var(--accent2); background:rgba(63,185,80,0.1); border:1px solid rgba(63,185,80,0.3); padding:0.5rem 1rem; border-radius:8px;">git merge &check;</div>
+      </div>
+      <p style="margin-top:2rem; font-size:clamp(0.95rem,1.5vw,1.2rem); color:var(--text-muted);">Next 40 minutes: <span class="accent">worktrees</span> &rarr; <span class="accent2">parallel workflows</span> &rarr; <span class="accent3">agent teams</span></p>
       <div class="speaker-notes">This is the agenda for the next 40 minutes. Let's start with the foundation.</div>
     </section>
 
@@ -929,8 +939,19 @@ my-project/
     <section class="slide">
       <span class="demo-badge">Live Demo</span>
       <h2>Merging a worktree</h2>
-      <p class="subtitle">Merging a completed worktree back to main</p>
-      <pre style="margin-top:2rem;"><code><span class="cmd">git</span> <span class="flag">merge</span> &lt;worktree-branch&gt;</code></pre>
+      <p class="subtitle">Completed worktree back to main</p>
+      <pre style="margin-top:1.5rem;"><code><span class="comment"># 1. Switch to main</span>
+<span class="cmd">cd</span> /path/to/project
+<span class="cmd">git</span> checkout main
+
+<span class="comment"># 2. Merge the worktree branch</span>
+<span class="cmd">git</span> <span class="flag">merge</span> worktree-clever-fox-123
+
+<span class="comment"># 3. Clean up the worktree</span>
+<span class="cmd">git</span> worktree remove .claude/worktrees/clever-fox-123</code></pre>
+      <div class="callout" style="margin-top:1rem;">
+        <p style="font-size:clamp(0.9rem,1.4vw,1.1rem);"><span class="accent2" style="font-weight:600;">Why no conflicts?</span> Each agent worked on different files in its own directory. Independent work = clean merges.</p>
+      </div>
       <div class="speaker-notes">Show a clean merge. Emphasise: because the work was independent, there are no conflicts.</div>
     </section>
 
@@ -989,11 +1010,29 @@ my-project/
     <!-- Slide 20: Common pitfalls -->
     <section class="slide">
       <h3>Common pitfalls</h3>
-      <ul style="margin-top:1rem;">
-        <li><span class="accent5">Don't edit shared files</span> across worktrees — merge conflicts</li>
-        <li><span class="accent4">Start hard tasks first</span> — give them more wall-clock time</li>
-        <li><span class="accent">Review before merging</span> — agents make mistakes too</li>
-      </ul>
+      <div style="display:flex; flex-direction:column; gap:1.2rem; max-width:800px; width:100%; margin-top:1.5rem;">
+        <div style="display:flex; align-items:flex-start; gap:1rem; background:rgba(248,81,73,0.06); border:1px solid rgba(248,81,73,0.2); border-radius:8px; padding:1rem 1.2rem;">
+          <span style="font-size:1.5rem; flex-shrink:0;">&#9888;</span>
+          <div style="text-align:left;">
+            <p style="color:var(--accent5); font-weight:600; font-size:clamp(1rem,1.6vw,1.2rem); margin-bottom:0.3rem;">Don't edit shared files across worktrees</p>
+            <p style="font-size:clamp(0.85rem,1.3vw,1rem);">Shared config, types, or entry points edited by multiple agents = merge conflicts. Give each agent its own files.</p>
+          </div>
+        </div>
+        <div style="display:flex; align-items:flex-start; gap:1rem; background:rgba(240,136,62,0.06); border:1px solid rgba(240,136,62,0.2); border-radius:8px; padding:1rem 1.2rem;">
+          <span style="font-size:1.5rem; flex-shrink:0;">&#9200;</span>
+          <div style="text-align:left;">
+            <p style="color:var(--accent4); font-weight:600; font-size:clamp(1rem,1.6vw,1.2rem); margin-bottom:0.3rem;">Start hard tasks first</p>
+            <p style="font-size:clamp(0.85rem,1.3vw,1rem);">Complex features need more wall-clock time. Launch them in Wave 1 so they run while you tackle easier tasks.</p>
+          </div>
+        </div>
+        <div style="display:flex; align-items:flex-start; gap:1rem; background:rgba(88,166,255,0.06); border:1px solid rgba(88,166,255,0.2); border-radius:8px; padding:1rem 1.2rem;">
+          <span style="font-size:1.5rem; flex-shrink:0;">&#128269;</span>
+          <div style="text-align:left;">
+            <p style="color:var(--accent); font-weight:600; font-size:clamp(1rem,1.6vw,1.2rem); margin-bottom:0.3rem;">Review before merging</p>
+            <p style="font-size:clamp(0.85rem,1.3vw,1rem);">Agents make mistakes too. Treat each worktree branch like a PR — read the diff, run the tests, then merge.</p>
+          </div>
+        </div>
+      </div>
       <div class="speaker-notes">Quick hits before we move to agent teams.</div>
     </section>
 
@@ -1131,13 +1170,25 @@ my-project/
     <!-- Slide 26: Where agent teams struggle -->
     <section class="slide">
       <h3>Where agent teams struggle</h3>
-      <ul style="margin-top:1rem;">
-        <li>Higher-level orchestration across multiple features</li>
-        <li>Session resumption doesn't work with in-process teammates</li>
-        <li>Task status can lag</li>
-        <li>One team at a time</li>
-        <li>Still experimental</li>
-      </ul>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; max-width:850px; width:100%; margin-top:1.5rem;">
+        <div style="background:var(--bg-alt); border:1px solid var(--border); border-radius:8px; padding:1rem 1.2rem; text-align:left;">
+          <p style="color:var(--accent5); font-weight:600; font-size:clamp(0.9rem,1.4vw,1.1rem); margin-bottom:0.4rem;">Cross-feature orchestration</p>
+          <p style="font-size:clamp(0.8rem,1.2vw,0.95rem);">Teams work well within one feature, but coordinating across multiple features with dependencies is hard.</p>
+        </div>
+        <div style="background:var(--bg-alt); border:1px solid var(--border); border-radius:8px; padding:1rem 1.2rem; text-align:left;">
+          <p style="color:var(--accent5); font-weight:600; font-size:clamp(0.9rem,1.4vw,1.1rem); margin-bottom:0.4rem;">No session resumption</p>
+          <p style="font-size:clamp(0.8rem,1.2vw,0.95rem);">If you close the session, in-process teammates are lost. You can't pick up where you left off.</p>
+        </div>
+        <div style="background:var(--bg-alt); border:1px solid var(--border); border-radius:8px; padding:1rem 1.2rem; text-align:left;">
+          <p style="color:var(--accent5); font-weight:600; font-size:clamp(0.9rem,1.4vw,1.1rem); margin-bottom:0.4rem;">Task status lag</p>
+          <p style="font-size:clamp(0.8rem,1.2vw,0.95rem);">The shared task list doesn't always reflect real-time progress. Teammates may duplicate work.</p>
+        </div>
+        <div style="background:var(--bg-alt); border:1px solid var(--border); border-radius:8px; padding:1rem 1.2rem; text-align:left;">
+          <p style="color:var(--accent5); font-weight:600; font-size:clamp(0.9rem,1.4vw,1.1rem); margin-bottom:0.4rem;">One team at a time</p>
+          <p style="font-size:clamp(0.8rem,1.2vw,0.95rem);">You can't run multiple teams in parallel. For that, use worktrees with separate sessions.</p>
+        </div>
+      </div>
+      <p style="margin-top:1.2rem; font-family:var(--font-mono); font-size:clamp(0.8rem,1.2vw,0.95rem); color:var(--accent4);">Still experimental — expect rough edges</p>
       <div class="speaker-notes">Don't oversell. These are real limitations.</div>
     </section>
 
@@ -1156,12 +1207,21 @@ my-project/
     <!-- Slide 28: Higher-level orchestration -->
     <section class="slide">
       <h3>For higher-level orchestration</h3>
-      <p style="margin-bottom:1.5rem; color:var(--text-muted);">Want multi-feature orchestration? Explore:</p>
-      <ul style="margin-top:0.5rem;">
-        <li><span class="accent" style="font-weight:600;">Gastown</span> — multi-agent orchestration across repos</li>
-        <li><span class="accent2" style="font-weight:600;">Citadel</span> — dependency-aware task scheduling</li>
-        <li><span class="accent3" style="font-weight:600;">Mission Control</span> — higher-level orchestration layer</li>
-      </ul>
+      <p style="margin-bottom:1.5rem; color:var(--text-muted);">Want multi-feature orchestration? These frameworks go beyond what we cover today:</p>
+      <div style="display:flex; flex-direction:column; gap:1rem; max-width:800px; width:100;">
+        <div style="display:flex; align-items:center; gap:1.2rem; background:rgba(88,166,255,0.06); border:1px solid rgba(88,166,255,0.2); border-radius:8px; padding:1rem 1.5rem; text-align:left;">
+          <span style="font-size:clamp(1.2rem,2vw,1.6rem); font-weight:700; color:var(--accent); min-width:160px;">Gastown</span>
+          <span style="font-size:clamp(0.85rem,1.3vw,1rem);">Multi-agent orchestration across repos. Coordinates feature-level work with cross-repo dependencies.</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:1.2rem; background:rgba(63,185,80,0.06); border:1px solid rgba(63,185,80,0.2); border-radius:8px; padding:1rem 1.5rem; text-align:left;">
+          <span style="font-size:clamp(1.2rem,2vw,1.6rem); font-weight:700; color:var(--accent2); min-width:160px;">Citadel</span>
+          <span style="font-size:clamp(0.85rem,1.3vw,1rem);">Dependency-aware task scheduling. Knows which tasks block others and sequences them automatically.</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:1.2rem; background:rgba(210,168,255,0.06); border:1px solid rgba(210,168,255,0.2); border-radius:8px; padding:1rem 1.5rem; text-align:left;">
+          <span style="font-size:clamp(1.2rem,2vw,1.6rem); font-weight:700; color:var(--accent3); min-width:160px;">Mission Control</span>
+          <span style="font-size:clamp(0.85rem,1.3vw,1rem);">Higher-level orchestration layer that manages agent teams across multiple features and projects.</span>
+        </div>
+      </div>
       <div class="speaker-notes">Pointer for self-study. We won't cover these today.</div>
     </section>
 
@@ -1200,13 +1260,27 @@ my-project/
     <!-- ==================== WORKSHOP TRANSITION ==================== -->
 
     <!-- Slide 31: Transition -->
-    <section class="slide">
-      <h2>Let's put this into practice</h2>
-      <div class="stagger" style="margin-top:1.5rem;">
+    <section class="slide" style="background:linear-gradient(135deg, var(--bg) 0%, #0a1628 100%);">
+      <h2 style="font-size:clamp(2.5rem,5vw,4rem);">Let's put this into practice</h2>
+      <div class="stagger" style="margin-top:2rem;">
         <p style="font-size:clamp(1.2rem,2vw,1.6rem); color:var(--text);">You'll build a <span class="accent">Repo Doctor</span> tool using parallel worktrees</p>
         <p style="font-size:clamp(1.2rem,2vw,1.6rem); color:var(--text-muted);">45 min slides &check; &rarr; 1h45 hands-on</p>
       </div>
-      <div class="speaker-notes">Bridge to the hands-on section.</div>
+      <div style="display:flex; gap:1.5rem; margin-top:2.5rem; flex-wrap:wrap; justify-content:center;">
+        <div style="background:rgba(88,166,255,0.08); border:1px solid rgba(88,166,255,0.25); border-radius:8px; padding:0.8rem 1.2rem; text-align:center;">
+          <p style="font-size:clamp(1.5rem,3vw,2.5rem); font-weight:700; color:var(--accent);">5</p>
+          <p style="font-size:0.85rem; color:var(--text-muted);">Core analyzers</p>
+        </div>
+        <div style="background:rgba(210,168,255,0.08); border:1px solid rgba(210,168,255,0.25); border-radius:8px; padding:0.8rem 1.2rem; text-align:center;">
+          <p style="font-size:clamp(1.5rem,3vw,2.5rem); font-weight:700; color:var(--accent3);">3</p>
+          <p style="font-size:0.85rem; color:var(--text-muted);">Stretch goals</p>
+        </div>
+        <div style="background:rgba(63,185,80,0.08); border:1px solid rgba(63,185,80,0.25); border-radius:8px; padding:0.8rem 1.2rem; text-align:center;">
+          <p style="font-size:clamp(1.5rem,3vw,2.5rem); font-weight:700; color:var(--accent2);">1</p>
+          <p style="font-size:0.85rem; color:var(--text-muted);">HTML report</p>
+        </div>
+      </div>
+      <div class="speaker-notes">Bridge to the hands-on section. The numbers give a quick sense of scope.</div>
     </section>
 
     <!-- Slide 32: Workshop overview -->
@@ -1264,7 +1338,15 @@ my-project/
 <span class="cmd">cd</span> repo-doctor
 <span class="cmd">bun</span> install          <span class="comment"># or: bundle install</span>
 <span class="cmd">bun</span> run doctor test-fixtures/unhealthy-repo/</code></pre>
-      <div class="speaker-notes">This is what they do in the first 10 minutes.</div>
+      <div class="callout" style="margin-top:1.5rem; border-left-color:var(--accent2);">
+        <p style="font-size:clamp(0.9rem,1.4vw,1.1rem);"><span class="accent2" style="font-weight:600;">What you'll see:</span> The skeleton runs a sample "file count" analyzer against the test fixture repo and generates an HTML report. This proves everything works before you start building your own analyzers.</p>
+      </div>
+      <div style="display:flex; gap:1rem; margin-top:1.2rem; justify-content:center; flex-wrap:wrap;">
+        <span style="font-family:var(--font-mono); font-size:0.85rem; background:var(--bg-alt); border:1px solid var(--border); padding:0.4rem 1rem; border-radius:6px; color:var(--text-muted);">Node 20+ &check;</span>
+        <span style="font-family:var(--font-mono); font-size:0.85rem; background:var(--bg-alt); border:1px solid var(--border); padding:0.4rem 1rem; border-radius:6px; color:var(--text-muted);">bun or yarn &check;</span>
+        <span style="font-family:var(--font-mono); font-size:0.85rem; background:var(--bg-alt); border:1px solid var(--border); padding:0.4rem 1rem; border-radius:6px; color:var(--text-muted);">Claude Code v2.1.32+ &check;</span>
+      </div>
+      <div class="speaker-notes">This is what they do in the first 10 minutes. The prerequisite badges remind them what they need installed.</div>
     </section>
 
     <!-- Slide 35: Parallel workflow recap -->
