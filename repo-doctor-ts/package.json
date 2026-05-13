@@ -1,0 +1,16 @@
+{
+  "name": "repo-doctor",
+  "version": "0.1.0",
+  "type": "module",
+  "bin": {
+    "repo-doctor": "./src/cli.ts"
+  },
+  "scripts": {
+    "doctor": "bun run src/cli.ts",
+    "test": "bun test"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "typescript": "^5.7"
+  }
+}
