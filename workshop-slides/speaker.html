@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Parallel Workflows, Worktrees & Agent Teams</title>
+  <title>Parallel Workflows, Worktrees & Agent Teams — Speaker Notes</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -31,6 +31,94 @@
       font-family: var(--font-sans);
     }
 
+    .speaker-layout {
+      display: flex;
+      width: 100%; height: 100%;
+    }
+
+    .slide-panel {
+      width: 65%; height: 100%;
+      position: relative;
+      overflow: hidden;
+      border-right: 2px solid var(--border);
+    }
+
+    .notes-panel {
+      width: 35%; height: 100%;
+      background: #0a0e14;
+      overflow-y: auto;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .notes-panel-header {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--accent);
+      font-weight: 600;
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .notes-content {
+      display: none;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .notes-content.active {
+      display: flex;
+    }
+
+    .notes-content h4 {
+      color: var(--accent4);
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-top: 0.5rem;
+    }
+
+    .notes-content p, .notes-content li {
+      font-size: 0.85rem;
+      line-height: 1.5;
+      color: var(--text-muted);
+    }
+
+    .notes-content ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .notes-content ul li::before {
+      content: "\2022";
+      color: var(--accent2);
+      font-weight: bold;
+      display: inline-block;
+      width: 1em;
+      margin-left: 0;
+    }
+
+    .notes-content .key-point {
+      background: rgba(88,166,255,0.08);
+      border-left: 3px solid var(--accent);
+      padding: 0.5rem 0.75rem;
+      border-radius: 0 4px 4px 0;
+      font-size: 0.85rem;
+      color: var(--text);
+    }
+
+    .notes-content .timing {
+      display: inline-block;
+      background: rgba(210,168,255,0.15);
+      color: var(--accent3);
+      font-size: 0.75rem;
+      padding: 0.15rem 0.5rem;
+      border-radius: 4px;
+      font-weight: 600;
+    }
+
     .deck {
       width: 100%; height: 100%;
       position: relative;
@@ -39,12 +127,12 @@
     .slide {
       position: absolute;
       top: 0; left: 0;
-      width: 100vw; height: 100vh;
+      width: 100%; height: 100%;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      padding: clamp(2rem, 5vw, 6rem);
+      padding: clamp(1.5rem, 3vw, 4rem);
       opacity: 0;
       transform: translateX(40px);
       transition: opacity 0.4s ease, transform 0.4s ease;
@@ -451,26 +539,9 @@
       margin: 0.3rem 0;
     }
 
-    /* Speaker notes */
+    /* Hide inline speaker notes — shown in side panel instead */
     .speaker-notes {
       display: none;
-    }
-
-    .show-notes .speaker-notes {
-      display: block;
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: rgba(0, 0, 0, 0.92);
-      color: var(--text-muted);
-      font-size: 0.9rem;
-      padding: 1rem 2rem;
-      border-top: 1px solid var(--border);
-      z-index: 100;
-      max-height: 25vh;
-      overflow-y: auto;
-      text-align: left;
     }
 
     /* Slide counter */
@@ -574,6 +645,8 @@
 </head>
 <body>
   <div class="progress-bar" id="progress"></div>
+  <div class="speaker-layout">
+  <div class="slide-panel">
   <div class="deck" id="deck">
 
     <!-- ==================== ACT 1: THE PROBLEM ==================== -->
@@ -1394,6 +1467,405 @@ my-project/
     </section>
 
   </div>
+  </div><!-- end slide-panel -->
+
+  <div class="notes-panel" id="notesPanel">
+    <div class="notes-panel-header">Speaker Notes</div>
+
+    <!-- 0: Title -->
+    <div class="notes-content" data-slide="0">
+      <p class="timing">~1 min</p>
+      <div class="key-point">Welcome everyone. Introduce yourself and set the scene.</div>
+      <h4>Talking points</h4>
+      <ul>
+        <li>Introduce yourself — name, role, how long you've been using Claude Code</li>
+        <li>"Today we're going to learn how to 10x your throughput by running multiple Claude agents in parallel"</li>
+        <li>Set expectations: ~40 min presentation, then hands-on workshop</li>
+        <li>Ask: "How many of you use Claude Code daily?" — gauge the room</li>
+      </ul>
+    </div>
+
+    <!-- 1: The scenario -->
+    <div class="notes-content" data-slide="1">
+      <p class="timing">~2 min</p>
+      <div class="key-point">Relatable scenario — get audience nodding along.</div>
+      <h4>Talking points</h4>
+      <ul>
+        <li>Paint the picture: Friday afternoon, PM drops a big feature request</li>
+        <li>"You've got Claude Code, it's great — but you're still doing one thing at a time"</li>
+        <li>Ask for a show of hands: "Who's had a task list that felt overwhelming even with AI help?"</li>
+        <li>Transition: "What if you could run 4 agents at once, each on a different part of the problem?"</li>
+      </ul>
+    </div>
+
+    <!-- 2: Sequential execution -->
+    <div class="notes-content" data-slide="2">
+      <p class="timing">~2 min</p>
+      <div class="key-point">This is how most people work with Claude Code today — one task at a time.</div>
+      <h4>Talking points</h4>
+      <ul>
+        <li>Walk through the timeline: task A finishes, then B starts, then C…</li>
+        <li>"Even though Claude is fast, you're bottlenecked by serialisation"</li>
+        <li>The human is the scheduler — context-switching between reviewing and prompting</li>
+        <li>Total wall-clock time = sum of all tasks</li>
+      </ul>
+    </div>
+
+    <!-- 3: Parallel execution in waves -->
+    <div class="notes-content" data-slide="3">
+      <p class="timing">~3 min</p>
+      <div class="key-point">Same work, fraction of the time. Batch into waves — run a wave, merge, review, then launch the next.</div>
+      <h4>Talking points</h4>
+      <ul>
+        <li>Point to the diagram: "Wave 1 runs 3 tasks simultaneously. Wall-clock time = longest task, not the sum"</li>
+        <li>After wave 1 completes, merge results, then launch wave 2</li>
+        <li>Key insight: you need tasks that DON'T depend on each other — we'll cover decomposition later</li>
+        <li>"This is what we're going to practice in the hands-on section"</li>
+        <li>Rough numbers: 4 independent tasks x 15 min each = 15 min parallel vs 60 min sequential</li>
+      </ul>
+    </div>
+
+    <!-- 4: "What if..." pitch -->
+    <div class="notes-content" data-slide="4">
+      <p class="timing">~30 sec</p>
+      <div class="key-point">This is the agenda / thesis statement. Let it land.</div>
+      <ul>
+        <li>Read the slide text with emphasis. Let the audience absorb it.</li>
+        <li>"This is exactly what we're going to learn today — and then you'll do it yourself."</li>
+      </ul>
+    </div>
+
+    <!-- 5: What is a git worktree? -->
+    <div class="notes-content" data-slide="5">
+      <p class="timing">~3 min</p>
+      <div class="key-point">Git worktrees have been around since Git 2.5 (2015). Most people don't know they exist.</div>
+      <h4>Talking points</h4>
+      <ul>
+        <li>A worktree is a second (or third, or fourth) checkout of the SAME repo</li>
+        <li>Each worktree has its own working directory and branch, but shares the .git history</li>
+        <li>"Think of it like having multiple browser tabs of the same repo, each on a different branch"</li>
+        <li>Unlike <code>git clone</code>, worktrees share objects — they're lightweight and instant</li>
+        <li>You can <code>cd</code> into any worktree and it's a fully functional git checkout</li>
+      </ul>
+    </div>
+
+    <!-- 6: Why worktrees matter for agents -->
+    <div class="notes-content" data-slide="6">
+      <p class="timing">~2 min</p>
+      <div class="key-point">The key insight: isolation is what makes parallelism safe.</div>
+      <h4>Talking points</h4>
+      <ul>
+        <li><strong>Without worktrees:</strong> Two agents editing the same working directory = race conditions, file conflicts, corrupted state</li>
+        <li><strong>With worktrees:</strong> Each agent gets its own directory, own branch, own files — complete isolation</li>
+        <li>"It's the difference between two people editing the same Google Doc vs two people editing their own copies"</li>
+        <li>This is WHY parallel agents work — not magic, just good isolation</li>
+      </ul>
+    </div>
+
+    <!-- 7: Two ways to get a worktree -->
+    <div class="notes-content" data-slide="7">
+      <p class="timing">~2 min</p>
+      <div class="key-point">Two options: CLI flag is simplest. Skills/plugins offer more customisation.</div>
+      <h4>Talking points</h4>
+      <ul>
+        <li><strong>Option 1 — Claude CLI:</strong> <code>claude --worktree</code> is the simplest — one flag and you're in an isolated worktree</li>
+        <li><strong>Option 2 — Skills/Plugins:</strong> For teams with naming conventions or setup scripts, plugins can automate worktree creation with custom logic</li>
+        <li>"My personal go-to is the CLI flag — it's fast and no setup required"</li>
+        <li>Either way it's just <code>git worktree add</code> under the hood</li>
+      </ul>
+    </div>
+
+    <!-- 8: Worktree directory structure -->
+    <div class="notes-content" data-slide="8">
+      <p class="timing">~1 min</p>
+      <div class="key-point">Reference slide — if the demo was too fast, this is the reference.</div>
+      <h4>Talking points</h4>
+      <ul>
+        <li>Point to the tree: worktrees live under <code>.claude/worktrees/</code></li>
+        <li>Each gets an auto-generated name (or you can name them)</li>
+        <li>"This is what your filesystem looks like when you have 3 agents running"</li>
+      </ul>
+    </div>
+
+    <!-- 9: Key takeaway -->
+    <div class="notes-content" data-slide="9">
+      <p class="timing">~30 sec</p>
+      <div class="key-point">Make sure this is crystal clear before moving on.</div>
+      <ul>
+        <li>Pause here. "Does everyone get this? Worktree = isolated directory + isolated branch. Questions?"</li>
+        <li>If anyone looks confused, draw the mental model: one .git, multiple working directories</li>
+      </ul>
+    </div>
+
+    <!-- 10: The pattern -->
+    <div class="notes-content" data-slide="10">
+      <p class="timing">~3 min</p>
+      <div class="key-point">This is the workflow they'll practice in the hands-on session. Walk through each step carefully.</div>
+      <h4>Talking points</h4>
+      <ul>
+        <li><strong>Step 1 — Decompose:</strong> Break the project into independent tasks. This is the hardest and most important step.</li>
+        <li><strong>Step 2 — Spawn:</strong> Launch one Claude session per task, each in its own worktree</li>
+        <li><strong>Step 3 — Monitor:</strong> Check status, review output as agents work</li>
+        <li><strong>Step 4 — Merge:</strong> Bring completed work back to main one branch at a time</li>
+        <li>"Think of yourself as a project manager, not a coder. Your job is decomposition and review."</li>
+      </ul>
+    </div>
+
+    <!-- 11: Tasks MUST be independent -->
+    <div class="notes-content" data-slide="11">
+      <p class="timing">~3 min</p>
+      <div class="key-point">This is the most common mistake. Spend time on decomposition — it's the highest-leverage skill.</div>
+      <h4>Talking points</h4>
+      <ul>
+        <li><strong>Good decomposition:</strong> Each task touches different files/directories. No shared state.</li>
+        <li><strong>Bad decomposition:</strong> Two agents editing the same config file, shared types, or entry points</li>
+        <li>"If two agents need to edit the same file, they're NOT independent — merge them into one task or sequence them"</li>
+        <li>Rule of thumb: if you can describe the task without referencing another task's output, it's independent</li>
+        <li>Walk through the table: independent tasks vs dependent tasks with concrete examples</li>
+      </ul>
+    </div>
+
+    <!-- 12: Demo — Spinning up parallel sessions -->
+    <div class="notes-content" data-slide="12">
+      <p class="timing">~2 min</p>
+      <div class="key-point">This is the money shot — multiple agents working at once.</div>
+      <h4>Talking points</h4>
+      <ul>
+        <li>Show the terminal commands — each <code>claude --worktree</code> opens a new session</li>
+        <li>"In practice you'd use Agent Orchestrator to manage these, but under the hood it's just multiple Claude sessions in worktrees"</li>
+        <li>Demo if possible: open 2-3 terminal tabs, launch <code>claude --worktree</code> in each</li>
+      </ul>
+    </div>
+
+    <!-- 13: Agent Orchestrator — status monitoring -->
+    <div class="notes-content" data-slide="13">
+      <p class="timing">~2 min</p>
+      <div class="key-point">Agent Orchestrator gives you a dashboard for visibility into what each agent is doing.</div>
+      <h4>Talking points</h4>
+      <ul>
+        <li>Walk through each status colour: Working (green pulse), Idle, Needs Attention, Finished, Error</li>
+        <li>Point to the gif: "This is what it looks like in practice"</li>
+        <li>"Needs Attention is key — the agent is stuck or has a question for you. Don't ignore it."</li>
+        <li>"The dashboard is the reason Agent Orchestrator exists — without it you're tab-switching between terminals"</li>
+      </ul>
+    </div>
+
+    <!-- 14: Demo — Completing a worktree -->
+    <div class="notes-content" data-slide="14">
+      <p class="timing">~2 min</p>
+      <div class="key-point">Two ways to land work. PRs for team review, direct merge for solo speed.</div>
+      <h4>Talking points</h4>
+      <ul>
+        <li><strong>Option A — PR:</strong> "This is what I actually do. Just tell Claude 'Create a PR' and it handles commit, push, and PR creation with a summary."</li>
+        <li>PRs give you a review step, a diff to inspect, and a paper trail — ideal for team workflows</li>
+        <li><strong>Option B — Direct merge:</strong> Faster for solo work or when you've already reviewed in the worktree</li>
+        <li>Walk through the 3 commands: checkout main, merge, remove worktree</li>
+        <li>"Why no conflicts either way? Because each agent worked on different files. This is why decomposition matters."</li>
+        <li>If there ARE conflicts, it means your decomposition was wrong — re-split next time</li>
+      </ul>
+    </div>
+
+    <!-- 15: The full picture -->
+    <div class="notes-content" data-slide="15">
+      <p class="timing">~1 min</p>
+      <div class="key-point">Visual summary — this is what your git history looks like when you work this way.</div>
+      <h4>Talking points</h4>
+      <ul>
+        <li>Point to the diagram: "Four branches forked from the same commit, worked in parallel, merged back"</li>
+        <li>"Notice the branches have different lengths — tasks take different amounts of time, and that's fine"</li>
+        <li>The merge order doesn't matter — merge each as it finishes</li>
+      </ul>
+    </div>
+
+    <!-- 16: Common pitfalls -->
+    <div class="notes-content" data-slide="16">
+      <p class="timing">~2 min</p>
+      <div class="key-point">Quick hits — warn them before they make these mistakes.</div>
+      <h4>Talking points</h4>
+      <ul>
+        <li><strong>Shared files:</strong> The #1 mistake. Shared config, types, entry points = merge conflicts.</li>
+        <li><strong>Too many agents:</strong> More than 4-5 and you can't keep up with reviews. Start with 2-3.</li>
+        <li><strong>Skipping review:</strong> Don't just merge blindly. Each branch needs a review pass.</li>
+        <li>Transition: "Now let's talk about a more advanced concept — agent teams."</li>
+      </ul>
+    </div>
+
+    <!-- 17: What are agent teams? -->
+    <div class="notes-content" data-slide="17">
+      <p class="timing">~3 min</p>
+      <div class="key-point">A step up from manual parallel sessions. Claude Code manages the coordination.</div>
+      <h4>Talking points</h4>
+      <ul>
+        <li>Agent teams = Claude Code spawning and managing sub-agents internally</li>
+        <li>Unlike worktree parallelism (YOU orchestrate), agent teams let Claude orchestrate</li>
+        <li>"Think of it as giving Claude a team to manage, vs you managing multiple Claudes"</li>
+        <li>Best for: planning phases, research, code review — where agents need to share context</li>
+      </ul>
+    </div>
+
+    <!-- 18: Subagents vs Agent Teams -->
+    <div class="notes-content" data-slide="18">
+      <p class="timing">~3 min</p>
+      <div class="key-point">Use subagents when you just need a result. Use agent teams when agents need to talk.</div>
+      <h4>Talking points</h4>
+      <ul>
+        <li><strong>Subagents:</strong> Fire-and-forget. "Go research X and come back with an answer." No coordination needed.</li>
+        <li><strong>Agent teams:</strong> Shared context. "Plan this feature together." Agents can build on each other's work.</li>
+        <li>Walk through the table column by column — scope, coordination, context sharing, best for</li>
+        <li>"Most of the time, you want subagents or manual worktree parallelism. Agent teams are for specific use cases."</li>
+      </ul>
+    </div>
+
+    <!-- 19: Architecture comparison -->
+    <div class="notes-content" data-slide="19">
+      <p class="timing">~2 min</p>
+      <div class="key-point">Visual reinforcement of the table. Point to the diagrams.</div>
+      <h4>Talking points</h4>
+      <ul>
+        <li><strong>Left (Subagent):</strong> Hub-and-spoke. One orchestrator, independent workers, results flow back up.</li>
+        <li><strong>Right (Agent Team):</strong> Mesh. Agents can communicate laterally. Shared context.</li>
+        <li>"The mesh model is more powerful but harder to control — that's the trade-off."</li>
+      </ul>
+    </div>
+
+    <!-- 20: My honest take -->
+    <div class="notes-content" data-slide="20">
+      <p class="timing">~2 min</p>
+      <div class="key-point">Be real with the audience. Agent teams are great for planning, not for implementation orchestration.</div>
+      <h4>Talking points</h4>
+      <ul>
+        <li>"I want to be honest about where this is today"</li>
+        <li>Agent teams shine at: brainstorming, planning, code review, research</li>
+        <li>They struggle at: long-running implementation, file-heavy tasks, anything needing precise coordination</li>
+        <li>"For building features, the worktree approach we just learned is more reliable today"</li>
+        <li>This will improve — but set expectations correctly for your team</li>
+      </ul>
+    </div>
+
+    <!-- 21: Where agent teams struggle -->
+    <div class="notes-content" data-slide="21">
+      <p class="timing">~2 min</p>
+      <div class="key-point">Don't oversell. These are real limitations.</div>
+      <h4>Talking points</h4>
+      <ul>
+        <li>Context window limits — agents can lose track in long conversations</li>
+        <li>Coordination overhead — more agents = more communication = more chances for misalignment</li>
+        <li>Debugging is harder — when something goes wrong in a team, finding the root cause is painful</li>
+        <li>"This is why we focus on worktree parallelism for the workshop — it's the most reliable approach today"</li>
+      </ul>
+    </div>
+
+    <!-- 22: Best practices -->
+    <div class="notes-content" data-slide="22">
+      <p class="timing">~1 min</p>
+      <div class="key-point">Quick practical tips if they want to try agent teams after this session.</div>
+      <h4>Talking points</h4>
+      <ul>
+        <li>Start small — 2 agents, simple task, see how it goes</li>
+        <li>Give clear roles — "You are the planner, you are the implementer"</li>
+        <li>Keep tasks short — agent teams work best for 10-15 min tasks, not multi-hour epics</li>
+      </ul>
+    </div>
+
+    <!-- 23: For higher-level orchestration -->
+    <div class="notes-content" data-slide="23">
+      <p class="timing">~1 min</p>
+      <div class="key-point">Pointer for self-study. Don't go deep here.</div>
+      <h4>Talking points</h4>
+      <ul>
+        <li>Mention these exist: MCP servers, custom orchestrators, CI/CD integration</li>
+        <li>"These are for teams that have outgrown manual orchestration — not today's focus"</li>
+        <li>Point to docs/resources they can explore later</li>
+      </ul>
+    </div>
+
+    <!-- 24: The spectrum -->
+    <div class="notes-content" data-slide="24">
+      <p class="timing">~1 min</p>
+      <div class="key-point">Position what we've learned on the spectrum. Today we practice the sweet spot.</div>
+      <ul>
+        <li>"We've gone from single agent -> parallel worktrees -> agent teams -> full orchestration"</li>
+        <li>"The sweet spot for most teams today is parallel worktrees — that's what we'll practice next"</li>
+      </ul>
+    </div>
+
+    <!-- 25: Questions? -->
+    <div class="notes-content" data-slide="25">
+      <p class="timing">~5 min</p>
+      <div class="key-point">5 min buffer. Take questions. If no questions, let people set up early.</div>
+      <h4>Common questions to prepare for</h4>
+      <ul>
+        <li>"How many agents can I run at once?" — Practically 3-5. More and you can't review fast enough.</li>
+        <li>"Does this work with other AI tools?" — Worktrees work with anything. The orchestration is Claude-specific.</li>
+        <li>"What about costs?" — Each agent is a separate session. Parallel = same total tokens, just faster.</li>
+        <li>"Can agents share context?" — Not in the worktree model. That's what agent teams are for.</li>
+      </ul>
+    </div>
+
+    <!-- 26: Let's put this into practice -->
+    <div class="notes-content" data-slide="26">
+      <p class="timing">~2 min</p>
+      <div class="key-point">Bridge to the hands-on section. Build excitement.</div>
+      <h4>Talking points</h4>
+      <ul>
+        <li>"Now it's your turn. You're going to build a real project using everything we just covered."</li>
+        <li>Briefly describe the project — the numbers give a quick sense of scope</li>
+        <li>Mention the repo they'll fork/clone</li>
+      </ul>
+    </div>
+
+    <!-- 27: What you're building -->
+    <div class="notes-content" data-slide="27">
+      <p class="timing">~1 min</p>
+      <div class="key-point">Quick preview of what they'll build. Don't over-explain — they'll discover it.</div>
+      <ul>
+        <li>Walk through the feature list briefly</li>
+        <li>"Each of these is an independent task — perfect for parallel worktrees"</li>
+        <li>Point to EPIC.md — "All the details are in here. Read it first."</li>
+      </ul>
+    </div>
+
+    <!-- 28: Your next 1h45 -->
+    <div class="notes-content" data-slide="28">
+      <p class="timing">~1 min</p>
+      <div class="key-point">Set expectations for timing.</div>
+      <ul>
+        <li>Walk through the time blocks</li>
+        <li>"Don't rush the decomposition step — it's the most important 10 minutes"</li>
+        <li>Mention you'll be walking around to help</li>
+      </ul>
+    </div>
+
+    <!-- 29: Quick start -->
+    <div class="notes-content" data-slide="29">
+      <p class="timing">~1 min</p>
+      <div class="key-point">Concrete commands they'll run. Reference slide they can come back to.</div>
+      <ul>
+        <li>Point to the prerequisite badges — "Make sure you have these installed"</li>
+        <li>Walk through the commands: clone, cd, read EPIC.md, plan, then launch worktrees</li>
+      </ul>
+    </div>
+
+    <!-- 30: The parallel workflow -->
+    <div class="notes-content" data-slide="30">
+      <p class="timing">~30 sec</p>
+      <div class="key-point">Reference slide for during the workshop.</div>
+      <ul>
+        <li>"This is the workflow loop. Keep this slide open as a reference while you work."</li>
+      </ul>
+    </div>
+
+    <!-- 31: Go build -->
+    <div class="notes-content" data-slide="31">
+      <p class="timing">~15 sec</p>
+      <div class="key-point">Release them. Walk around and help.</div>
+      <ul>
+        <li>"Go! Read EPIC.md. Decompose. Parallelise. Merge. I'll be walking around."</li>
+        <li>Start a timer visible to the room if possible</li>
+      </ul>
+    </div>
+  </div><!-- end notes-panel -->
+  </div><!-- end speaker-layout -->
 
   <div class="slide-counter" id="counter"></div>
 
@@ -1405,6 +1877,8 @@ my-project/
     let current = 0;
     let prevIndex = -1;
 
+    const notesContents = Array.from(document.querySelectorAll('.notes-content'));
+
     function showSlide(index) {
       if (index < 0 || index >= slides.length) return;
       prevIndex = current;
@@ -1414,6 +1888,10 @@ my-project/
         if (i === current) s.classList.add('active');
         else if (i === prevIndex && prevIndex < current) s.classList.add('prev');
       });
+      // Sync notes panel
+      notesContents.forEach(n => n.classList.remove('active'));
+      const activeNote = document.querySelector(`.notes-content[data-slide="${current}"]`);
+      if (activeNote) activeNote.classList.add('active');
       counter.textContent = `${current + 1} / ${slides.length}`;
       progress.style.width = `${((current + 1) / slides.length) * 100}%`;
     }
@@ -1425,8 +1903,6 @@ my-project/
       } else if (e.key === 'ArrowLeft') {
         e.preventDefault();
         showSlide(current - 1);
-      } else if (e.key === 'n' || e.key === 'N') {
-        document.body.classList.toggle('show-notes');
       } else if (e.key === 'Home') {
         showSlide(0);
       } else if (e.key === 'End') {
