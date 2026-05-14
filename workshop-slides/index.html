@@ -902,37 +902,40 @@ my-project/
       <div class="speaker-notes">Switch to Agent Orchestrator. This is the money shot — multiple agents working at once.</div>
     </section>
 
-    <!-- Slide 17: Status monitoring -->
+    <!-- Slide 17: Agent Orchestrator status monitoring -->
     <section class="slide">
-      <h3>Status monitoring</h3>
-      <div style="display:flex; flex-direction:column; gap:0.8rem; max-width:600px; width:100%; margin-top:1rem;">
-        <div style="display:flex; align-items:center; gap:1rem;">
-          <span style="width:16px; height:16px; border-radius:50%; background:var(--accent2); display:inline-block; animation:pulse 2s infinite;"></span>
-          <span style="color:var(--accent2); font-weight:600; width:120px;">Working</span>
-          <span style="color:var(--text-muted);">Agent is actively coding</span>
+      <h3>Agent Orchestrator — status monitoring</h3>
+      <div style="display:flex; gap:2rem; align-items:flex-start; margin-top:1rem; width:100%; max-width:900px;">
+        <div style="display:flex; flex-direction:column; gap:0.8rem; flex-shrink:0;">
+          <div style="display:flex; align-items:center; gap:1rem;">
+            <span style="width:16px; height:16px; border-radius:50%; background:var(--accent2); display:inline-block; animation:pulse 2s infinite;"></span>
+            <span style="color:var(--accent2); font-weight:600; width:120px;">Working</span>
+            <span style="color:var(--text-muted);">Agent is actively coding</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:1rem;">
+            <span style="width:16px; height:16px; border-radius:50%; background:#e3b341; display:inline-block;"></span>
+            <span style="color:#e3b341; font-weight:600; width:120px;">Idle</span>
+            <span style="color:var(--text-muted);">Waiting for input</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:1rem;">
+            <span style="width:16px; height:16px; border-radius:50%; background:var(--accent4); display:inline-block;"></span>
+            <span style="color:var(--accent4); font-weight:600; width:120px;">Needs Attention</span>
+            <span style="color:var(--text-muted);">Agent is stuck or has a question</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:1rem;">
+            <span style="width:16px; height:16px; border-radius:50%; background:var(--accent); display:inline-block;"></span>
+            <span style="color:var(--accent); font-weight:600; width:120px;">Finished</span>
+            <span style="color:var(--text-muted);">Ready for review</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:1rem;">
+            <span style="width:16px; height:16px; border-radius:50%; background:var(--accent5); display:inline-block;"></span>
+            <span style="color:var(--accent5); font-weight:600; width:120px;">Error</span>
+            <span style="color:var(--text-muted);">Something went wrong</span>
+          </div>
         </div>
-        <div style="display:flex; align-items:center; gap:1rem;">
-          <span style="width:16px; height:16px; border-radius:50%; background:#e3b341; display:inline-block;"></span>
-          <span style="color:#e3b341; font-weight:600; width:120px;">Idle</span>
-          <span style="color:var(--text-muted);">Waiting for input</span>
-        </div>
-        <div style="display:flex; align-items:center; gap:1rem;">
-          <span style="width:16px; height:16px; border-radius:50%; background:var(--accent4); display:inline-block;"></span>
-          <span style="color:var(--accent4); font-weight:600; width:120px;">Needs Attention</span>
-          <span style="color:var(--text-muted);">Agent is stuck or has a question</span>
-        </div>
-        <div style="display:flex; align-items:center; gap:1rem;">
-          <span style="width:16px; height:16px; border-radius:50%; background:var(--accent); display:inline-block;"></span>
-          <span style="color:var(--accent); font-weight:600; width:120px;">Finished</span>
-          <span style="color:var(--text-muted);">Ready for review</span>
-        </div>
-        <div style="display:flex; align-items:center; gap:1rem;">
-          <span style="width:16px; height:16px; border-radius:50%; background:var(--accent5); display:inline-block;"></span>
-          <span style="color:var(--accent5); font-weight:600; width:120px;">Error</span>
-          <span style="color:var(--text-muted);">Something went wrong</span>
-        </div>
+        <img src="assets/hero-demo.gif" alt="Agent Orchestrator demo" style="max-width:400px; width:100%; border-radius:8px; border:1px solid var(--border-color); box-shadow:0 4px 16px rgba(0,0,0,0.3);"/>
       </div>
-      <div class="speaker-notes">You need visibility into what each agent is doing. AO gives you this.</div>
+      <div class="speaker-notes">You need visibility into what each agent is doing. Agent Orchestrator gives you this dashboard.</div>
     </section>
 
     <!-- Slide 18: Demo merging -->
