@@ -1,0 +1,1908 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Parallel Workflows, Worktrees & Agent Teams — Speaker Notes</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0d1117;
+      --bg-alt: #161b22;
+      --text: #e6edf3;
+      --text-muted: #8b949e;
+      --accent: #58a6ff;
+      --accent2: #3fb950;
+      --accent3: #d2a8ff;
+      --accent4: #f0883e;
+      --accent5: #f85149;
+      --border: #30363d;
+      --code-bg: #1c2128;
+      --font-sans: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      --font-mono: 'SF Mono', 'Fira Code', 'JetBrains Mono', Consolas, monospace;
+    }
+
+    html, body {
+      width: 100%; height: 100%;
+      overflow: hidden;
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-sans);
+    }
+
+    .speaker-layout {
+      display: flex;
+      width: 100%; height: 100%;
+    }
+
+    .slide-panel {
+      width: 65%; height: 100%;
+      position: relative;
+      overflow: hidden;
+      border-right: 2px solid var(--border);
+    }
+
+    .notes-panel {
+      width: 35%; height: 100%;
+      background: #0a0e14;
+      overflow-y: auto;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .notes-panel-header {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--accent);
+      font-weight: 600;
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .notes-content {
+      display: none;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .notes-content.active {
+      display: flex;
+    }
+
+    .notes-content h4 {
+      color: var(--accent4);
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-top: 0.5rem;
+    }
+
+    .notes-content p, .notes-content li {
+      font-size: 0.85rem;
+      line-height: 1.5;
+      color: var(--text-muted);
+    }
+
+    .notes-content ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .notes-content ul li::before {
+      content: "\2022";
+      color: var(--accent2);
+      font-weight: bold;
+      display: inline-block;
+      width: 1em;
+      margin-left: 0;
+    }
+
+    .notes-content .key-point {
+      background: rgba(88,166,255,0.08);
+      border-left: 3px solid var(--accent);
+      padding: 0.5rem 0.75rem;
+      border-radius: 0 4px 4px 0;
+      font-size: 0.85rem;
+      color: var(--text);
+    }
+
+    .notes-content .timing {
+      display: inline-block;
+      background: rgba(210,168,255,0.15);
+      color: var(--accent3);
+      font-size: 0.75rem;
+      padding: 0.15rem 0.5rem;
+      border-radius: 4px;
+      font-weight: 600;
+    }
+
+    .deck {
+      width: 100%; height: 100%;
+      position: relative;
+    }
+
+    .slide {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: clamp(1.5rem, 3vw, 4rem);
+      opacity: 0;
+      transform: translateX(40px);
+      transition: opacity 0.4s ease, transform 0.4s ease;
+      pointer-events: none;
+      text-align: center;
+    }
+
+    .slide.active {
+      opacity: 1;
+      transform: translateX(0);
+      pointer-events: auto;
+    }
+
+    .slide.prev {
+      opacity: 0;
+      transform: translateX(-40px);
+    }
+
+    /* Typography */
+    h1 {
+      font-size: clamp(2.5rem, 5vw, 4.5rem);
+      font-weight: 700;
+      line-height: 1.1;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+    }
+
+    h2 {
+      font-size: clamp(2rem, 4vw, 3.5rem);
+      font-weight: 600;
+      line-height: 1.2;
+      margin-bottom: 1rem;
+      letter-spacing: -0.01em;
+    }
+
+    h3 {
+      font-size: clamp(1.5rem, 3vw, 2.5rem);
+      font-weight: 600;
+      line-height: 1.3;
+      margin-bottom: 0.75rem;
+    }
+
+    p, li {
+      font-size: clamp(1.1rem, 2vw, 1.6rem);
+      line-height: 1.6;
+      color: var(--text-muted);
+    }
+
+    .subtitle {
+      font-size: clamp(1.2rem, 2.5vw, 1.8rem);
+      color: var(--text-muted);
+      margin-top: 0.5rem;
+    }
+
+    .big-text {
+      font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+      font-weight: 600;
+      line-height: 1.4;
+      max-width: 900px;
+    }
+
+    .accent { color: var(--accent); }
+    .accent2 { color: var(--accent2); }
+    .accent3 { color: var(--accent3); }
+    .accent4 { color: var(--accent4); }
+    .accent5 { color: var(--accent5); }
+
+    /* Code blocks */
+    pre, code {
+      font-family: var(--font-mono);
+    }
+
+    pre {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.5rem 2rem;
+      text-align: left;
+      font-size: clamp(0.9rem, 1.5vw, 1.2rem);
+      line-height: 1.7;
+      overflow-x: auto;
+      max-width: 900px;
+      width: 100%;
+      margin: 1rem 0;
+    }
+
+    code {
+      background: var(--code-bg);
+      padding: 0.15em 0.4em;
+      border-radius: 4px;
+      font-size: 0.9em;
+    }
+
+    pre code {
+      background: none;
+      padding: 0;
+    }
+
+    .keyword { color: var(--accent5); }
+    .string { color: var(--accent2); }
+    .comment { color: var(--text-muted); }
+    .cmd { color: var(--accent); }
+    .flag { color: var(--accent3); }
+    .prompt { color: var(--accent4); }
+
+    /* Lists */
+    ul, ol {
+      text-align: left;
+      max-width: 800px;
+      width: 100%;
+    }
+
+    li {
+      margin-bottom: 0.6rem;
+      padding-left: 0.5rem;
+    }
+
+    ul { list-style: none; }
+    ul li::before {
+      content: "\2022";
+      color: var(--accent);
+      font-weight: bold;
+      display: inline-block;
+      width: 1em;
+      margin-left: -1em;
+    }
+
+    ol { padding-left: 1.5rem; }
+    ol li::marker { color: var(--accent); font-weight: 700; }
+
+    /* Tables */
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      max-width: 900px;
+      margin: 1rem 0;
+      font-size: clamp(0.85rem, 1.4vw, 1.1rem);
+    }
+
+    th, td {
+      padding: 0.75rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+
+    th {
+      color: var(--accent);
+      font-weight: 600;
+      border-bottom: 2px solid var(--accent);
+    }
+
+    td { color: var(--text-muted); }
+
+    /* Two-column layout */
+    .columns {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      max-width: 1100px;
+      width: 100%;
+      text-align: left;
+    }
+
+    .column {
+      padding: 1.5rem;
+      border-radius: 8px;
+    }
+
+    .column h3 {
+      font-size: clamp(1.2rem, 2vw, 1.6rem);
+      margin-bottom: 1rem;
+    }
+
+    /* Diagrams */
+    .diagram {
+      max-width: 1000px;
+      width: 100%;
+      margin: 1.5rem 0;
+    }
+
+    .timeline {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      width: 100%;
+    }
+
+    .timeline-row {
+      display: flex;
+      gap: 4px;
+      align-items: center;
+      height: 48px;
+    }
+
+    .timeline-label {
+      width: 80px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+      text-align: right;
+      padding-right: 12px;
+      flex-shrink: 0;
+    }
+
+    .task-block {
+      height: 100%;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      font-weight: 600;
+      font-family: var(--font-mono);
+      color: var(--bg);
+      flex-shrink: 0;
+    }
+
+    .time-label {
+      font-family: var(--font-mono);
+      font-size: clamp(1rem, 1.8vw, 1.4rem);
+      font-weight: 700;
+      margin-top: 1rem;
+    }
+
+    /* Flow steps */
+    .flow-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+      max-width: 700px;
+      width: 100%;
+    }
+
+    .flow-step {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      text-align: left;
+    }
+
+    .step-number {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: var(--accent);
+      color: var(--bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 1.2rem;
+      flex-shrink: 0;
+    }
+
+    .step-text {
+      font-size: clamp(1rem, 1.8vw, 1.4rem);
+      color: var(--text);
+    }
+
+    /* Spectrum */
+    .spectrum {
+      display: flex;
+      align-items: stretch;
+      max-width: 1000px;
+      width: 100%;
+      gap: 4px;
+      margin: 2rem 0;
+    }
+
+    .spectrum-item {
+      flex: 1;
+      padding: 1.2rem 0.8rem;
+      border-radius: 8px;
+      text-align: center;
+      position: relative;
+    }
+
+    .spectrum-item .label {
+      font-size: clamp(0.75rem, 1.2vw, 0.95rem);
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .spectrum-item .sublabel {
+      font-size: clamp(0.65rem, 1vw, 0.8rem);
+      color: var(--text-muted);
+      margin-top: 0.3rem;
+    }
+
+    .you-are-here {
+      position: absolute;
+      top: -28px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--accent2);
+      white-space: nowrap;
+      font-family: var(--font-mono);
+    }
+
+    .you-are-here::after {
+      content: "\25BC";
+      display: block;
+      text-align: center;
+      margin-top: 2px;
+    }
+
+    /* Staggered reveal animation */
+    .stagger > * {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+
+    .slide.active .stagger > *:nth-child(1) { animation: fadeUp 0.5s 0.2s forwards; }
+    .slide.active .stagger > *:nth-child(2) { animation: fadeUp 0.5s 0.5s forwards; }
+    .slide.active .stagger > *:nth-child(3) { animation: fadeUp 0.5s 0.8s forwards; }
+    .slide.active .stagger > *:nth-child(4) { animation: fadeUp 0.5s 1.1s forwards; }
+    .slide.active .stagger > *:nth-child(5) { animation: fadeUp 0.5s 1.4s forwards; }
+    .slide.active .stagger > *:nth-child(6) { animation: fadeUp 0.5s 1.7s forwards; }
+
+    @keyframes fadeUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Live demo badge */
+    .demo-badge {
+      display: inline-block;
+      background: var(--accent5);
+      color: white;
+      font-size: clamp(0.8rem, 1.2vw, 1rem);
+      font-weight: 700;
+      padding: 0.4rem 1.2rem;
+      border-radius: 999px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 1rem;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
+    }
+
+    /* Checklist for demo slides */
+    .checklist {
+      text-align: left;
+      max-width: 600px;
+      list-style: none;
+    }
+
+    .checklist li {
+      padding: 0.5rem 0;
+      padding-left: 2rem;
+      position: relative;
+    }
+
+    .checklist li::before {
+      content: "\25A2";
+      position: absolute;
+      left: 0;
+      color: var(--accent);
+      font-size: 1.2em;
+      width: auto;
+      margin: 0;
+    }
+
+    /* Architecture boxes */
+    .arch-box {
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      padding: 1.2rem 1.5rem;
+      margin: 0.5rem;
+      text-align: center;
+    }
+
+    .arch-box.lead {
+      border-color: var(--accent);
+      background: rgba(88, 166, 255, 0.08);
+    }
+
+    .arch-box.teammate {
+      border-color: var(--accent2);
+      background: rgba(63, 185, 80, 0.08);
+    }
+
+    .arch-box.shared {
+      border-color: var(--accent3);
+      background: rgba(210, 168, 255, 0.08);
+    }
+
+    .arch-grid {
+      display: grid;
+      gap: 1rem;
+      max-width: 800px;
+      width: 100%;
+    }
+
+    /* Arrow connectors */
+    .arrow-down {
+      color: var(--text-muted);
+      font-size: 1.5rem;
+      margin: 0.3rem 0;
+    }
+
+    /* Hide inline speaker notes — shown in side panel instead */
+    .speaker-notes {
+      display: none;
+    }
+
+    /* Slide counter */
+    .slide-counter {
+      position: fixed;
+      bottom: 1rem;
+      right: 1.5rem;
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      z-index: 50;
+      opacity: 0.6;
+    }
+
+    /* Progress bar */
+    .progress-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 3px;
+      background: var(--accent);
+      z-index: 50;
+      transition: width 0.3s ease;
+    }
+
+    /* Act title slides */
+    .slide.act-title {
+      background: linear-gradient(135deg, var(--bg) 0%, var(--bg-alt) 100%);
+    }
+
+    .slide.act-title h2 {
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      background: linear-gradient(135deg, var(--accent), var(--accent3));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* Warn/info boxes */
+    .callout {
+      background: var(--bg-alt);
+      border-left: 4px solid var(--accent4);
+      padding: 1rem 1.5rem;
+      border-radius: 0 8px 8px 0;
+      text-align: left;
+      max-width: 800px;
+      width: 100%;
+      margin: 1rem 0;
+    }
+
+    /* Workshop timeline table */
+    .workshop-timeline {
+      width: 100%;
+      max-width: 900px;
+    }
+
+    .workshop-timeline td:first-child {
+      font-family: var(--font-mono);
+      color: var(--accent);
+      white-space: nowrap;
+      width: 100px;
+    }
+
+    .workshop-timeline td:nth-child(2) {
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    /* Side-by-side architecture */
+    .side-by-side {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      max-width: 1000px;
+      width: 100%;
+    }
+
+    .side-by-side > div {
+      background: var(--bg-alt);
+      border-radius: 12px;
+      padding: 1.5rem;
+      border: 1px solid var(--border);
+    }
+
+    .side-by-side h3 {
+      font-size: clamp(1rem, 1.6vw, 1.3rem);
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+
+    /* SVG lifecycle diagram */
+    .lifecycle-svg {
+      max-width: 900px;
+      width: 100%;
+    }
+
+    .lifecycle-svg text {
+      font-family: var(--font-mono);
+    }
+  </style>
+</head>
+<body>
+  <div class="progress-bar" id="progress"></div>
+  <div class="speaker-layout">
+  <div class="slide-panel">
+  <div class="deck" id="deck">
+
+    <!-- ==================== ACT 1: THE PROBLEM ==================== -->
+
+    <!-- Slide 1: Title -->
+    <section class="slide">
+      <h1>Parallel Workflows,<br>Worktrees <span class="accent">&amp;</span> Agent Teams</h1>
+      <p class="subtitle">From one agent to many</p>
+      <div class="speaker-notes">Welcome, introduce yourself, set the scene.</div>
+    </section>
+
+    <!-- Slide 2: The Scenario -->
+    <section class="slide">
+      <div class="stagger">
+        <h2>The scenario</h2>
+        <p style="font-size:clamp(1.3rem,2.5vw,2rem); color:var(--text);">You have <span class="accent">8 features</span> to build.</p>
+        <p style="font-size:clamp(1.3rem,2.5vw,2rem); color:var(--text);">You open Claude Code.</p>
+        <p style="font-size:clamp(1.3rem,2.5vw,2rem); color:var(--text);">You do them <span class="accent5">one at a time</span>.</p>
+        <p style="font-size:clamp(1.3rem,2.5vw,2rem); color:var(--text);">It takes <span class="accent5">all day</span>.</p>
+      </div>
+      <div class="speaker-notes">Relatable scenario — who has been here?</div>
+    </section>
+
+    <!-- Slide 3: Sequential Timeline -->
+    <section class="slide">
+      <h3>Sequential execution</h3>
+      <div class="diagram">
+        <div class="timeline">
+          <div class="timeline-row">
+            <span class="timeline-label">Agent 1</span>
+            <div class="task-block" style="width:12%; background:#58a6ff;">F1</div>
+            <div class="task-block" style="width:12%; background:#3fb950;">F2</div>
+            <div class="task-block" style="width:12%; background:#d2a8ff;">F3</div>
+            <div class="task-block" style="width:12%; background:#f0883e;">F4</div>
+            <div class="task-block" style="width:12%; background:#f85149;">F5</div>
+            <div class="task-block" style="width:12%; background:#79c0ff;">F6</div>
+            <div class="task-block" style="width:12%; background:#56d364;">F7</div>
+            <div class="task-block" style="width:12%; background:#bc8cff;">F8</div>
+          </div>
+        </div>
+        <div class="time-label accent5">~8 hours</div>
+      </div>
+      <div class="speaker-notes">This is how most people work with Claude Code today.</div>
+    </section>
+
+    <!-- Slide 4: Parallel Waves Timeline -->
+    <section class="slide">
+      <h3>Parallel execution <span class="accent">in waves</span></h3>
+      <div class="diagram">
+        <div style="display:flex; gap:2rem; width:100%; justify-content:center; align-items:flex-start;">
+          <!-- Wave 1 -->
+          <div style="flex:1; max-width:420px;">
+            <div style="text-align:center; margin-bottom:0.75rem;">
+              <span style="font-family:var(--font-mono); font-size:0.9rem; font-weight:700; color:var(--accent); background:rgba(88,166,255,0.12); padding:0.3rem 1rem; border-radius:999px; border:1px solid rgba(88,166,255,0.3);">Wave 1</span>
+            </div>
+            <div class="timeline">
+              <div class="timeline-row">
+                <span class="timeline-label">Agent 1</span>
+                <div class="task-block" style="width:90%; background:#58a6ff;">F1</div>
+              </div>
+              <div class="timeline-row">
+                <span class="timeline-label">Agent 2</span>
+                <div class="task-block" style="width:90%; background:#3fb950;">F2</div>
+              </div>
+              <div class="timeline-row">
+                <span class="timeline-label">Agent 3</span>
+                <div class="task-block" style="width:90%; background:#d2a8ff;">F3</div>
+              </div>
+              <div class="timeline-row">
+                <span class="timeline-label">Agent 4</span>
+                <div class="task-block" style="width:90%; background:#f0883e;">F4</div>
+              </div>
+            </div>
+            <div style="text-align:center; margin-top:0.5rem; font-family:var(--font-mono); font-size:0.8rem; color:var(--text-muted);">merge &rarr; review &rarr;</div>
+          </div>
+          <!-- Wave 2 -->
+          <div style="flex:1; max-width:420px;">
+            <div style="text-align:center; margin-bottom:0.75rem;">
+              <span style="font-family:var(--font-mono); font-size:0.9rem; font-weight:700; color:var(--accent2); background:rgba(63,185,80,0.12); padding:0.3rem 1rem; border-radius:999px; border:1px solid rgba(63,185,80,0.3);">Wave 2</span>
+            </div>
+            <div class="timeline">
+              <div class="timeline-row">
+                <span class="timeline-label">Agent 1</span>
+                <div class="task-block" style="width:90%; background:#79c0ff;">F5</div>
+              </div>
+              <div class="timeline-row">
+                <span class="timeline-label">Agent 2</span>
+                <div class="task-block" style="width:90%; background:#56d364;">F6</div>
+              </div>
+              <div class="timeline-row">
+                <span class="timeline-label">Agent 3</span>
+                <div class="task-block" style="width:90%; background:#bc8cff;">F7</div>
+              </div>
+              <div class="timeline-row">
+                <span class="timeline-label">Agent 4</span>
+                <div class="task-block" style="width:90%; background:#f85149;">F8</div>
+              </div>
+            </div>
+            <div style="text-align:center; margin-top:0.5rem; font-family:var(--font-mono); font-size:0.8rem; color:var(--text-muted);">merge &rarr; done</div>
+          </div>
+        </div>
+        <div class="time-label accent2" style="margin-top:1.5rem;">~2 hours <span style="color:var(--text-muted); font-size:0.8em;">(2 waves &times; 4 agents)</span></div>
+      </div>
+      <div class="speaker-notes">Same work, fraction of the time. Batch into waves — run a wave, merge, review, then launch the next wave. This is what we're learning today.</div>
+    </section>
+
+    <!-- Slide 5: The Hook -->
+    <section class="slide">
+      <p class="big-text">What if you could run <span class="accent">5 agents</span> at once, each in its own <span class="accent2">isolated branch</span>, and <span class="accent3">merge them all</span>?</p>
+      <div style="display:flex; gap:0.6rem; margin-top:2.5rem; align-items:center;">
+        <div style="width:40px; height:40px; border-radius:50%; background:var(--accent); opacity:0.8; display:flex; align-items:center; justify-content:center; font-size:0.75rem; font-weight:700; color:var(--bg);">1</div>
+        <div style="width:40px; height:40px; border-radius:50%; background:var(--accent2); opacity:0.8; display:flex; align-items:center; justify-content:center; font-size:0.75rem; font-weight:700; color:var(--bg);">2</div>
+        <div style="width:40px; height:40px; border-radius:50%; background:var(--accent3); opacity:0.8; display:flex; align-items:center; justify-content:center; font-size:0.75rem; font-weight:700; color:var(--bg);">3</div>
+        <div style="width:40px; height:40px; border-radius:50%; background:var(--accent4); opacity:0.8; display:flex; align-items:center; justify-content:center; font-size:0.75rem; font-weight:700; color:var(--bg);">4</div>
+        <div style="width:40px; height:40px; border-radius:50%; background:var(--accent5); opacity:0.8; display:flex; align-items:center; justify-content:center; font-size:0.75rem; font-weight:700; color:var(--bg);">5</div>
+        <span style="font-size:1.5rem; color:var(--text-muted); margin:0 0.5rem;">&rarr;</span>
+        <div style="font-family:var(--font-mono); font-size:0.9rem; color:var(--accent2); background:rgba(63,185,80,0.1); border:1px solid rgba(63,185,80,0.3); padding:0.5rem 1rem; border-radius:8px;">git merge &check;</div>
+      </div>
+      <p style="margin-top:2rem; font-size:clamp(0.95rem,1.5vw,1.2rem); color:var(--text-muted);">Next 40 minutes: <span class="accent">worktrees</span> &rarr; <span class="accent2">parallel workflows</span> &rarr; <span class="accent3">agent teams</span></p>
+      <div class="speaker-notes">This is the agenda for the next 40 minutes. Let's start with the foundation.</div>
+    </section>
+
+    <!-- ==================== ACT 2: WORKTREES ==================== -->
+
+    <!-- Slide 6: Act Title -->
+    <section class="slide act-title">
+      <h2>Worktrees: The Foundation</h2>
+      <div class="speaker-notes">Transition — now let's understand the key primitive.</div>
+    </section>
+
+    <!-- Slide 7: What is a git worktree? -->
+    <section class="slide">
+      <h3>What is a git worktree?</h3>
+      <div class="diagram" style="max-width:700px;">
+        <div style="display:flex; flex-direction:column; align-items:center; gap:0.5rem;">
+          <div class="arch-box" style="border-color:var(--accent4); background:rgba(240,136,62,0.1); width:200px;">
+            <span style="font-weight:700; color:var(--accent4);">.git</span><br>
+            <span style="font-size:0.8rem; color:var(--text-muted);">One repo</span>
+          </div>
+          <div style="display:flex; gap:2rem; margin-top:0.5rem;">
+            <div style="display:flex; flex-direction:column; align-items:center;">
+              <span class="arrow-down">|</span>
+              <div class="arch-box" style="border-color:var(--accent); width:180px;">
+                <span style="font-size:0.85rem; color:var(--accent);">main/</span><br>
+                <span style="font-size:0.75rem; color:var(--text-muted);">Working dir</span>
+              </div>
+            </div>
+            <div style="display:flex; flex-direction:column; align-items:center;">
+              <span class="arrow-down">|</span>
+              <div class="arch-box" style="border-color:var(--accent2); width:180px;">
+                <span style="font-size:0.85rem; color:var(--accent2);">feature-a/</span><br>
+                <span style="font-size:0.75rem; color:var(--text-muted);">Working dir</span>
+              </div>
+            </div>
+            <div style="display:flex; flex-direction:column; align-items:center;">
+              <span class="arrow-down">|</span>
+              <div class="arch-box" style="border-color:var(--accent3); width:180px;">
+                <span style="font-size:0.85rem; color:var(--accent3);">feature-b/</span><br>
+                <span style="font-size:0.75rem; color:var(--text-muted);">Working dir</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p style="margin-top:1.5rem; font-size:clamp(1.1rem,2vw,1.5rem); color:var(--text);">One repo. Multiple checkouts. Each with its own branch.</p>
+      <div class="speaker-notes">Git worktrees have been around since Git 2.5 (2015). Most people don't know they exist.</div>
+    </section>
+
+    <!-- Slide 8: Why worktrees matter -->
+    <section class="slide">
+      <h3>Why worktrees matter for agents</h3>
+      <div class="columns">
+        <div class="column" style="background:rgba(248,81,73,0.06); border:1px solid rgba(248,81,73,0.3); border-radius:8px;">
+          <h3 class="accent5">Without worktrees</h3>
+          <ul>
+            <li>Agents fight over the same files</li>
+            <li>Branch switching chaos</li>
+            <li>Uncommitted changes get trampled</li>
+            <li>One agent at a time</li>
+          </ul>
+        </div>
+        <div class="column" style="background:rgba(63,185,80,0.06); border:1px solid rgba(63,185,80,0.3); border-radius:8px;">
+          <h3 class="accent2">With worktrees</h3>
+          <ul>
+            <li>Each agent has its own copy</li>
+            <li>Zero file conflicts</li>
+            <li>Parallel work is safe</li>
+            <li>Merge when done</li>
+          </ul>
+        </div>
+      </div>
+      <div class="speaker-notes">The key insight: isolation is what makes parallelism safe.</div>
+    </section>
+
+    <!-- Slide 9: The command -->
+    <section class="slide">
+      <h3>Two ways to get a worktree</h3>
+      <div class="columns" style="max-width:950px; gap:2rem; margin-top:1rem;">
+        <div class="column" style="background:rgba(63,185,80,0.06); border:1px solid rgba(63,185,80,0.3); border-radius:8px; position:relative;">
+          <div style="position:absolute; top:-12px; right:12px; background:var(--accent2); color:var(--bg); font-size:0.7rem; font-weight:700; padding:0.2rem 0.8rem; border-radius:999px; text-transform:uppercase;">My preference</div>
+          <h3 class="accent2">Claude CLI</h3>
+          <pre style="max-width:100%; margin:0.75rem 0;"><code><span class="cmd">claude</span> <span class="flag">--worktree</span></code></pre>
+          <ul style="font-size:clamp(0.85rem,1.4vw,1rem);">
+            <li>One flag, instant worktree</li>
+            <li>Agent starts in its own branch</li>
+            <li>Minimal setup, maximum speed</li>
+          </ul>
+        </div>
+        <div class="column" style="background:rgba(210,168,255,0.06); border:1px solid rgba(210,168,255,0.3); border-radius:8px;">
+          <h3 class="accent3">Skills / Plugins</h3>
+          <pre style="max-width:100%; margin:0.75rem 0;"><code><span class="comment"># e.g. using-git-worktrees skill</span>
+<span class="cmd">/worktree</span></code></pre>
+          <ul style="font-size:clamp(0.85rem,1.4vw,1rem);">
+            <li>Skills can automate worktree creation</li>
+            <li>Custom hooks for setup &amp; cleanup</li>
+            <li>Good for team-wide conventions</li>
+          </ul>
+        </div>
+      </div>
+      <p style="margin-top:1.5rem; font-size:clamp(0.95rem,1.6vw,1.2rem); color:var(--text-muted);">Both work great — <code>claude --worktree</code> is the fastest path to get going</p>
+      <div class="speaker-notes">Two options: the CLI flag is the simplest and my personal go-to. Skills and plugins can also generate worktrees with more customisation — useful if your team has specific branch naming or setup conventions. Either way, it's just git under the hood.</div>
+    </section>
+
+    <!-- Slide 10: Directory structure -->
+    <section class="slide">
+      <h3>Worktree directory structure</h3>
+      <pre><code><span class="comment"># Your project</span>
+my-project/
+  .git/
+  .claude/
+    worktrees/
+      <span class="accent2">clever-fox-123/</span>        <span class="comment"># &larr; Agent 1's workspace</span>
+        src/
+        package.json
+        ...
+      <span class="accent3">brave-owl-456/</span>         <span class="comment"># &larr; Agent 2's workspace</span>
+        src/
+        package.json
+        ...
+  src/                          <span class="comment"># &larr; Original (main)</span>
+  package.json</code></pre>
+      <div class="speaker-notes">If the demo didn't work or was too fast, this is the reference.</div>
+    </section>
+
+    <!-- Slide 12: Key takeaway -->
+    <section class="slide">
+      <div class="stagger">
+        <h3>Key takeaway</h3>
+        <p style="font-size:clamp(1.3rem,2.2vw,1.8rem); color:var(--text);">Worktree = <span class="accent">isolated branch</span> + <span class="accent2">working directory</span></p>
+        <p style="font-size:clamp(1.3rem,2.2vw,1.8rem); color:var(--text);">Each agent gets its own <span class="accent3">sandbox</span></p>
+        <p style="font-size:clamp(1.3rem,2.2vw,1.8rem); color:var(--text);">Create a <span class="accent4">PR</span>, review, then merge — just like a <span class="accent4">feature branch</span></p>
+      </div>
+      <div class="speaker-notes">Make sure this is crystal clear before moving on.</div>
+    </section>
+
+    <!-- ==================== ACT 3: PARALLEL WORKFLOWS ==================== -->
+
+    <!-- Slide 13: Act Title -->
+    <section class="slide act-title">
+      <h2>Parallel Workflows</h2>
+      <div class="speaker-notes">Now we combine worktrees with multiple agents.</div>
+    </section>
+
+    <!-- Slide 14: The Pattern -->
+    <section class="slide">
+      <h3>The pattern</h3>
+      <div class="flow-steps">
+        <div class="flow-step">
+          <div class="step-number">1</div>
+          <div class="step-text">Decompose work into independent tasks</div>
+        </div>
+        <div class="flow-step">
+          <div class="step-number">2</div>
+          <div class="step-text">Create a worktree per task</div>
+        </div>
+        <div class="flow-step">
+          <div class="step-number">3</div>
+          <div class="step-text">Assign each task to an agent</div>
+        </div>
+        <div class="flow-step">
+          <div class="step-number">4</div>
+          <div class="step-text">Monitor progress</div>
+        </div>
+        <div class="flow-step">
+          <div class="step-number">5</div>
+          <div class="step-text">Review and merge</div>
+        </div>
+      </div>
+      <div class="speaker-notes">This is the workflow you'll practice in the hands-on session.</div>
+    </section>
+
+    <!-- Slide 15: Independence -->
+    <section class="slide">
+      <h2>Tasks <span class="accent5">MUST</span> be independent</h2>
+      <p class="subtitle" style="margin-bottom:2rem;">If Feature B depends on Feature A's output, they can't run in parallel</p>
+      <div class="columns" style="max-width:800px;">
+        <div style="text-align:center;">
+          <div style="display:flex; gap:1rem; justify-content:center; margin-bottom:1rem;">
+            <div class="arch-box" style="border-color:var(--accent2); width:100px;"><span class="accent2">A</span></div>
+            <div class="arch-box" style="border-color:var(--accent2); width:100px;"><span class="accent2">B</span></div>
+          </div>
+          <p style="color:var(--accent2); font-weight:600;">Parallel OK</p>
+        </div>
+        <div style="text-align:center;">
+          <div style="display:flex; gap:0.5rem; justify-content:center; align-items:center; margin-bottom:1rem;">
+            <div class="arch-box" style="border-color:var(--accent5); width:100px;"><span class="accent5">A</span></div>
+            <span style="font-size:1.5rem; color:var(--accent5);">&rarr;</span>
+            <div class="arch-box" style="border-color:var(--accent5); width:100px;"><span class="accent5">B</span></div>
+          </div>
+          <p style="color:var(--accent5); font-weight:600;">Must be sequential</p>
+        </div>
+      </div>
+      <div class="speaker-notes">This is the most common mistake. Spend time on decomposition.</div>
+    </section>
+
+    <!-- Slide 16: Demo parallel sessions -->
+    <section class="slide">
+      <span class="demo-badge">Live Demo</span>
+      <h2>Spinning up parallel sessions</h2>
+      <p class="subtitle">3-4 sessions running simultaneously</p>
+      <ul class="checklist" style="margin-top:2rem;">
+        <li>Spin up 3-4 sessions with different tasks</li>
+        <li>Show status indicators (Working, Idle, Finished)</li>
+        <li>Show all worktree branches in git</li>
+      </ul>
+      <div class="speaker-notes">Switch to Agent Orchestrator. This is the money shot — multiple agents working at once.</div>
+    </section>
+
+    <!-- Slide 17: Agent Orchestrator status monitoring -->
+    <section class="slide">
+      <h3>Agent Orchestrator — status monitoring</h3>
+      <div style="display:flex; gap:2rem; align-items:flex-start; margin-top:1rem; width:100%; max-width:900px;">
+        <div style="display:flex; flex-direction:column; gap:0.8rem; flex-shrink:0;">
+          <div style="display:flex; align-items:center; gap:1rem;">
+            <span style="width:16px; height:16px; border-radius:50%; background:var(--accent2); display:inline-block; animation:pulse 2s infinite;"></span>
+            <span style="color:var(--accent2); font-weight:600; width:120px;">Working</span>
+            <span style="color:var(--text-muted);">Agent is actively coding</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:1rem;">
+            <span style="width:16px; height:16px; border-radius:50%; background:#e3b341; display:inline-block;"></span>
+            <span style="color:#e3b341; font-weight:600; width:120px;">Idle</span>
+            <span style="color:var(--text-muted);">Waiting for input</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:1rem;">
+            <span style="width:16px; height:16px; border-radius:50%; background:var(--accent4); display:inline-block;"></span>
+            <span style="color:var(--accent4); font-weight:600; width:120px;">Needs Attention</span>
+            <span style="color:var(--text-muted);">Agent is stuck or has a question</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:1rem;">
+            <span style="width:16px; height:16px; border-radius:50%; background:var(--accent); display:inline-block;"></span>
+            <span style="color:var(--accent); font-weight:600; width:120px;">Finished</span>
+            <span style="color:var(--text-muted);">Ready for review</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:1rem;">
+            <span style="width:16px; height:16px; border-radius:50%; background:var(--accent5); display:inline-block;"></span>
+            <span style="color:var(--accent5); font-weight:600; width:120px;">Error</span>
+            <span style="color:var(--text-muted);">Something went wrong</span>
+          </div>
+        </div>
+        <img src="assets/hero-demo.gif" alt="Agent Orchestrator demo" style="max-width:700px; width:100%; border-radius:8px; border:1px solid var(--border-color); box-shadow:0 4px 16px rgba(0,0,0,0.3);"/>
+      </div>
+      <div class="speaker-notes">You need visibility into what each agent is doing. Agent Orchestrator gives you this dashboard.</div>
+    </section>
+
+    <!-- Slide 18: Demo merging -->
+    <section class="slide">
+      <span class="demo-badge">Live Demo</span>
+      <h2>Merging a worktree</h2>
+      <p class="subtitle">Completed worktree back to main</p>
+      <pre style="margin-top:1.5rem;"><code><span class="comment"># 1. Switch to main</span>
+<span class="cmd">cd</span> /path/to/project
+<span class="cmd">git</span> checkout main
+
+<span class="comment"># 2. Merge the worktree branch</span>
+<span class="cmd">git</span> <span class="flag">merge</span> worktree-clever-fox-123
+
+<span class="comment"># 3. Clean up the worktree</span>
+<span class="cmd">git</span> worktree remove .claude/worktrees/clever-fox-123</code></pre>
+      <div class="callout" style="margin-top:1rem;">
+        <p style="font-size:clamp(0.9rem,1.4vw,1.1rem);"><span class="accent2" style="font-weight:600;">Why no conflicts?</span> Each agent worked on different files in its own directory. Independent work = clean merges.</p>
+      </div>
+      <div class="speaker-notes">Show a clean merge. Emphasise: because the work was independent, there are no conflicts.</div>
+    </section>
+
+    <!-- Slide 19: Full lifecycle -->
+    <section class="slide">
+      <h3>The full picture</h3>
+      <svg class="lifecycle-svg" viewBox="0 0 800 360" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Main branch line -->
+        <line x1="50" y1="40" x2="750" y2="40" stroke="#8b949e" stroke-width="3"/>
+        <text x="30" y="44" fill="#8b949e" font-size="13" text-anchor="end">main</text>
+        <circle cx="100" cy="40" r="6" fill="#8b949e"/>
+        <circle cx="700" cy="40" r="6" fill="#8b949e"/>
+
+        <!-- Branch 1 (blue) -->
+        <path d="M 100,40 V 100 Q 100,110 110,110 H 180" stroke="#58a6ff" stroke-width="2" stroke-dasharray="6,3" fill="none"/>
+        <line x1="180" y1="110" x2="500" y2="110" stroke="#58a6ff" stroke-width="3"/>
+        <path d="M 500,110 H 570 Q 580,110 580,100 V 40" stroke="#58a6ff" stroke-width="2" stroke-dasharray="6,3" fill="none"/>
+        <rect x="200" y="94" width="280" height="32" rx="6" fill="rgba(88,166,255,0.15)" stroke="#58a6ff" stroke-width="1.5"/>
+        <text x="340" y="115" fill="#58a6ff" font-size="13" text-anchor="middle">Feature: TODO Debt Tracker</text>
+
+        <!-- Branch 2 (green) -->
+        <path d="M 100,40 V 170 Q 100,180 110,180 H 180" stroke="#3fb950" stroke-width="2" stroke-dasharray="6,3" fill="none"/>
+        <line x1="180" y1="180" x2="550" y2="180" stroke="#3fb950" stroke-width="3"/>
+        <path d="M 550,180 H 630 Q 640,180 640,170 V 40" stroke="#3fb950" stroke-width="2" stroke-dasharray="6,3" fill="none"/>
+        <rect x="200" y="164" width="330" height="32" rx="6" fill="rgba(63,185,80,0.15)" stroke="#3fb950" stroke-width="1.5"/>
+        <text x="365" y="185" fill="#3fb950" font-size="13" text-anchor="middle">Feature: Dead Code Detector</text>
+
+        <!-- Branch 3 (purple) -->
+        <path d="M 100,40 V 240 Q 100,250 110,250 H 180" stroke="#d2a8ff" stroke-width="2" stroke-dasharray="6,3" fill="none"/>
+        <line x1="180" y1="250" x2="450" y2="250" stroke="#d2a8ff" stroke-width="3"/>
+        <path d="M 450,250 H 530 Q 540,250 540,240 V 40" stroke="#d2a8ff" stroke-width="2" stroke-dasharray="6,3" fill="none"/>
+        <rect x="200" y="234" width="230" height="32" rx="6" fill="rgba(210,168,255,0.15)" stroke="#d2a8ff" stroke-width="1.5"/>
+        <text x="315" y="255" fill="#d2a8ff" font-size="13" text-anchor="middle">Feature: Doc Health</text>
+
+        <!-- Branch 4 (orange) -->
+        <path d="M 100,40 V 310 Q 100,320 110,320 H 180" stroke="#f0883e" stroke-width="2" stroke-dasharray="6,3" fill="none"/>
+        <line x1="180" y1="320" x2="580" y2="320" stroke="#f0883e" stroke-width="3"/>
+        <path d="M 580,320 H 650 Q 660,320 660,310 V 40" stroke="#f0883e" stroke-width="2" stroke-dasharray="6,3" fill="none"/>
+        <rect x="200" y="304" width="360" height="32" rx="6" fill="rgba(240,136,62,0.15)" stroke="#f0883e" stroke-width="1.5"/>
+        <text x="380" y="325" fill="#f0883e" font-size="13" text-anchor="middle">Feature: Dependency Staleness</text>
+
+        <!-- Merge dots -->
+        <circle cx="540" cy="40" r="5" fill="#d2a8ff"/>
+        <circle cx="580" cy="40" r="5" fill="#58a6ff"/>
+        <circle cx="640" cy="40" r="5" fill="#3fb950"/>
+        <circle cx="660" cy="40" r="5" fill="#f0883e"/>
+
+        <!-- Time arrow -->
+        <line x1="50" y1="350" x2="750" y2="350" stroke="#30363d" stroke-width="1"/>
+        <polygon points="750,346 750,354 762,350" fill="#30363d"/>
+        <text x="400" y="345" fill="#8b949e" font-size="11" text-anchor="middle">time &rarr; parallel execution</text>
+      </svg>
+      <div class="speaker-notes">This is what your git history looks like when you work this way.</div>
+    </section>
+
+    <!-- Slide 20: Common pitfalls -->
+    <section class="slide">
+      <h3>Common pitfalls</h3>
+      <div style="display:flex; flex-direction:column; gap:1.2rem; max-width:800px; width:100%; margin-top:1.5rem;">
+        <div style="display:flex; align-items:flex-start; gap:1rem; background:rgba(248,81,73,0.06); border:1px solid rgba(248,81,73,0.2); border-radius:8px; padding:1rem 1.2rem;">
+          <span style="font-size:1.5rem; flex-shrink:0;">&#9888;</span>
+          <div style="text-align:left;">
+            <p style="color:var(--accent5); font-weight:600; font-size:clamp(1rem,1.6vw,1.2rem); margin-bottom:0.3rem;">Don't edit shared files across worktrees</p>
+            <p style="font-size:clamp(0.85rem,1.3vw,1rem);">Shared config, types, or entry points edited by multiple agents = merge conflicts. Give each agent its own files.</p>
+          </div>
+        </div>
+        <div style="display:flex; align-items:flex-start; gap:1rem; background:rgba(240,136,62,0.06); border:1px solid rgba(240,136,62,0.2); border-radius:8px; padding:1rem 1.2rem;">
+          <span style="font-size:1.5rem; flex-shrink:0;">&#9200;</span>
+          <div style="text-align:left;">
+            <p style="color:var(--accent4); font-weight:600; font-size:clamp(1rem,1.6vw,1.2rem); margin-bottom:0.3rem;">Start hard tasks first</p>
+            <p style="font-size:clamp(0.85rem,1.3vw,1rem);">Complex features need more wall-clock time. Launch them in Wave 1 so they run while you tackle easier tasks.</p>
+          </div>
+        </div>
+        <div style="display:flex; align-items:flex-start; gap:1rem; background:rgba(88,166,255,0.06); border:1px solid rgba(88,166,255,0.2); border-radius:8px; padding:1rem 1.2rem;">
+          <span style="font-size:1.5rem; flex-shrink:0;">&#128269;</span>
+          <div style="text-align:left;">
+            <p style="color:var(--accent); font-weight:600; font-size:clamp(1rem,1.6vw,1.2rem); margin-bottom:0.3rem;">Review before merging</p>
+            <p style="font-size:clamp(0.85rem,1.3vw,1rem);">Agents make mistakes too. Treat each worktree branch like a PR — read the diff, run the tests, then merge.</p>
+          </div>
+        </div>
+      </div>
+      <div class="speaker-notes">Quick hits before we move to agent teams.</div>
+    </section>
+
+    <!-- ==================== ACT 4: AGENT TEAMS ==================== -->
+
+    <!-- Slide 21: Act Title -->
+    <section class="slide act-title">
+      <h2>Agent Teams &amp;<br>When to Use What</h2>
+      <div class="speaker-notes">Final concept section before the workshop.</div>
+    </section>
+
+    <!-- Slide 22: What are agent teams? -->
+    <section class="slide">
+      <h3>What are agent teams?</h3>
+      <p style="margin-bottom:1.5rem; color:var(--text);">Claude Code coordinates a <span class="accent">team lead</span> + <span class="accent2">teammates</span></p>
+      <div class="arch-grid" style="grid-template-columns:1fr; justify-items:center; gap:0.5rem;">
+        <div class="arch-box lead" style="width:220px;">
+          <span style="font-weight:700; color:var(--accent);">Team Lead</span><br>
+          <span style="font-size:0.8rem; color:var(--text-muted);">Creates tasks, coordinates</span>
+        </div>
+        <div class="arrow-down">&darr;</div>
+        <div style="display:flex; gap:1rem; flex-wrap:wrap; justify-content:center;">
+          <div class="arch-box teammate" style="width:160px;">
+            <span style="font-weight:600; color:var(--accent2);">Teammate 1</span><br>
+            <span style="font-size:0.75rem; color:var(--text-muted);">Own context</span>
+          </div>
+          <div class="arch-box teammate" style="width:160px;">
+            <span style="font-weight:600; color:var(--accent2);">Teammate 2</span><br>
+            <span style="font-size:0.75rem; color:var(--text-muted);">Own context</span>
+          </div>
+          <div class="arch-box teammate" style="width:160px;">
+            <span style="font-weight:600; color:var(--accent2);">Teammate 3</span><br>
+            <span style="font-size:0.75rem; color:var(--text-muted);">Own context</span>
+          </div>
+        </div>
+        <div class="arrow-down">&darr;</div>
+        <div class="arch-box shared" style="width:300px;">
+          <span style="font-weight:600; color:var(--accent3);">Shared Task List + Mailboxes</span>
+        </div>
+      </div>
+      <div class="speaker-notes">This is a step up from manual parallel sessions. Claude Code manages the coordination.</div>
+    </section>
+
+    <!-- Slide 23: Subagents vs Agent Teams -->
+    <section class="slide">
+      <h3>Subagents vs Agent Teams</h3>
+      <table>
+        <thead>
+          <tr>
+            <th></th>
+            <th>Subagents</th>
+            <th>Agent Teams</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="color:var(--text); font-weight:600;">Context</td>
+            <td>Own window; results return to caller</td>
+            <td>Own window; fully independent</td>
+          </tr>
+          <tr>
+            <td style="color:var(--text); font-weight:600;">Communication</td>
+            <td>Report back to main agent only</td>
+            <td>Teammates message each other directly</td>
+          </tr>
+          <tr>
+            <td style="color:var(--text); font-weight:600;">Coordination</td>
+            <td>Main agent manages all work</td>
+            <td>Shared task list with self-coordination</td>
+          </tr>
+          <tr>
+            <td style="color:var(--text); font-weight:600;">Best for</td>
+            <td>Focused tasks — only the result matters</td>
+            <td>Complex work requiring collaboration</td>
+          </tr>
+          <tr>
+            <td style="color:var(--text); font-weight:600;">Token cost</td>
+            <td style="color:var(--accent2);">Lower</td>
+            <td style="color:var(--accent4);">Higher</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="speaker-notes">Use subagents when you just need a result. Use agent teams when agents need to talk.</div>
+    </section>
+
+    <!-- Slide 24: Architecture comparison -->
+    <section class="slide">
+      <h3>Architecture comparison</h3>
+      <div class="side-by-side">
+        <div>
+          <h3 class="accent">Subagent Model</h3>
+          <div style="display:flex; flex-direction:column; align-items:center; gap:0.5rem;">
+            <div class="arch-box" style="border-color:var(--accent); width:140px;">
+              <span style="font-size:0.85rem; color:var(--accent);">Parent</span>
+            </div>
+            <span style="color:var(--text-muted);">&darr; dispatch &darr;</span>
+            <div style="display:flex; gap:0.5rem;">
+              <div class="arch-box" style="border-color:var(--text-muted); width:80px; font-size:0.75rem;">Child 1</div>
+              <div class="arch-box" style="border-color:var(--text-muted); width:80px; font-size:0.75rem;">Child 2</div>
+            </div>
+            <span style="color:var(--text-muted);">&uarr; result &uarr;</span>
+          </div>
+        </div>
+        <div>
+          <h3 class="accent2">Agent Team Model</h3>
+          <div style="display:flex; flex-direction:column; align-items:center; gap:0.5rem;">
+            <div class="arch-box lead" style="width:140px;">
+              <span style="font-size:0.85rem; color:var(--accent);">Lead</span>
+            </div>
+            <span style="color:var(--text-muted);">&harr; messages &harr;</span>
+            <div style="display:flex; gap:0.5rem;">
+              <div class="arch-box teammate" style="width:80px; font-size:0.75rem;">T1</div>
+              <div class="arch-box teammate" style="width:80px; font-size:0.75rem;">T2</div>
+            </div>
+            <span style="color:var(--text-muted);">&darr;</span>
+            <div class="arch-box shared" style="width:180px; font-size:0.75rem;">Shared Tasks</div>
+          </div>
+        </div>
+      </div>
+      <div class="speaker-notes">Visual reinforcement of the table.</div>
+    </section>
+
+    <!-- Slide 25: Honest take -->
+    <section class="slide">
+      <h3>My honest take</h3>
+      <div class="stagger">
+        <p style="font-size:clamp(1.1rem,2vw,1.5rem); color:var(--text);">I use agent teams to get a <span class="accent">plan built quicker</span></p>
+        <p style="font-size:clamp(1.1rem,2vw,1.5rem); color:var(--text);">Spin up teammates to <span class="accent2">research, explore, validate</span> different angles</p>
+        <p style="font-size:clamp(1.1rem,2vw,1.5rem); color:var(--text);">Arrive at a <span class="accent3">solid plan</span> faster</p>
+        <p style="font-size:clamp(1.1rem,2vw,1.5rem); color:var(--text);">For implementation &rarr; <span class="accent4">worktrees and parallel sessions</span></p>
+      </div>
+      <div class="speaker-notes">Be real with the audience. Agent teams are great for planning, not great for implementation orchestration.</div>
+    </section>
+
+    <!-- Slide 26: Where agent teams struggle -->
+    <section class="slide">
+      <h3>Where agent teams struggle</h3>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; max-width:850px; width:100%; margin-top:1.5rem;">
+        <div style="background:var(--bg-alt); border:1px solid var(--border); border-radius:8px; padding:1rem 1.2rem; text-align:left;">
+          <p style="color:var(--accent5); font-weight:600; font-size:clamp(0.9rem,1.4vw,1.1rem); margin-bottom:0.4rem;">Cross-feature orchestration</p>
+          <p style="font-size:clamp(0.8rem,1.2vw,0.95rem);">Teams work well within one feature, but coordinating across multiple features with dependencies is hard.</p>
+        </div>
+        <div style="background:var(--bg-alt); border:1px solid var(--border); border-radius:8px; padding:1rem 1.2rem; text-align:left;">
+          <p style="color:var(--accent5); font-weight:600; font-size:clamp(0.9rem,1.4vw,1.1rem); margin-bottom:0.4rem;">No session resumption</p>
+          <p style="font-size:clamp(0.8rem,1.2vw,0.95rem);">If you close the session, in-process teammates are lost. You can't pick up where you left off.</p>
+        </div>
+        <div style="background:var(--bg-alt); border:1px solid var(--border); border-radius:8px; padding:1rem 1.2rem; text-align:left;">
+          <p style="color:var(--accent5); font-weight:600; font-size:clamp(0.9rem,1.4vw,1.1rem); margin-bottom:0.4rem;">Task status lag</p>
+          <p style="font-size:clamp(0.8rem,1.2vw,0.95rem);">The shared task list doesn't always reflect real-time progress. Teammates may duplicate work.</p>
+        </div>
+        <div style="background:var(--bg-alt); border:1px solid var(--border); border-radius:8px; padding:1rem 1.2rem; text-align:left;">
+          <p style="color:var(--accent5); font-weight:600; font-size:clamp(0.9rem,1.4vw,1.1rem); margin-bottom:0.4rem;">One team at a time</p>
+          <p style="font-size:clamp(0.8rem,1.2vw,0.95rem);">You can't run multiple teams in parallel. For that, use worktrees with separate sessions.</p>
+        </div>
+      </div>
+      <p style="margin-top:1.2rem; font-family:var(--font-mono); font-size:clamp(0.8rem,1.2vw,0.95rem); color:var(--accent4);">Still experimental — expect rough edges</p>
+      <div class="speaker-notes">Don't oversell. These are real limitations.</div>
+    </section>
+
+    <!-- Slide 27: Best practices -->
+    <section class="slide">
+      <h3>Best practices</h3>
+      <ul style="margin-top:1rem;">
+        <li><span class="accent">3-5 teammates</span> — sweet spot for coordination</li>
+        <li><span class="accent2">5-6 tasks per teammate</span> — enough to stay busy</li>
+        <li><span class="accent3">Each teammate owns different files</span> — avoid conflicts</li>
+        <li><span class="accent4">Start with research/review</span> — build confidence first</li>
+      </ul>
+      <div class="speaker-notes">Quick practical tips if they want to try agent teams after this session.</div>
+    </section>
+
+    <!-- Slide 28: Higher-level orchestration -->
+    <section class="slide">
+      <h3>For higher-level orchestration</h3>
+      <p style="margin-bottom:1.5rem; color:var(--text-muted);">Want multi-feature orchestration? These frameworks go beyond what we cover today:</p>
+      <div style="display:flex; flex-direction:column; gap:1rem; max-width:800px; width:100;">
+        <div style="display:flex; align-items:center; gap:1.2rem; background:rgba(88,166,255,0.06); border:1px solid rgba(88,166,255,0.2); border-radius:8px; padding:1rem 1.5rem; text-align:left;">
+          <span style="font-size:clamp(1.2rem,2vw,1.6rem); font-weight:700; color:var(--accent); min-width:160px;">Gastown</span>
+          <span style="font-size:clamp(0.85rem,1.3vw,1rem);">Multi-agent orchestration across repos. Coordinates feature-level work with cross-repo dependencies.</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:1.2rem; background:rgba(63,185,80,0.06); border:1px solid rgba(63,185,80,0.2); border-radius:8px; padding:1rem 1.5rem; text-align:left;">
+          <span style="font-size:clamp(1.2rem,2vw,1.6rem); font-weight:700; color:var(--accent2); min-width:160px;">Citadel</span>
+          <span style="font-size:clamp(0.85rem,1.3vw,1rem);">Dependency-aware task scheduling. Knows which tasks block others and sequences them automatically.</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:1.2rem; background:rgba(210,168,255,0.06); border:1px solid rgba(210,168,255,0.2); border-radius:8px; padding:1rem 1.5rem; text-align:left;">
+          <span style="font-size:clamp(1.2rem,2vw,1.6rem); font-weight:700; color:var(--accent3); min-width:160px;">Mission Control</span>
+          <span style="font-size:clamp(0.85rem,1.3vw,1rem);">Higher-level orchestration layer that manages agent teams across multiple features and projects.</span>
+        </div>
+      </div>
+      <div class="speaker-notes">Pointer for self-study. We won't cover these today.</div>
+    </section>
+
+    <!-- Slide 29: The Spectrum -->
+    <section class="slide">
+      <h3>The spectrum</h3>
+      <div class="spectrum" style="margin-top:2rem;">
+        <div class="spectrum-item" style="background:rgba(88,166,255,0.1); border:1px solid rgba(88,166,255,0.3); border-radius:8px 0 0 8px;">
+          <div class="label">Single Agent</div>
+          <div class="sublabel">Simple tasks</div>
+        </div>
+        <div class="spectrum-item" style="background:rgba(63,185,80,0.15); border:2px solid var(--accent2); position:relative;">
+          <div class="you-are-here">YOU ARE HERE</div>
+          <div class="label" style="color:var(--accent2);">Worktrees +<br>Parallel Sessions</div>
+          <div class="sublabel">Today's focus</div>
+        </div>
+        <div class="spectrum-item" style="background:rgba(210,168,255,0.1); border:1px solid rgba(210,168,255,0.3);">
+          <div class="label">Agent Teams</div>
+          <div class="sublabel">Planning acceleration</div>
+        </div>
+        <div class="spectrum-item" style="background:rgba(240,136,62,0.1); border:1px solid rgba(240,136,62,0.3); border-radius:0 8px 8px 0;">
+          <div class="label">Full Orchestration</div>
+          <div class="sublabel">Gastown / Citadel / MC</div>
+        </div>
+      </div>
+      <div class="speaker-notes">Position what we've learned on the spectrum. Today we practice the sweet spot.</div>
+    </section>
+
+    <!-- Slide 30: Questions -->
+    <section class="slide">
+      <h1>Questions?</h1>
+      <p class="subtitle">Before we jump into the hands-on session</p>
+      <div class="speaker-notes">5 min buffer. Take questions. If no questions, use the time to let people set up early.</div>
+    </section>
+
+    <!-- ==================== WORKSHOP TRANSITION ==================== -->
+
+    <!-- Slide 31: Transition -->
+    <section class="slide" style="background:linear-gradient(135deg, var(--bg) 0%, #0a1628 100%);">
+      <h2 style="font-size:clamp(2.5rem,5vw,4rem);">Let's put this into practice</h2>
+      <div class="stagger" style="margin-top:2rem;">
+        <p style="font-size:clamp(1.2rem,2vw,1.6rem); color:var(--text);">You'll build a <span class="accent">Repo Doctor</span> tool using parallel worktrees</p>
+        <p style="font-size:clamp(1.2rem,2vw,1.6rem); color:var(--text-muted);">45 min slides &check; &rarr; 1h45 hands-on</p>
+      </div>
+      <div style="display:flex; gap:1.5rem; margin-top:2.5rem; flex-wrap:wrap; justify-content:center;">
+        <div style="background:rgba(88,166,255,0.08); border:1px solid rgba(88,166,255,0.25); border-radius:8px; padding:0.8rem 1.2rem; text-align:center;">
+          <p style="font-size:clamp(1.5rem,3vw,2.5rem); font-weight:700; color:var(--accent);">5</p>
+          <p style="font-size:0.85rem; color:var(--text-muted);">Core analyzers</p>
+        </div>
+        <div style="background:rgba(210,168,255,0.08); border:1px solid rgba(210,168,255,0.25); border-radius:8px; padding:0.8rem 1.2rem; text-align:center;">
+          <p style="font-size:clamp(1.5rem,3vw,2.5rem); font-weight:700; color:var(--accent3);">3</p>
+          <p style="font-size:0.85rem; color:var(--text-muted);">Stretch goals</p>
+        </div>
+        <div style="background:rgba(63,185,80,0.08); border:1px solid rgba(63,185,80,0.25); border-radius:8px; padding:0.8rem 1.2rem; text-align:center;">
+          <p style="font-size:clamp(1.5rem,3vw,2.5rem); font-weight:700; color:var(--accent2);">1</p>
+          <p style="font-size:0.85rem; color:var(--text-muted);">HTML report</p>
+        </div>
+      </div>
+      <div class="speaker-notes">Bridge to the hands-on section. The numbers give a quick sense of scope.</div>
+    </section>
+
+    <!-- Slide 32: Workshop overview -->
+    <section class="slide">
+      <h3>What you're building</h3>
+      <p style="margin-bottom:1rem; color:var(--text);"><code>repo-doctor</code> — a CLI that produces an HTML health report</p>
+      <pre><code><span class="cmd">repo-doctor</span> /path/to/any/repo <span class="flag">--output</span> report.html</code></pre>
+      <ul style="margin-top:1.5rem;">
+        <li><span class="accent">5 core analyzers</span> — everyone should complete</li>
+        <li><span class="accent3">3 stretch analyzers</span> — for fast finishers</li>
+        <li>Each analyzer is <span class="accent2">independent</span> — perfect for parallel worktrees</li>
+      </ul>
+      <div class="speaker-notes">Quick preview of what they'll build.</div>
+    </section>
+
+    <!-- Slide 33: Workshop timeline -->
+    <section class="slide">
+      <h3>Your next 1h45</h3>
+      <table class="workshop-timeline">
+        <tbody>
+          <tr>
+            <td>0:00-0:10</td>
+            <td>Setup</td>
+            <td>Clone, install, run skeleton</td>
+          </tr>
+          <tr>
+            <td>0:10-0:20</td>
+            <td>Plan</td>
+            <td>Read EPIC.md, set up worktrees</td>
+          </tr>
+          <tr>
+            <td>0:20-1:20</td>
+            <td>Build</td>
+            <td>Parallel agents, one per worktree</td>
+          </tr>
+          <tr>
+            <td>1:20-1:35</td>
+            <td>Merge &amp; Run</td>
+            <td>Merge branches, view report</td>
+          </tr>
+          <tr>
+            <td>1:35-1:45</td>
+            <td>Show &amp; Tell</td>
+            <td>Share results, discuss workflow</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="speaker-notes">Set expectations for timing.</div>
+    </section>
+
+    <!-- Slide 34: Quick start -->
+    <section class="slide">
+      <h3>Quick start</h3>
+      <pre><code><span class="cmd">git</span> clone &lt;repo-url&gt;
+<span class="cmd">cd</span> repo-doctor
+<span class="cmd">bun</span> install          <span class="comment"># or: bundle install</span>
+<span class="cmd">bun</span> run doctor test-fixtures/unhealthy-repo/</code></pre>
+      <div class="callout" style="margin-top:1.5rem; border-left-color:var(--accent2);">
+        <p style="font-size:clamp(0.9rem,1.4vw,1.1rem);"><span class="accent2" style="font-weight:600;">What you'll see:</span> The skeleton runs a sample "file count" analyzer against the test fixture repo and generates an HTML report. This proves everything works before you start building your own analyzers.</p>
+      </div>
+      <div style="display:flex; gap:1rem; margin-top:1.2rem; justify-content:center; flex-wrap:wrap;">
+        <span style="font-family:var(--font-mono); font-size:0.85rem; background:var(--bg-alt); border:1px solid var(--border); padding:0.4rem 1rem; border-radius:6px; color:var(--text-muted);">Node 20+ &check;</span>
+        <span style="font-family:var(--font-mono); font-size:0.85rem; background:var(--bg-alt); border:1px solid var(--border); padding:0.4rem 1rem; border-radius:6px; color:var(--text-muted);">bun or yarn &check;</span>
+        <span style="font-family:var(--font-mono); font-size:0.85rem; background:var(--bg-alt); border:1px solid var(--border); padding:0.4rem 1rem; border-radius:6px; color:var(--text-muted);">Claude Code v2.1.32+ &check;</span>
+      </div>
+      <div class="speaker-notes">This is what they do in the first 10 minutes. The prerequisite badges remind them what they need installed.</div>
+    </section>
+
+    <!-- Slide 35: Parallel workflow recap -->
+    <section class="slide">
+      <h3>The parallel workflow</h3>
+      <pre><code><span class="comment"># Terminal 1</span>
+<span class="cmd">claude</span> <span class="flag">--worktree</span>
+<span class="prompt">&gt;</span> <span class="string">"Implement the TODO/FIXME Debt Tracker per EPIC.md"</span>
+
+<span class="comment"># Terminal 2</span>
+<span class="cmd">claude</span> <span class="flag">--worktree</span>
+<span class="prompt">&gt;</span> <span class="string">"Implement the Dead Code Detector per EPIC.md"</span>
+
+<span class="comment"># Terminal 3</span>
+<span class="cmd">claude</span> <span class="flag">--worktree</span>
+<span class="prompt">&gt;</span> <span class="string">"Implement the Dependency Staleness Checker per EPIC.md"</span></code></pre>
+      <div class="speaker-notes">Concrete commands they'll run. Reference slide they can come back to.</div>
+    </section>
+
+    <!-- Slide 36: Go! -->
+    <section class="slide" style="background:linear-gradient(135deg, var(--bg) 0%, #0a1628 100%);">
+      <h1 style="font-size:clamp(4rem,8vw,8rem); background:linear-gradient(135deg, var(--accent2), var(--accent)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;">Go build.</h1>
+      <p class="subtitle" style="margin-top:1rem;">Read EPIC.md. Decompose. Parallelise. Merge.</p>
+      <div class="speaker-notes">Release them. Walk around and help.</div>
+    </section>
+
+  </div>
+  </div><!-- end slide-panel -->
+
+  <div class="notes-panel" id="notesPanel">
+    <div class="notes-panel-header">Speaker Notes</div>
+
+    <!-- 0: Title -->
+    <div class="notes-content" data-slide="0">
+      <p class="timing">~1 min</p>
+      <div class="key-point">Welcome everyone. Introduce yourself and set the scene.</div>
+      <h4>Talking points</h4>
+      <ul>
+        <li>Introduce yourself — name, role, how long you've been using Claude Code</li>
+        <li>"Today we're going to learn how to 10x your throughput by running multiple Claude agents in parallel"</li>
+        <li>Set expectations: ~40 min presentation, then hands-on workshop</li>
+        <li>Ask: "How many of you use Claude Code daily?" — gauge the room</li>
+      </ul>
+    </div>
+
+    <!-- 1: The scenario -->
+    <div class="notes-content" data-slide="1">
+      <p class="timing">~2 min</p>
+      <div class="key-point">Relatable scenario — get audience nodding along.</div>
+      <h4>Talking points</h4>
+      <ul>
+        <li>Paint the picture: Friday afternoon, PM drops a big feature request</li>
+        <li>"You've got Claude Code, it's great — but you're still doing one thing at a time"</li>
+        <li>Ask for a show of hands: "Who's had a task list that felt overwhelming even with AI help?"</li>
+        <li>Transition: "What if you could run 4 agents at once, each on a different part of the problem?"</li>
+      </ul>
+    </div>
+
+    <!-- 2: Sequential execution -->
+    <div class="notes-content" data-slide="2">
+      <p class="timing">~2 min</p>
+      <div class="key-point">This is how most people work with Claude Code today — one task at a time.</div>
+      <h4>Talking points</h4>
+      <ul>
+        <li>Walk through the timeline: task A finishes, then B starts, then C…</li>
+        <li>"Even though Claude is fast, you're bottlenecked by serialisation"</li>
+        <li>The human is the scheduler — context-switching between reviewing and prompting</li>
+        <li>Total wall-clock time = sum of all tasks</li>
+      </ul>
+    </div>
+
+    <!-- 3: Parallel execution in waves -->
+    <div class="notes-content" data-slide="3">
+      <p class="timing">~3 min</p>
+      <div class="key-point">Same work, fraction of the time. Batch into waves — run a wave, merge, review, then launch the next.</div>
+      <h4>Talking points</h4>
+      <ul>
+        <li>Point to the diagram: "Wave 1 runs 3 tasks simultaneously. Wall-clock time = longest task, not the sum"</li>
+        <li>After wave 1 completes, merge results, then launch wave 2</li>
+        <li>Key insight: you need tasks that DON'T depend on each other — we'll cover decomposition later</li>
+        <li>"This is what we're going to practice in the hands-on section"</li>
+        <li>Rough numbers: 4 independent tasks x 15 min each = 15 min parallel vs 60 min sequential</li>
+      </ul>
+    </div>
+
+    <!-- 4: "What if..." pitch -->
+    <div class="notes-content" data-slide="4">
+      <p class="timing">~30 sec</p>
+      <div class="key-point">This is the agenda / thesis statement. Let it land.</div>
+      <ul>
+        <li>Read the slide text with emphasis. Let the audience absorb it.</li>
+        <li>"This is exactly what we're going to learn today — and then you'll do it yourself."</li>
+      </ul>
+    </div>
+
+    <!-- 5: What is a git worktree? -->
+    <div class="notes-content" data-slide="5">
+      <p class="timing">~3 min</p>
+      <div class="key-point">Git worktrees have been around since Git 2.5 (2015). Most people don't know they exist.</div>
+      <h4>Talking points</h4>
+      <ul>
+        <li>A worktree is a second (or third, or fourth) checkout of the SAME repo</li>
+        <li>Each worktree has its own working directory and branch, but shares the .git history</li>
+        <li>"Think of it like having multiple browser tabs of the same repo, each on a different branch"</li>
+        <li>Unlike <code>git clone</code>, worktrees share objects — they're lightweight and instant</li>
+        <li>You can <code>cd</code> into any worktree and it's a fully functional git checkout</li>
+      </ul>
+    </div>
+
+    <!-- 6: Why worktrees matter for agents -->
+    <div class="notes-content" data-slide="6">
+      <p class="timing">~2 min</p>
+      <div class="key-point">The key insight: isolation is what makes parallelism safe.</div>
+      <h4>Talking points</h4>
+      <ul>
+        <li><strong>Without worktrees:</strong> Two agents editing the same working directory = race conditions, file conflicts, corrupted state</li>
+        <li><strong>With worktrees:</strong> Each agent gets its own directory, own branch, own files — complete isolation</li>
+        <li>"It's the difference between two people editing the same Google Doc vs two people editing their own copies"</li>
+        <li>This is WHY parallel agents work — not magic, just good isolation</li>
+      </ul>
+    </div>
+
+    <!-- 7: Two ways to get a worktree -->
+    <div class="notes-content" data-slide="7">
+      <p class="timing">~2 min</p>
+      <div class="key-point">Two options: CLI flag is simplest. Skills/plugins offer more customisation.</div>
+      <h4>Talking points</h4>
+      <ul>
+        <li><strong>Option 1 — Claude CLI:</strong> <code>claude --worktree</code> is the simplest — one flag and you're in an isolated worktree</li>
+        <li><strong>Option 2 — Skills/Plugins:</strong> For teams with naming conventions or setup scripts, plugins can automate worktree creation with custom logic</li>
+        <li>"My personal go-to is the CLI flag — it's fast and no setup required"</li>
+        <li>Either way it's just <code>git worktree add</code> under the hood</li>
+      </ul>
+    </div>
+
+    <!-- 8: Worktree directory structure -->
+    <div class="notes-content" data-slide="8">
+      <p class="timing">~1 min</p>
+      <div class="key-point">Reference slide — if the demo was too fast, this is the reference.</div>
+      <h4>Talking points</h4>
+      <ul>
+        <li>Point to the tree: worktrees live under <code>.claude/worktrees/</code></li>
+        <li>Each gets an auto-generated name (or you can name them)</li>
+        <li>"This is what your filesystem looks like when you have 3 agents running"</li>
+      </ul>
+    </div>
+
+    <!-- 9: Key takeaway -->
+    <div class="notes-content" data-slide="9">
+      <p class="timing">~30 sec</p>
+      <div class="key-point">Make sure this is crystal clear before moving on.</div>
+      <ul>
+        <li>Pause here. "Does everyone get this? Worktree = isolated directory + isolated branch. Questions?"</li>
+        <li>If anyone looks confused, draw the mental model: one .git, multiple working directories</li>
+      </ul>
+    </div>
+
+    <!-- 10: The pattern -->
+    <div class="notes-content" data-slide="10">
+      <p class="timing">~3 min</p>
+      <div class="key-point">This is the workflow they'll practice in the hands-on session. Walk through each step carefully.</div>
+      <h4>Talking points</h4>
+      <ul>
+        <li><strong>Step 1 — Decompose:</strong> Break the project into independent tasks. This is the hardest and most important step.</li>
+        <li><strong>Step 2 — Spawn:</strong> Launch one Claude session per task, each in its own worktree</li>
+        <li><strong>Step 3 — Monitor:</strong> Check status, review output as agents work</li>
+        <li><strong>Step 4 — Merge:</strong> Bring completed work back to main one branch at a time</li>
+        <li>"Think of yourself as a project manager, not a coder. Your job is decomposition and review."</li>
+      </ul>
+    </div>
+
+    <!-- 11: Tasks MUST be independent -->
+    <div class="notes-content" data-slide="11">
+      <p class="timing">~3 min</p>
+      <div class="key-point">This is the most common mistake. Spend time on decomposition — it's the highest-leverage skill.</div>
+      <h4>Talking points</h4>
+      <ul>
+        <li><strong>Good decomposition:</strong> Each task touches different files/directories. No shared state.</li>
+        <li><strong>Bad decomposition:</strong> Two agents editing the same config file, shared types, or entry points</li>
+        <li>"If two agents need to edit the same file, they're NOT independent — merge them into one task or sequence them"</li>
+        <li>Rule of thumb: if you can describe the task without referencing another task's output, it's independent</li>
+        <li>Walk through the table: independent tasks vs dependent tasks with concrete examples</li>
+      </ul>
+    </div>
+
+    <!-- 12: Demo — Spinning up parallel sessions -->
+    <div class="notes-content" data-slide="12">
+      <p class="timing">~2 min</p>
+      <div class="key-point">This is the money shot — multiple agents working at once.</div>
+      <h4>Talking points</h4>
+      <ul>
+        <li>Show the terminal commands — each <code>claude --worktree</code> opens a new session</li>
+        <li>"In practice you'd use Agent Orchestrator to manage these, but under the hood it's just multiple Claude sessions in worktrees"</li>
+        <li>Demo if possible: open 2-3 terminal tabs, launch <code>claude --worktree</code> in each</li>
+      </ul>
+    </div>
+
+    <!-- 13: Agent Orchestrator — status monitoring -->
+    <div class="notes-content" data-slide="13">
+      <p class="timing">~2 min</p>
+      <div class="key-point">Agent Orchestrator gives you a dashboard for visibility into what each agent is doing.</div>
+      <h4>Talking points</h4>
+      <ul>
+        <li>Walk through each status colour: Working (green pulse), Idle, Needs Attention, Finished, Error</li>
+        <li>Point to the gif: "This is what it looks like in practice"</li>
+        <li>"Needs Attention is key — the agent is stuck or has a question for you. Don't ignore it."</li>
+        <li>"The dashboard is the reason Agent Orchestrator exists — without it you're tab-switching between terminals"</li>
+      </ul>
+    </div>
+
+    <!-- 14: Demo — Merging a worktree -->
+    <div class="notes-content" data-slide="14">
+      <p class="timing">~2 min</p>
+      <div class="key-point">Show a clean merge. Emphasise: independent work = clean merges.</div>
+      <h4>Talking points</h4>
+      <ul>
+        <li>Walk through the 3 commands: checkout main, merge, remove worktree</li>
+        <li>"Why no conflicts? Because each agent worked on different files. This is why decomposition matters."</li>
+        <li>If there ARE conflicts, it means your decomposition was wrong — go back and re-split</li>
+        <li>Mention: <code>git worktree remove</code> cleans up the directory but the branch history stays</li>
+      </ul>
+    </div>
+
+    <!-- 15: The full picture -->
+    <div class="notes-content" data-slide="15">
+      <p class="timing">~1 min</p>
+      <div class="key-point">Visual summary — this is what your git history looks like when you work this way.</div>
+      <h4>Talking points</h4>
+      <ul>
+        <li>Point to the diagram: "Four branches forked from the same commit, worked in parallel, merged back"</li>
+        <li>"Notice the branches have different lengths — tasks take different amounts of time, and that's fine"</li>
+        <li>The merge order doesn't matter — merge each as it finishes</li>
+      </ul>
+    </div>
+
+    <!-- 16: Common pitfalls -->
+    <div class="notes-content" data-slide="16">
+      <p class="timing">~2 min</p>
+      <div class="key-point">Quick hits — warn them before they make these mistakes.</div>
+      <h4>Talking points</h4>
+      <ul>
+        <li><strong>Shared files:</strong> The #1 mistake. Shared config, types, entry points = merge conflicts.</li>
+        <li><strong>Too many agents:</strong> More than 4-5 and you can't keep up with reviews. Start with 2-3.</li>
+        <li><strong>Skipping review:</strong> Don't just merge blindly. Each branch needs a review pass.</li>
+        <li>Transition: "Now let's talk about a more advanced concept — agent teams."</li>
+      </ul>
+    </div>
+
+    <!-- 17: What are agent teams? -->
+    <div class="notes-content" data-slide="17">
+      <p class="timing">~3 min</p>
+      <div class="key-point">A step up from manual parallel sessions. Claude Code manages the coordination.</div>
+      <h4>Talking points</h4>
+      <ul>
+        <li>Agent teams = Claude Code spawning and managing sub-agents internally</li>
+        <li>Unlike worktree parallelism (YOU orchestrate), agent teams let Claude orchestrate</li>
+        <li>"Think of it as giving Claude a team to manage, vs you managing multiple Claudes"</li>
+        <li>Best for: planning phases, research, code review — where agents need to share context</li>
+      </ul>
+    </div>
+
+    <!-- 18: Subagents vs Agent Teams -->
+    <div class="notes-content" data-slide="18">
+      <p class="timing">~3 min</p>
+      <div class="key-point">Use subagents when you just need a result. Use agent teams when agents need to talk.</div>
+      <h4>Talking points</h4>
+      <ul>
+        <li><strong>Subagents:</strong> Fire-and-forget. "Go research X and come back with an answer." No coordination needed.</li>
+        <li><strong>Agent teams:</strong> Shared context. "Plan this feature together." Agents can build on each other's work.</li>
+        <li>Walk through the table column by column — scope, coordination, context sharing, best for</li>
+        <li>"Most of the time, you want subagents or manual worktree parallelism. Agent teams are for specific use cases."</li>
+      </ul>
+    </div>
+
+    <!-- 19: Architecture comparison -->
+    <div class="notes-content" data-slide="19">
+      <p class="timing">~2 min</p>
+      <div class="key-point">Visual reinforcement of the table. Point to the diagrams.</div>
+      <h4>Talking points</h4>
+      <ul>
+        <li><strong>Left (Subagent):</strong> Hub-and-spoke. One orchestrator, independent workers, results flow back up.</li>
+        <li><strong>Right (Agent Team):</strong> Mesh. Agents can communicate laterally. Shared context.</li>
+        <li>"The mesh model is more powerful but harder to control — that's the trade-off."</li>
+      </ul>
+    </div>
+
+    <!-- 20: My honest take -->
+    <div class="notes-content" data-slide="20">
+      <p class="timing">~2 min</p>
+      <div class="key-point">Be real with the audience. Agent teams are great for planning, not for implementation orchestration.</div>
+      <h4>Talking points</h4>
+      <ul>
+        <li>"I want to be honest about where this is today"</li>
+        <li>Agent teams shine at: brainstorming, planning, code review, research</li>
+        <li>They struggle at: long-running implementation, file-heavy tasks, anything needing precise coordination</li>
+        <li>"For building features, the worktree approach we just learned is more reliable today"</li>
+        <li>This will improve — but set expectations correctly for your team</li>
+      </ul>
+    </div>
+
+    <!-- 21: Where agent teams struggle -->
+    <div class="notes-content" data-slide="21">
+      <p class="timing">~2 min</p>
+      <div class="key-point">Don't oversell. These are real limitations.</div>
+      <h4>Talking points</h4>
+      <ul>
+        <li>Context window limits — agents can lose track in long conversations</li>
+        <li>Coordination overhead — more agents = more communication = more chances for misalignment</li>
+        <li>Debugging is harder — when something goes wrong in a team, finding the root cause is painful</li>
+        <li>"This is why we focus on worktree parallelism for the workshop — it's the most reliable approach today"</li>
+      </ul>
+    </div>
+
+    <!-- 22: Best practices -->
+    <div class="notes-content" data-slide="22">
+      <p class="timing">~1 min</p>
+      <div class="key-point">Quick practical tips if they want to try agent teams after this session.</div>
+      <h4>Talking points</h4>
+      <ul>
+        <li>Start small — 2 agents, simple task, see how it goes</li>
+        <li>Give clear roles — "You are the planner, you are the implementer"</li>
+        <li>Keep tasks short — agent teams work best for 10-15 min tasks, not multi-hour epics</li>
+      </ul>
+    </div>
+
+    <!-- 23: For higher-level orchestration -->
+    <div class="notes-content" data-slide="23">
+      <p class="timing">~1 min</p>
+      <div class="key-point">Pointer for self-study. Don't go deep here.</div>
+      <h4>Talking points</h4>
+      <ul>
+        <li>Mention these exist: MCP servers, custom orchestrators, CI/CD integration</li>
+        <li>"These are for teams that have outgrown manual orchestration — not today's focus"</li>
+        <li>Point to docs/resources they can explore later</li>
+      </ul>
+    </div>
+
+    <!-- 24: The spectrum -->
+    <div class="notes-content" data-slide="24">
+      <p class="timing">~1 min</p>
+      <div class="key-point">Position what we've learned on the spectrum. Today we practice the sweet spot.</div>
+      <ul>
+        <li>"We've gone from single agent -> parallel worktrees -> agent teams -> full orchestration"</li>
+        <li>"The sweet spot for most teams today is parallel worktrees — that's what we'll practice next"</li>
+      </ul>
+    </div>
+
+    <!-- 25: Questions? -->
+    <div class="notes-content" data-slide="25">
+      <p class="timing">~5 min</p>
+      <div class="key-point">5 min buffer. Take questions. If no questions, let people set up early.</div>
+      <h4>Common questions to prepare for</h4>
+      <ul>
+        <li>"How many agents can I run at once?" — Practically 3-5. More and you can't review fast enough.</li>
+        <li>"Does this work with other AI tools?" — Worktrees work with anything. The orchestration is Claude-specific.</li>
+        <li>"What about costs?" — Each agent is a separate session. Parallel = same total tokens, just faster.</li>
+        <li>"Can agents share context?" — Not in the worktree model. That's what agent teams are for.</li>
+      </ul>
+    </div>
+
+    <!-- 26: Let's put this into practice -->
+    <div class="notes-content" data-slide="26">
+      <p class="timing">~2 min</p>
+      <div class="key-point">Bridge to the hands-on section. Build excitement.</div>
+      <h4>Talking points</h4>
+      <ul>
+        <li>"Now it's your turn. You're going to build a real project using everything we just covered."</li>
+        <li>Briefly describe the project — the numbers give a quick sense of scope</li>
+        <li>Mention the repo they'll fork/clone</li>
+      </ul>
+    </div>
+
+    <!-- 27: What you're building -->
+    <div class="notes-content" data-slide="27">
+      <p class="timing">~1 min</p>
+      <div class="key-point">Quick preview of what they'll build. Don't over-explain — they'll discover it.</div>
+      <ul>
+        <li>Walk through the feature list briefly</li>
+        <li>"Each of these is an independent task — perfect for parallel worktrees"</li>
+        <li>Point to EPIC.md — "All the details are in here. Read it first."</li>
+      </ul>
+    </div>
+
+    <!-- 28: Your next 1h45 -->
+    <div class="notes-content" data-slide="28">
+      <p class="timing">~1 min</p>
+      <div class="key-point">Set expectations for timing.</div>
+      <ul>
+        <li>Walk through the time blocks</li>
+        <li>"Don't rush the decomposition step — it's the most important 10 minutes"</li>
+        <li>Mention you'll be walking around to help</li>
+      </ul>
+    </div>
+
+    <!-- 29: Quick start -->
+    <div class="notes-content" data-slide="29">
+      <p class="timing">~1 min</p>
+      <div class="key-point">Concrete commands they'll run. Reference slide they can come back to.</div>
+      <ul>
+        <li>Point to the prerequisite badges — "Make sure you have these installed"</li>
+        <li>Walk through the commands: clone, cd, read EPIC.md, plan, then launch worktrees</li>
+      </ul>
+    </div>
+
+    <!-- 30: The parallel workflow -->
+    <div class="notes-content" data-slide="30">
+      <p class="timing">~30 sec</p>
+      <div class="key-point">Reference slide for during the workshop.</div>
+      <ul>
+        <li>"This is the workflow loop. Keep this slide open as a reference while you work."</li>
+      </ul>
+    </div>
+
+    <!-- 31: Go build -->
+    <div class="notes-content" data-slide="31">
+      <p class="timing">~15 sec</p>
+      <div class="key-point">Release them. Walk around and help.</div>
+      <ul>
+        <li>"Go! Read EPIC.md. Decompose. Parallelise. Merge. I'll be walking around."</li>
+        <li>Start a timer visible to the room if possible</li>
+      </ul>
+    </div>
+  </div><!-- end notes-panel -->
+  </div><!-- end speaker-layout -->
+
+  <div class="slide-counter" id="counter"></div>
+
+  <script>
+    const deck = document.getElementById('deck');
+    const slides = Array.from(deck.querySelectorAll('.slide'));
+    const counter = document.getElementById('counter');
+    const progress = document.getElementById('progress');
+    let current = 0;
+    let prevIndex = -1;
+
+    const notesContents = Array.from(document.querySelectorAll('.notes-content'));
+
+    function showSlide(index) {
+      if (index < 0 || index >= slides.length) return;
+      prevIndex = current;
+      current = index;
+      slides.forEach((s, i) => {
+        s.classList.remove('active', 'prev');
+        if (i === current) s.classList.add('active');
+        else if (i === prevIndex && prevIndex < current) s.classList.add('prev');
+      });
+      // Sync notes panel
+      notesContents.forEach(n => n.classList.remove('active'));
+      const activeNote = document.querySelector(`.notes-content[data-slide="${current}"]`);
+      if (activeNote) activeNote.classList.add('active');
+      counter.textContent = `${current + 1} / ${slides.length}`;
+      progress.style.width = `${((current + 1) / slides.length) * 100}%`;
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ') {
+        e.preventDefault();
+        showSlide(current + 1);
+      } else if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        showSlide(current - 1);
+      } else if (e.key === 'Home') {
+        showSlide(0);
+      } else if (e.key === 'End') {
+        showSlide(slides.length - 1);
+      }
+    });
+
+    // Touch support
+    let touchStartX = 0;
+    document.addEventListener('touchstart', (e) => { touchStartX = e.touches[0].clientX; });
+    document.addEventListener('touchend', (e) => {
+      const dx = e.changedTouches[0].clientX - touchStartX;
+      if (Math.abs(dx) > 50) {
+        if (dx < 0) showSlide(current + 1);
+        else showSlide(current - 1);
+      }
+    });
+
+    showSlide(0);
+  </script>
+</body>
+</html>
