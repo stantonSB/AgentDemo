@@ -6,6 +6,8 @@
 
 Repo Doctor is a CLI tool that performs automated health checks on any git repository and produces a scored HTML report. Think of it as a doctor's check-up for your codebase — it examines dependencies, code quality, documentation, security, complexity, and git hygiene, then gives each dimension a score from 0–100 and an overall grade.
 
+> **Note:** None of the analyzers use AI or LLMs at runtime. Every check is deterministic — regex pattern matching, file system traversal, import graph parsing, git commands, and naming convention checks. The AI aspect of this project is in **how it's built** (parallel Claude Code sessions in git worktrees), not in what the tool itself does.
+
 ### What We're Building
 
 A single command — `bun run doctor <repo-path>` — that:
