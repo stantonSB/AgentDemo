@@ -1,6 +1,106 @@
 # Repo Doctor — Analyzer Epic (Ruby)
 
-This epic defines 8 independent analyzers to be built in parallel using Claude Code worktrees. Each analyzer extends `BaseAnalyzer`, uses only Ruby stdlib + Open3, and produces an `AnalyzerResult`.
+## Overview
+
+### Vision
+
+Repo Doctor is a CLI tool that performs automated health checks on any git repository and produces a scored HTML report. Think of it as a doctor's check-up for your codebase — it examines dependencies, code quality, documentation, security, complexity, and git hygiene, then gives each dimension a score from 0–100 and an overall grade.
+
+### What We're Building
+
+A single command — `bundle exec bin/repo-doctor <repo-path>` — that:
+
+1. **Discovers** all analyzers at runtime by globbing `lib/analyzers/*.rb`
+2. **Runs** each analyzer against the target repository in sequence
+3. **Collects** findings (file, line, message, severity) and a 0–100 score from each
+4. **Renders** the results as either terminal output or a standalone HTML report with letter grades (A–F)
+
+The tool ships with 8 independent analyzers spanning dependency health, code quality, documentation, security, complexity, and git hygiene. Each analyzer is a self-contained Ruby class extending `BaseAnalyzer` — no shared state, no cross-dependencies.
+
+### How We Build It
+
+Each analyzer is implemented in its own git worktree using a parallel Claude Code session. This means:
+
+- **No merge conflicts** — each analyzer lives in its own file under `lib/analyzers/`
+- **No coordination required** — auto-discovery means no central registration
+- **Independent testing** — each analyzer has its own spec file and can be run in isolation via `--analyzer <name>`
+- **Parallel development** — all 8 analyzers can be built simultaneously
+
+### Architecture
+
+```
+CLI (lib/cli.rb)
+  ├── discovers analyzers via glob
+  ├── requires each file, camelizes class name
+  ├── calls run(repo_path) on each
+  ├── collects AnalyzerResult[]
+  └── passes results to renderer
+
+Analyzer (lib/analyzers/*.rb)
+  ├── extends BaseAnalyzer
+  ├── implements name, description, run()
+  ├── returns AnalyzerResult(analyzer:, findings:, score:)
+  └── uses only Ruby stdlib + Open3
+
+Renderer (lib/renderer/)
+  ├── reads template.html
+  ├── calculates letter grades
+  └── produces standalone HTML report
+```
+
+### Type System
+
+- **Finding** — `Struct(file:, message:, severity:, line:)` where severity is `:info`, `:warning`, or `:error`
+- **AnalyzerResult** — `Struct(analyzer:, findings:, score:)` where score is 0–100
+
+---
+
+## Project-Level Acceptance Criteria
+
+These criteria apply to Repo Doctor as a whole, not to any individual analyzer.
+
+### CLI
+
+- [ ] `bundle exec bin/repo-doctor <repo-path>` runs all discovered analyzers and prints results to the terminal
+- [ ] `bundle exec bin/repo-doctor <repo-path> --output report.html` generates a standalone HTML report
+- [ ] `bundle exec bin/repo-doctor <repo-path> --analyzer <name>` runs only the named analyzer
+- [ ] `bundle exec bin/repo-doctor --help` prints usage information
+- [ ] Exit code is 0 on success, 1 on error
+- [ ] Gracefully handles missing or invalid repo paths with a clear error message
+
+### Auto-Discovery
+
+- [ ] Any `.rb` file added to `lib/analyzers/` (other than `base.rb`) is automatically picked up — no registration needed
+- [ ] Class name is derived from filename: `snake_case.rb` → `SnakeCaseAnalyzer`
+- [ ] Removing an analyzer file cleanly removes it from the output — no errors
+
+### Scoring & Grading
+
+- [ ] Each analyzer returns a score clamped to 0–100
+- [ ] The overall score is the average of all analyzer scores
+- [ ] Letter grades: A (90–100), B (80–89), C (70–79), D (60–69), F (0–59)
+
+### HTML Report
+
+- [ ] Report is a single self-contained HTML file (no external dependencies)
+- [ ] Shows overall score and grade
+- [ ] Lists each analyzer with its individual score, grade, and findings
+- [ ] Findings are collapsible and show file, line number (if available), severity, and message
+- [ ] Includes a timestamp of when the report was generated
+
+### Testing
+
+- [ ] `bundle exec rspec` passes with no failures
+- [ ] Each analyzer has a corresponding spec file in `spec/analyzers/`
+- [ ] Specs run against `test-fixtures/unhealthy-repo-ruby/` to validate expected findings
+- [ ] Specs verify score ranges, not exact scores (to avoid brittleness)
+
+### End-to-End
+
+- [ ] Running all 8 analyzers against `test-fixtures/unhealthy-repo-ruby/` produces a report with all expected issues flagged
+- [ ] Running against a healthy repo produces high scores across the board
+- [ ] The tool completes within a reasonable time (< 30 seconds for a typical repository)
+- [ ] Analyzers use only Ruby stdlib + Open3 — no external gem dependencies
 
 ---
 
@@ -27,9 +127,14 @@ This epic defines 8 independent analyzers to be built in parallel using Claude C
 - Score: percentage of gems that are reasonably up-to-date (0-100)
 
 ### Acceptance Criteria
-- [ ] Parses Gemfile correctly
-- [ ] Flags gems with old pinned versions
-- [ ] Returns score 0-100
+- [ ] Parses `Gemfile` and extracts gem names with version constraints
+- [ ] Flags gems pinned to known-old versions (e.g., `rails` < 7.0, `nokogiri` < 1.14)
+- [ ] Flags gems with no version constraint at all (severity: warning)
+- [ ] Flags known deprecated gems (severity: error)
+- [ ] Running against `test-fixtures/unhealthy-repo-ruby/` flags old pinned versions in Gemfile
+- [ ] Score is < 100 for the unhealthy repo fixture
+- [ ] Score is 0–100 for any repo with a Gemfile
+- [ ] Returns gracefully (score 100, no findings) if no Gemfile is present
 - [ ] Has passing specs
 
 ### Independence Note
@@ -77,9 +182,12 @@ end
 - Score: percentage of files that are referenced (0-100)
 
 ### Acceptance Criteria
-- [ ] Builds require graph from `require_relative` statements
-- [ ] Correctly identifies dead files
-- [ ] Returns score 0-100
+- [ ] Builds require graph by parsing `require_relative` statements from all `.rb` files
+- [ ] Identifies entry points (files in `bin/`, files with `if __FILE__ == $0`)
+- [ ] Running against `test-fixtures/unhealthy-repo-ruby/` flags `dead_module.rb` as dead code
+- [ ] Does NOT flag `main.rb` (entry point) or `active_module.rb` (required by main)
+- [ ] Score reflects percentage of live files (should be < 100 for unhealthy repo)
+- [ ] Returns gracefully if no `lib/` directory exists
 - [ ] Has passing specs
 
 ### Independence Note
@@ -127,9 +235,13 @@ end
 - Score: 100 - (number of TODOs * 5), clamped to 0-100
 
 ### Acceptance Criteria
-- [ ] Finds TODO/FIXME/HACK/XXX comments
-- [ ] Reports file, line number, and message
-- [ ] Returns score 0-100
+- [ ] Finds TODO, FIXME, HACK, and XXX comments (case-insensitive)
+- [ ] Running against `test-fixtures/unhealthy-repo-ruby/` finds all 4 markers in `lib/utils.rb`
+- [ ] Each finding includes the file path, line number, and the matched comment text
+- [ ] Severity escalates with age: `:info` for recent, `:warning` for > 90 days, `:error` for > 365 days
+- [ ] Score is < 100 for the unhealthy repo fixture
+- [ ] Excludes files in `vendor/`, `node_modules/`, and `.git/` directories
+- [ ] Gracefully handles repos that are not git repositories (skips blame enrichment)
 - [ ] Has passing specs
 
 ### Independence Note
@@ -178,9 +290,12 @@ end
 - Score: percentage of lib files with specs (0-100)
 
 ### Acceptance Criteria
-- [ ] Correctly maps lib files to spec files
-- [ ] Flags files without corresponding specs
-- [ ] Returns score 0-100
+- [ ] Maps `lib/*.rb` files to `spec/*_spec.rb` by naming convention
+- [ ] Handles nested directories: `lib/bar/baz.rb` → `spec/bar/baz_spec.rb`
+- [ ] Running against `test-fixtures/unhealthy-repo-ruby/` flags `utils.rb`, `dead_module.rb`, and `main.rb` as uncovered
+- [ ] Recognises `active_module_spec.rb` as covering `active_module.rb`
+- [ ] Score reflects percentage of covered files (should be 25% for unhealthy repo — 1 of 4 files)
+- [ ] Reports a finding with severity `:error` if no `spec/` directory exists at all
 - [ ] Has passing specs
 
 ### Independence Note
@@ -222,17 +337,20 @@ end
 ### Checks
 - README.md exists
 - Markdown relative links resolve to existing files
+- No merge conflict markers in markdown files
 - No broken internal links
-- Check for common sections (Getting Started, etc.)
 
 ### Output Shape
-- Findings: one per issue (missing README = error, broken link = warning)
+- Findings: one per issue (missing README = error, broken link = warning, conflict markers = error)
 - Score: based on number of issues found
 
 ### Acceptance Criteria
-- [ ] Detects missing README
-- [ ] Finds broken relative links in markdown
-- [ ] Returns score 0-100
+- [ ] Detects missing README.md (severity: `:error`)
+- [ ] Parses relative markdown links (`[text](./path)`) and verifies targets exist on disk
+- [ ] Running against `test-fixtures/unhealthy-repo-ruby/` flags broken links and merge conflict markers in README
+- [ ] Detects merge conflict markers (`<<<<<<<`, `=======`, `>>>>>>>`) in any `.md` file (severity: `:error`)
+- [ ] Score is low for the unhealthy repo fixture due to multiple broken links and conflict markers
+- [ ] Does not flag external URLs (http/https links) — only checks relative paths
 - [ ] Has passing specs
 
 ### Independence Note
@@ -281,10 +399,12 @@ end
 - Score: 100 - (errors * 20 + warnings * 5), clamped to 0-100
 
 ### Acceptance Criteria
-- [ ] Detects common secret patterns
-- [ ] Flags tracked .env files
-- [ ] Checks .gitignore coverage
-- [ ] Returns score 0-100
+- [ ] Detects common secret patterns via regex (AWS keys, passwords, tokens, database URLs)
+- [ ] Running against `test-fixtures/unhealthy-repo-ruby/` flags the `.env` file with `AWS_ACCESS_KEY_ID`, `SECRET_KEY`, and `DATABASE_URL`
+- [ ] Flags `.env` files that are tracked by git (severity: `:error`)
+- [ ] Checks `.gitignore` exists and covers common sensitive patterns (`.env`, `*.pem`, `*.key`)
+- [ ] Score is very low for the unhealthy repo fixture due to committed secrets
+- [ ] Does not scan binary files or `.git/` directory
 - [ ] Has passing specs
 
 ### Independence Note
@@ -333,10 +453,14 @@ end
 - Score: percentage of files within acceptable limits (0-100)
 
 ### Acceptance Criteria
-- [ ] Counts lines per file
-- [ ] Counts methods per file
-- [ ] Flags oversized files and methods
-- [ ] Returns score 0-100
+- [ ] Counts lines per `.rb` file and flags those exceeding 200 lines (severity: `:warning`)
+- [ ] Counts `def` methods per file and flags those exceeding 15 methods (severity: `:warning`)
+- [ ] Identifies individual methods exceeding 30 lines (severity: `:warning`)
+- [ ] Uses `:error` severity for extreme outliers (e.g., > 500 lines or > 30 methods)
+- [ ] Running against a small repo scores high (files are short)
+- [ ] Correctly counts methods using `def`/`end` patterns, including class methods
+- [ ] Score is 0–100 and reflects the percentage of files within all thresholds
+- [ ] Excludes `vendor/`, `.git/`, and other non-project directories
 - [ ] Has passing specs
 
 ### Independence Note
@@ -379,16 +503,20 @@ end
 - Recent commit frequency (warn if no commits in 30+ days)
 - Stale branches (branches with no recent commits)
 - Conflict markers in tracked files (`<<<<<<<`, `=======`, `>>>>>>>`)
-- Large files in history
+- Uncommitted changes
 
 ### Output Shape
 - Findings: one per issue found
-- Score: based on severity and count of issues
+- Score: starts at 100, penalties per issue
 
 ### Acceptance Criteria
-- [ ] Checks commit recency
-- [ ] Detects conflict markers
-- [ ] Returns score 0-100
+- [ ] Checks commit recency via `git log` and warns if no commits in the last 30 days
+- [ ] Detects stale branches (no commits in 90+ days) via `git branch` and `git log`
+- [ ] Running against `test-fixtures/unhealthy-repo-ruby/` flags conflict markers in README.md
+- [ ] Detects merge conflict markers (`<<<<<<<`, `=======`, `>>>>>>>`) in all tracked files (severity: `:error`)
+- [ ] Score is < 100 for the unhealthy repo fixture
+- [ ] Gracefully handles repos with no branches or minimal history
+- [ ] Uses `Open3` for all git commands (no backticks or `system()`)
 - [ ] Has passing specs
 
 ### Independence Note

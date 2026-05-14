@@ -1,6 +1,105 @@
-# Repo Doctor — Analyzer Epic
+# Repo Doctor — Analyzer Epic (TypeScript)
 
-This epic defines all 8 analyzers to be built for the Repo Doctor workshop. Each analyzer is independent and can be built in a separate worktree in parallel.
+## Overview
+
+### Vision
+
+Repo Doctor is a CLI tool that performs automated health checks on any git repository and produces a scored HTML report. Think of it as a doctor's check-up for your codebase — it examines dependencies, code quality, documentation, security, complexity, and git hygiene, then gives each dimension a score from 0–100 and an overall grade.
+
+### What We're Building
+
+A single command — `bun run doctor <repo-path>` — that:
+
+1. **Discovers** all analyzers at runtime by globbing `src/analyzers/*.ts`
+2. **Runs** each analyzer against the target repository in sequence
+3. **Collects** findings (file, line, message, severity) and a 0–100 score from each
+4. **Renders** the results as either terminal output or a standalone HTML report with letter grades (A–F)
+
+The tool ships with 8 independent analyzers spanning dependency health, code quality, documentation, security, complexity, and git hygiene. Each analyzer is a self-contained TypeScript class extending `BaseAnalyzer` — no shared state, no cross-dependencies.
+
+### How We Build It
+
+Each analyzer is implemented in its own git worktree using a parallel Claude Code session. This means:
+
+- **No merge conflicts** — each analyzer lives in its own file under `src/analyzers/`
+- **No coordination required** — auto-discovery means no central registration
+- **Independent testing** — each analyzer has its own test file and can be run in isolation via `--analyzer <name>`
+- **Parallel development** — all 8 analyzers can be built simultaneously
+
+### Architecture
+
+```
+CLI (src/cli.ts)
+  ├── discovers analyzers via glob
+  ├── instantiates each analyzer class
+  ├── calls run(repoPath) on each
+  ├── collects AnalyzerResult[]
+  └── passes results to renderer
+
+Analyzer (src/analyzers/*.ts)
+  ├── extends BaseAnalyzer
+  ├── implements name, description, run()
+  ├── returns { analyzer, findings[], score }
+  └── uses only stdlib + child_process
+
+Renderer (src/renderer/)
+  ├── reads template.html
+  ├── calculates letter grades
+  └── produces standalone HTML report
+```
+
+### Type System
+
+- **Finding** — `{ file, line?, message, severity }` where severity is `"info" | "warning" | "error"`
+- **AnalyzerResult** — `{ analyzer, findings[], score }` where score is 0–100
+- **Analyzer** — `{ name, description, run(repoPath): Promise<AnalyzerResult> }`
+
+---
+
+## Project-Level Acceptance Criteria
+
+These criteria apply to Repo Doctor as a whole, not to any individual analyzer.
+
+### CLI
+
+- [ ] `bun run doctor <repo-path>` runs all discovered analyzers and prints results to the terminal
+- [ ] `bun run doctor <repo-path> --output report.html` generates a standalone HTML report
+- [ ] `bun run doctor <repo-path> --analyzer <name>` runs only the named analyzer
+- [ ] `bun run doctor --help` prints usage information
+- [ ] Exit code is 0 on success, 1 on error
+- [ ] Gracefully handles missing or invalid repo paths with a clear error message
+
+### Auto-Discovery
+
+- [ ] Any `.ts` file added to `src/analyzers/` (other than `base.ts`) is automatically picked up — no registration needed
+- [ ] Removing an analyzer file cleanly removes it from the output — no errors
+
+### Scoring & Grading
+
+- [ ] Each analyzer returns a score clamped to 0–100
+- [ ] The overall score is the average of all analyzer scores
+- [ ] Letter grades: A (90–100), B (80–89), C (70–79), D (60–69), F (0–59)
+
+### HTML Report
+
+- [ ] Report is a single self-contained HTML file (no external dependencies)
+- [ ] Shows overall score and grade
+- [ ] Lists each analyzer with its individual score, grade, and findings
+- [ ] Findings are collapsible and show file, line number (if available), severity, and message
+- [ ] Includes a timestamp of when the report was generated
+
+### Testing
+
+- [ ] `bun test` passes with no failures
+- [ ] Each analyzer has a corresponding test file in `test/analyzers/`
+- [ ] Tests run against `test-fixtures/unhealthy-repo/` to validate expected findings
+- [ ] Tests verify score ranges, not exact scores (to avoid brittleness)
+
+### End-to-End
+
+- [ ] Running all 8 analyzers against `test-fixtures/unhealthy-repo/` produces a report with all expected issues flagged
+- [ ] Running against a healthy repo produces high scores across the board
+- [ ] The tool completes within a reasonable time (< 30 seconds for a typical repository)
 
 ---
 
