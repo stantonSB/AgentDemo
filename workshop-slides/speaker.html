@@ -1014,21 +1014,38 @@ my-project/
     <!-- Slide 18: Demo merging -->
     <section class="slide">
       <span class="demo-badge">Live Demo</span>
-      <h2>Merging a worktree</h2>
-      <p class="subtitle">Completed worktree back to main</p>
-      <pre style="margin-top:1.5rem;"><code><span class="comment"># 1. Switch to main</span>
+      <h2>Completing a worktree</h2>
+      <p class="subtitle">Two ways to land your work</p>
+      <div style="display:flex; gap:1.5rem; margin-top:1.5rem; width:100%; max-width:950px; flex-wrap:wrap; justify-content:center;">
+        <!-- Option A: Create PR via Claude -->
+        <div style="flex:1; min-width:380px; background:var(--bg-alt); border:1px solid var(--accent); border-radius:8px; padding:1.2rem 1.5rem; text-align:left;">
+          <h3 style="font-size:clamp(1rem,1.6vw,1.2rem); margin-bottom:0.8rem;"><span class="accent">Option A</span> — Create PR from worktree</h3>
+          <pre style="margin:0; font-size:clamp(0.8rem,1.2vw,0.95rem);"><code><span class="comment"># Inside the worktree, ask Claude:</span>
+<span class="prompt">&gt;</span> <span class="string">"Create a PR for this work"</span>
+
+<span class="comment"># Claude will:</span>
+<span class="comment">#   1. Commit &amp; push the branch</span>
+<span class="comment">#   2. Open a PR with summary + test plan</span>
+<span class="comment">#   3. Return the PR URL</span></code></pre>
+        </div>
+        <!-- Option B: Manual merge -->
+        <div style="flex:1; min-width:380px; background:var(--bg-alt); border:1px solid var(--accent2); border-radius:8px; padding:1.2rem 1.5rem; text-align:left;">
+          <h3 style="font-size:clamp(1rem,1.6vw,1.2rem); margin-bottom:0.8rem;"><span class="accent2">Option B</span> — Direct merge to main</h3>
+          <pre style="margin:0; font-size:clamp(0.8rem,1.2vw,0.95rem);"><code><span class="comment"># 1. Switch to main</span>
 <span class="cmd">cd</span> /path/to/project
 <span class="cmd">git</span> checkout main
 
 <span class="comment"># 2. Merge the worktree branch</span>
 <span class="cmd">git</span> <span class="flag">merge</span> worktree-clever-fox-123
 
-<span class="comment"># 3. Clean up the worktree</span>
+<span class="comment"># 3. Clean up</span>
 <span class="cmd">git</span> worktree remove .claude/worktrees/clever-fox-123</code></pre>
+        </div>
+      </div>
       <div class="callout" style="margin-top:1rem;">
         <p style="font-size:clamp(0.9rem,1.4vw,1.1rem);"><span class="accent2" style="font-weight:600;">Why no conflicts?</span> Each agent worked on different files in its own directory. Independent work = clean merges.</p>
       </div>
-      <div class="speaker-notes">Show a clean merge. Emphasise: because the work was independent, there are no conflicts.</div>
+      <div class="speaker-notes">Show both paths. PRs are better for team workflows with review. Direct merge is faster for solo work.</div>
     </section>
 
     <!-- Slide 19: Full lifecycle -->
@@ -1633,16 +1650,18 @@ my-project/
       </ul>
     </div>
 
-    <!-- 14: Demo — Merging a worktree -->
+    <!-- 14: Demo — Completing a worktree -->
     <div class="notes-content" data-slide="14">
       <p class="timing">~2 min</p>
-      <div class="key-point">Show a clean merge. Emphasise: independent work = clean merges.</div>
+      <div class="key-point">Two ways to land work. PRs for team review, direct merge for solo speed.</div>
       <h4>Talking points</h4>
       <ul>
+        <li><strong>Option A — PR:</strong> "This is what I actually do. Just tell Claude 'Create a PR' and it handles commit, push, and PR creation with a summary."</li>
+        <li>PRs give you a review step, a diff to inspect, and a paper trail — ideal for team workflows</li>
+        <li><strong>Option B — Direct merge:</strong> Faster for solo work or when you've already reviewed in the worktree</li>
         <li>Walk through the 3 commands: checkout main, merge, remove worktree</li>
-        <li>"Why no conflicts? Because each agent worked on different files. This is why decomposition matters."</li>
-        <li>If there ARE conflicts, it means your decomposition was wrong — go back and re-split</li>
-        <li>Mention: <code>git worktree remove</code> cleans up the directory but the branch history stays</li>
+        <li>"Why no conflicts either way? Because each agent worked on different files. This is why decomposition matters."</li>
+        <li>If there ARE conflicts, it means your decomposition was wrong — re-split next time</li>
       </ul>
     </div>
 
