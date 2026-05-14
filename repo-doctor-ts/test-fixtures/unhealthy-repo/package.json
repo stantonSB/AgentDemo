@@ -1,0 +1,17 @@
+{
+  "name": "unhealthy-app",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "node src/index.ts",
+    "build": "tsc",
+    "phantom-script": "echo this script references a file that doesnt exist"
+  },
+  "dependencies": {
+    "lodash": "4.17.15",
+    "express": "4.17.1",
+    "moment": "2.29.1"
+  },
+  "devDependencies": {
+    "typescript": "4.5.0"
+  }
+}
