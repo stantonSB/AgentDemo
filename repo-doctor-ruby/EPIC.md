@@ -28,7 +28,7 @@ Each analyzer is implemented in its own git worktree using a parallel Claude Cod
 - **Independent testing** — each analyzer has its own spec file and can be run in isolation via `--analyzer <name>`
 - **Parallel development** — all 8 analyzers can be built simultaneously
 
-> **Running the demo:** You don't need to run all 8 features simultaneously — but you could! We recommend running at least 3 in parallel (or as many as you're comfortable with) to see the workflow in action. We also suggest using **auto mode** (`claude --dangerously-skip-permissions`) so each session can work autonomously without waiting for permission prompts.
+> **Running the demo:** You don't need to run all 8 features simultaneously — but you could! We recommend running at least 3 in parallel (or as many as you're comfortable with) to see the workflow in action. We also suggest using **auto mode** so each session can work autonomously without waiting for permission prompts.
 
 ### Architecture
 
