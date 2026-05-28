@@ -1315,42 +1315,7 @@ my-project/
       <div class="speaker-notes">Quick preview of what they'll build.</div>
     </section>
 
-    <!-- Slide 33: Workshop timeline -->
-    <section class="slide">
-      <h3>Your next 1h45</h3>
-      <table class="workshop-timeline">
-        <tbody>
-          <tr>
-            <td>0:00-0:10</td>
-            <td>Setup</td>
-            <td>Clone, install, run skeleton</td>
-          </tr>
-          <tr>
-            <td>0:10-0:20</td>
-            <td>Plan</td>
-            <td>Read EPIC.md, set up worktrees</td>
-          </tr>
-          <tr>
-            <td>0:20-1:20</td>
-            <td>Build</td>
-            <td>Parallel agents, one per worktree</td>
-          </tr>
-          <tr>
-            <td>1:20-1:35</td>
-            <td>Merge &amp; Run</td>
-            <td>Merge branches, view report</td>
-          </tr>
-          <tr>
-            <td>1:35-1:45</td>
-            <td>Show &amp; Tell</td>
-            <td>Share results, discuss workflow</td>
-          </tr>
-        </tbody>
-      </table>
-      <div class="speaker-notes">Set expectations for timing.</div>
-    </section>
-
-    <!-- Slide 34: Quick start -->
+    <!-- Slide 33: Quick start -->
     <section class="slide">
       <h3>Quick start</h3>
       <pre><code><span class="cmd">git</span> clone https://github.com/stantonSB/AgentDemo.git
@@ -1368,7 +1333,32 @@ my-project/
       <div class="speaker-notes">This is what they do in the first 10 minutes. The prerequisite badges remind them what they need installed.</div>
     </section>
 
-    <!-- Slide 35: Parallel workflow recap -->
+    <!-- Slide 35: Planning before building -->
+    <section class="slide">
+      <h3>Plan before you build</h3>
+      <ol style="text-align:left; max-width:44rem; margin:0 auto; list-style:none; counter-reset:steps; padding:0;">
+        <li style="margin-bottom:1rem; padding-left:2.2rem; position:relative;">
+          <span style="position:absolute; left:0; top:0.1em; font-weight:700; color:var(--accent); font-size:1.2em;">1.</span>
+          <span class="accent" style="font-weight:600;">Brainstorm</span> — decompose the EPIC into parallel features
+          <pre style="margin-top:0.4rem;"><code><span class="prompt">&gt;</span> <span class="string">"Read EPIC.md and brainstorm how to split the work into parallel features"</span></code></pre>
+        </li>
+        <li style="margin-bottom:1rem; padding-left:2.2rem; position:relative;">
+          <span style="position:absolute; left:0; top:0.1em; font-weight:700; color:var(--accent2); font-size:1.2em;">2.</span>
+          <span class="accent2" style="font-weight:600;">Create plans</span> — write an implementation plan for each feature
+          <pre style="margin-top:0.4rem;"><code><span class="prompt">&gt;</span> <span class="string">"Write an implementation plan for the TODO Debt Tracker feature"</span></code></pre>
+        </li>
+        <li style="margin-bottom:1rem; padding-left:2.2rem; position:relative;">
+          <span style="position:absolute; left:0; top:0.1em; font-weight:700; color:var(--accent3); font-size:1.2em;">3.</span>
+          <span class="accent3" style="font-weight:600;">Review plans</span> — merge plan PRs to main, review before implementing
+        </li>
+      </ol>
+      <div class="callout" style="margin-top:1.2rem; max-width:44rem; border-left-color:var(--accent4); text-align:left;">
+        <p style="font-size:clamp(0.85rem,1.3vw,1rem);"><span class="accent4" style="font-weight:600;">Pro tip:</span> Ask Claude to generate an implementation prompt for each plan. Once plans are merged to main, copy those prompts into fresh sessions with <code>claude --worktree</code> to kick off parallel agent teams.</p>
+      </div>
+      <div class="speaker-notes">Planning phase is critical — brainstorm the decomposition, write plans, review them, then hand off to parallel agents. The prompt-copy trick avoids context pollution between planning and implementation.</div>
+    </section>
+
+    <!-- Slide 36: Parallel workflow recap -->
     <section class="slide">
       <h3>The parallel workflow</h3>
       <pre><code><span class="comment"># Terminal 1</span>
