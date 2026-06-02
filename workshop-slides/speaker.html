@@ -912,27 +912,34 @@ my-project/
 
     <!-- Slide 14: The Pattern -->
     <section class="slide">
-      <h3>The pattern</h3>
-      <div class="flow-steps">
-        <div class="flow-step">
-          <div class="step-number">1</div>
-          <div class="step-text">Decompose work into independent tasks</div>
+      <div style="display:flex; align-items:center; gap:2rem; justify-content:center; height:100%;">
+        <div style="flex:0 0 auto;">
+          <h3 style="margin-bottom:1rem;">The pattern</h3>
+          <div class="flow-steps">
+            <div class="flow-step">
+              <div class="step-number">1</div>
+              <div class="step-text">Decompose work into independent tasks</div>
+            </div>
+            <div class="flow-step">
+              <div class="step-number">2</div>
+              <div class="step-text">Create a worktree per task</div>
+            </div>
+            <div class="flow-step">
+              <div class="step-number">3</div>
+              <div class="step-text">Assign each task to an agent</div>
+            </div>
+            <div class="flow-step">
+              <div class="step-number">4</div>
+              <div class="step-text">Monitor progress</div>
+            </div>
+            <div class="flow-step">
+              <div class="step-number">5</div>
+              <div class="step-text">Review and merge</div>
+            </div>
+          </div>
         </div>
-        <div class="flow-step">
-          <div class="step-number">2</div>
-          <div class="step-text">Create a worktree per task</div>
-        </div>
-        <div class="flow-step">
-          <div class="step-number">3</div>
-          <div class="step-text">Assign each task to an agent</div>
-        </div>
-        <div class="flow-step">
-          <div class="step-number">4</div>
-          <div class="step-text">Monitor progress</div>
-        </div>
-        <div class="flow-step">
-          <div class="step-number">5</div>
-          <div class="step-text">Review and merge</div>
+        <div style="flex:1 1 0; min-width:0;">
+          <img src="assets/brainstorm.png" alt="Claude Code brainstorming session" style="width:100%; border-radius:8px; border:1px solid var(--border); box-shadow:0 4px 12px rgba(0,0,0,0.3);">
         </div>
       </div>
       <div class="speaker-notes">This is the workflow you'll practice in the hands-on session.</div>
@@ -958,6 +965,9 @@ my-project/
           </div>
           <p style="color:var(--accent5); font-weight:600;">Must be sequential</p>
         </div>
+      </div>
+      <div style="margin-top:1.2rem; text-align:center;">
+        <img src="assets/MultiWavesCropped.png" alt="Multi-wave parallel task execution" style="max-width:56rem; width:100%; border-radius:8px; border:1px solid var(--border); box-shadow:0 4px 12px rgba(0,0,0,0.3);">
       </div>
       <div class="speaker-notes">This is the most common mistake. Spend time on decomposition.</div>
     </section>
