@@ -582,6 +582,10 @@
     <section class="slide">
       <h1>Parallel Workflows,<br>Worktrees <span class="accent">&amp;</span> Agent Teams</h1>
       <p class="subtitle">From one agent to many</p>
+      <div style="margin-top:2rem; font-size:clamp(0.85rem,1.3vw,1.05rem); color:var(--text-muted);">
+        <p><strong style="color:var(--text);">Stanton Borthwick</strong> &middot; Engineering Lead</p>
+        <p style="margin-top:0.4rem;">Claude Code user since the closed beta &middot; GitHub Copilot closed beta (2022)</p>
+      </div>
       <div class="speaker-notes">Welcome, introduce yourself. Frame the session: share how you run multiple Claude Code sessions in parallel — what's worked for you, what hasn't, and when the overhead is worth it. Qualify that there may be better approaches and you encourage experimentation.</div>
     </section>
 
@@ -959,23 +963,8 @@ my-project/
       <p style="margin-top:1rem; font-size:clamp(0.85rem,1.3vw,1rem); color:var(--text-muted); background:rgba(210,168,255,0.08); border:1px solid rgba(210,168,255,0.2); border-radius:6px; padding:0.6rem 1rem; display:inline-block;">Tip: Claude's brainstorming mode is great at figuring out how to decompose tasks and identify dependencies</p>
       <div class="speaker-notes">This is the most common mistake. Spend time on decomposition. Claude's brainstorming mode can help identify which tasks are truly independent.</div>
     </section>
-
-    <!-- Slide 16: Demo parallel sessions -->
-    <section class="slide">
-      <span class="demo-badge">Live Demo</span>
-      <h2>Spinning up parallel sessions</h2>
-      <p class="subtitle">3-4 sessions running simultaneously</p>
-      <ul class="checklist" style="margin-top:2rem;">
-        <li>Spin up 3-4 sessions with different tasks</li>
-        <li>Show status indicators (Working, Idle, Finished)</li>
-        <li>Show all worktree branches in git</li>
-      </ul>
-      <div class="speaker-notes">Switch to Agent Orchestrator. Show the sessions running side by side — this is where it clicks for most people.</div>
-    </section>
-
     <!-- Slide 18: Demo merging -->
     <section class="slide">
-      <span class="demo-badge">Live Demo</span>
       <h2>Completing a worktree</h2>
       <p class="subtitle">Two ways to land your work</p>
       <div style="display:flex; gap:1.5rem; margin-top:1.5rem; width:100%; max-width:950px; flex-wrap:wrap; justify-content:center;">
@@ -991,7 +980,7 @@ my-project/
 <span class="comment">#   3. Return the PR URL</span></code></pre>
         </div>
         <!-- Option B: Manual merge -->
-        <div style="flex:1; min-width:380px; background:var(--bg-alt); border:1px solid var(--accent2); border-radius:8px; padding:1.2rem 1.5rem; text-align:left;">
+        <div style="flex:1; min-width:380px; background:var(--bg-alt); border:1px solid var(--accent2); border-radius:8px; padding:1.2rem 1.5rem; text-align:left; opacity:0.5;">
           <h3 style="font-size:clamp(1rem,1.6vw,1.2rem); margin-bottom:0.8rem;"><span class="accent2">Option B</span> — Direct merge to main</h3>
           <pre style="margin:0; font-size:clamp(0.8rem,1.2vw,0.95rem);"><code><span class="comment"># 1. Switch to main</span>
 <span class="cmd">cd</span> /path/to/project
@@ -1002,6 +991,7 @@ my-project/
 
 <span class="comment"># 3. Clean up</span>
 <span class="cmd">git</span> worktree remove .claude/worktrees/clever-fox-123</code></pre>
+          <p style="margin:0.8rem 0 0; font-size:clamp(0.75rem,1.1vw,0.9rem); color:var(--accent2); font-style:italic;">Not available at SB — branch protection rules require PRs for all merges to main.</p>
         </div>
       </div>
       <div class="callout" style="margin-top:1rem;">
@@ -1214,12 +1204,12 @@ my-project/
     <section class="slide">
       <h3>My honest take</h3>
       <div class="stagger">
-        <p style="font-size:clamp(1.1rem,2vw,1.5rem); color:var(--text);">I use agent teams to get a <span class="accent">plan built quicker</span></p>
-        <p style="font-size:clamp(1.1rem,2vw,1.5rem); color:var(--text);">Spin up teammates to <span class="accent2">research, explore, validate</span> different angles</p>
-        <p style="font-size:clamp(1.1rem,2vw,1.5rem); color:var(--text);">Arrive at a <span class="accent3">solid plan</span> faster</p>
-        <p style="font-size:clamp(1.1rem,2vw,1.5rem); color:var(--text);">For implementation &rarr; <span class="accent4">worktrees and parallel sessions</span></p>
+        <p style="font-size:clamp(1.1rem,2vw,1.5rem); color:var(--text);">I use agent teams to <span class="accent">execute implementation plans quicker</span></p>
+        <p style="font-size:clamp(1.1rem,2vw,1.5rem); color:var(--text);">Give the lead agent a plan &rarr; it <span class="accent2">decomposes, delegates, and coordinates</span></p>
+        <p style="font-size:clamp(1.1rem,2vw,1.5rem); color:var(--text);">Teammates work <span class="accent3">in parallel</span> on different parts of the plan</p>
+        <p style="font-size:clamp(1.1rem,2vw,1.5rem); color:var(--text);">For larger cross-feature work &rarr; <span class="accent4">worktrees give you more control</span></p>
       </div>
-      <div class="speaker-notes">Be real with the audience. Agent teams are great for planning, not great for implementation orchestration.</div>
+      <div class="speaker-notes">Agent teams are my go-to for executing plans within a single feature. For bigger cross-feature work, worktrees give more control.</div>
     </section>
 
     <!-- Slide 26: Where agent teams struggle -->
@@ -1346,6 +1336,7 @@ my-project/
         <li><span class="accent">5 core analyzers</span> — everyone should complete</li>
         <li><span class="accent3">3 stretch analyzers</span> — for fast finishers</li>
         <li>Each analyzer is <span class="accent2">independent</span> — perfect for parallel worktrees</li>
+        <li>While independent, analyzers <span class="accent5">may share files</span> (e.g. types, utils) — factor this into your decomposition</li>
       </ul>
       <div class="speaker-notes">Quick preview of what they'll build.</div>
     </section>
@@ -1393,24 +1384,7 @@ my-project/
       <div class="speaker-notes">Planning phase is critical — brainstorm the decomposition, write plans, review them, then hand off to parallel agents. The prompt-copy trick avoids context pollution between planning and implementation.</div>
     </section>
 
-    <!-- Slide 36: Parallel workflow recap -->
-    <section class="slide">
-      <h3>The parallel workflow</h3>
-      <pre><code><span class="comment"># Terminal 1</span>
-<span class="cmd">claude</span> <span class="flag">--worktree</span>
-<span class="prompt">&gt;</span> <span class="string">"Implement the TODO/FIXME Debt Tracker per EPIC.md"</span>
-
-<span class="comment"># Terminal 2</span>
-<span class="cmd">claude</span> <span class="flag">--worktree</span>
-<span class="prompt">&gt;</span> <span class="string">"Implement the Dead Code Detector per EPIC.md"</span>
-
-<span class="comment"># Terminal 3</span>
-<span class="cmd">claude</span> <span class="flag">--worktree</span>
-<span class="prompt">&gt;</span> <span class="string">"Implement the Dependency Staleness Checker per EPIC.md"</span></code></pre>
-      <div class="speaker-notes">Concrete commands they'll run. Reference slide they can come back to.</div>
-    </section>
-
-    <!-- Slide 36: Go! -->
+    <!-- Slide 35: Go! -->
     <section class="slide" style="background:linear-gradient(135deg, var(--bg) 0%, #0a1628 100%);">
       <h1 style="font-size:clamp(4rem,8vw,8rem); background:linear-gradient(135deg, var(--accent2), var(--accent)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;">Go build.</h1>
       <p class="subtitle" style="margin-top:1rem;">Read EPIC.md. Decompose. Parallelise. Merge.</p>
