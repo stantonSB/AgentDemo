@@ -655,6 +655,10 @@
     <section class="slide">
       <h1>Parallel Workflows,<br>Worktrees <span class="accent">&amp;</span> Agent Teams</h1>
       <p class="subtitle">From one agent to many</p>
+      <div style="margin-top:2rem; font-size:clamp(0.85rem,1.3vw,1.05rem); color:var(--text-muted);">
+        <p><strong style="color:var(--text);">Stanton Borthwick</strong> &middot; Engineering Lead</p>
+        <p style="margin-top:0.4rem;">Claude Code user since the closed beta &middot; GitHub Copilot closed beta (2022)</p>
+      </div>
       <div class="speaker-notes">Welcome, introduce yourself. Frame the session: share how you run multiple Claude Code sessions in parallel — what's worked for you, what hasn't, and when the overhead is worth it. Qualify that there may be better approaches and you encourage experimentation.</div>
     </section>
 
@@ -1032,23 +1036,8 @@ my-project/
       <p style="margin-top:1rem; font-size:clamp(0.85rem,1.3vw,1rem); color:var(--text-muted); background:rgba(210,168,255,0.08); border:1px solid rgba(210,168,255,0.2); border-radius:6px; padding:0.6rem 1rem; display:inline-block;">Tip: Claude's brainstorming mode is great at figuring out how to decompose tasks and identify dependencies</p>
       <div class="speaker-notes">This is the most common mistake. Spend time on decomposition. Claude's brainstorming mode can help identify which tasks are truly independent.</div>
     </section>
-
-    <!-- Slide 16: Demo parallel sessions -->
-    <section class="slide">
-      <span class="demo-badge">Live Demo</span>
-      <h2>Spinning up parallel sessions</h2>
-      <p class="subtitle">3-4 sessions running simultaneously</p>
-      <ul class="checklist" style="margin-top:2rem;">
-        <li>Spin up 3-4 sessions with different tasks</li>
-        <li>Show status indicators (Working, Idle, Finished)</li>
-        <li>Show all worktree branches in git</li>
-      </ul>
-      <div class="speaker-notes">Switch to Agent Orchestrator. Show the sessions running side by side — this is where it clicks for most people.</div>
-    </section>
-
     <!-- Slide 18: Demo merging -->
     <section class="slide">
-      <span class="demo-badge">Live Demo</span>
       <h2>Completing a worktree</h2>
       <p class="subtitle">Two ways to land your work</p>
       <div style="display:flex; gap:1.5rem; margin-top:1.5rem; width:100%; max-width:950px; flex-wrap:wrap; justify-content:center;">
@@ -1064,7 +1053,7 @@ my-project/
 <span class="comment">#   3. Return the PR URL</span></code></pre>
         </div>
         <!-- Option B: Manual merge -->
-        <div style="flex:1; min-width:380px; background:var(--bg-alt); border:1px solid var(--accent2); border-radius:8px; padding:1.2rem 1.5rem; text-align:left;">
+        <div style="flex:1; min-width:380px; background:var(--bg-alt); border:1px solid var(--accent2); border-radius:8px; padding:1.2rem 1.5rem; text-align:left; opacity:0.5;">
           <h3 style="font-size:clamp(1rem,1.6vw,1.2rem); margin-bottom:0.8rem;"><span class="accent2">Option B</span> — Direct merge to main</h3>
           <pre style="margin:0; font-size:clamp(0.8rem,1.2vw,0.95rem);"><code><span class="comment"># 1. Switch to main</span>
 <span class="cmd">cd</span> /path/to/project
@@ -1075,6 +1064,7 @@ my-project/
 
 <span class="comment"># 3. Clean up</span>
 <span class="cmd">git</span> worktree remove .claude/worktrees/clever-fox-123</code></pre>
+          <p style="margin:0.8rem 0 0; font-size:clamp(0.75rem,1.1vw,0.9rem); color:var(--accent2); font-style:italic;">Not available at SB — branch protection rules require PRs for all merges to main.</p>
         </div>
       </div>
       <div class="callout" style="margin-top:1rem;">
@@ -1287,12 +1277,12 @@ my-project/
     <section class="slide">
       <h3>My honest take</h3>
       <div class="stagger">
-        <p style="font-size:clamp(1.1rem,2vw,1.5rem); color:var(--text);">I use agent teams to get a <span class="accent">plan built quicker</span></p>
-        <p style="font-size:clamp(1.1rem,2vw,1.5rem); color:var(--text);">Spin up teammates to <span class="accent2">research, explore, validate</span> different angles</p>
-        <p style="font-size:clamp(1.1rem,2vw,1.5rem); color:var(--text);">Arrive at a <span class="accent3">solid plan</span> faster</p>
-        <p style="font-size:clamp(1.1rem,2vw,1.5rem); color:var(--text);">For implementation &rarr; <span class="accent4">worktrees and parallel sessions</span></p>
+        <p style="font-size:clamp(1.1rem,2vw,1.5rem); color:var(--text);">I use agent teams to <span class="accent">execute implementation plans quicker</span></p>
+        <p style="font-size:clamp(1.1rem,2vw,1.5rem); color:var(--text);">Give the lead agent a plan &rarr; it <span class="accent2">decomposes, delegates, and coordinates</span></p>
+        <p style="font-size:clamp(1.1rem,2vw,1.5rem); color:var(--text);">Teammates work <span class="accent3">in parallel</span> on different parts of the plan</p>
+        <p style="font-size:clamp(1.1rem,2vw,1.5rem); color:var(--text);">For larger cross-feature work &rarr; <span class="accent4">worktrees give you more control</span></p>
       </div>
-      <div class="speaker-notes">Be real with the audience. Agent teams are great for planning, not great for implementation orchestration.</div>
+      <div class="speaker-notes">Agent teams are my go-to for executing plans within a single feature. For bigger cross-feature work, worktrees give more control.</div>
     </section>
 
     <!-- Slide 26: Where agent teams struggle -->
@@ -1392,7 +1382,6 @@ my-project/
       <h2 style="font-size:clamp(2.5rem,5vw,4rem);">Let's put this into practice</h2>
       <div class="stagger" style="margin-top:2rem;">
         <p style="font-size:clamp(1.2rem,2vw,1.6rem); color:var(--text);">You'll build a <span class="accent">Repo Doctor</span> tool using parallel worktrees</p>
-        <p style="font-size:clamp(1.2rem,2vw,1.6rem); color:var(--text-muted);">45 min slides &check; &rarr; 1h45 hands-on</p>
       </div>
       <div style="display:flex; gap:1.5rem; margin-top:2.5rem; flex-wrap:wrap; justify-content:center;">
         <div style="background:rgba(88,166,255,0.08); border:1px solid rgba(88,166,255,0.25); border-radius:8px; padding:0.8rem 1.2rem; text-align:center;">
@@ -1420,6 +1409,7 @@ my-project/
         <li><span class="accent">5 core analyzers</span> — everyone should complete</li>
         <li><span class="accent3">3 stretch analyzers</span> — for fast finishers</li>
         <li>Each analyzer is <span class="accent2">independent</span> — perfect for parallel worktrees</li>
+        <li>While independent, analyzers <span class="accent5">may share files</span> (e.g. types, utils) — factor this into your decomposition</li>
       </ul>
       <div class="speaker-notes">Quick preview of what they'll build.</div>
     </section>
@@ -1477,24 +1467,7 @@ my-project/
       <div class="speaker-notes">This is what they do in the first 10 minutes. The prerequisite badges remind them what they need installed.</div>
     </section>
 
-    <!-- Slide 35: Parallel workflow recap -->
-    <section class="slide">
-      <h3>The parallel workflow</h3>
-      <pre><code><span class="comment"># Terminal 1</span>
-<span class="cmd">claude</span> <span class="flag">--worktree</span>
-<span class="prompt">&gt;</span> <span class="string">"Implement the TODO/FIXME Debt Tracker per EPIC.md"</span>
-
-<span class="comment"># Terminal 2</span>
-<span class="cmd">claude</span> <span class="flag">--worktree</span>
-<span class="prompt">&gt;</span> <span class="string">"Implement the Dead Code Detector per EPIC.md"</span>
-
-<span class="comment"># Terminal 3</span>
-<span class="cmd">claude</span> <span class="flag">--worktree</span>
-<span class="prompt">&gt;</span> <span class="string">"Implement the Dependency Staleness Checker per EPIC.md"</span></code></pre>
-      <div class="speaker-notes">Concrete commands they'll run. Reference slide they can come back to.</div>
-    </section>
-
-    <!-- Slide 36: Go! -->
+    <!-- Slide 35: Go! -->
     <section class="slide" style="background:linear-gradient(135deg, var(--bg) 0%, #0a1628 100%);">
       <h1 style="font-size:clamp(4rem,8vw,8rem); background:linear-gradient(135deg, var(--accent2), var(--accent)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;">Go build.</h1>
       <p class="subtitle" style="margin-top:1rem;">Read EPIC.md. Decompose. Parallelise. Merge.</p>
@@ -1695,20 +1668,8 @@ my-project/
       </ul>
     </div>
 
-    <!-- 16: Demo — Spinning up parallel sessions -->
+    <!-- 16: Demo — Completing a worktree -->
     <div class="notes-content" data-slide="16">
-      <p class="timing">~2 min</p>
-      <div class="key-point">Show the sessions running side by side — this is where it clicks for most people.</div>
-      <h4>Talking points</h4>
-      <ul>
-        <li>Show the terminal commands — each <code>claude --worktree</code> opens a new session</li>
-        <li>"In practice you'd use Agent Orchestrator to manage these, but under the hood it's just multiple Claude sessions in worktrees"</li>
-        <li>Demo if possible: open 2-3 terminal tabs, launch <code>claude --worktree</code> in each</li>
-      </ul>
-    </div>
-
-    <!-- 17: Demo — Completing a worktree -->
-    <div class="notes-content" data-slide="17">
       <p class="timing">~2 min</p>
       <div class="key-point">Two ways to land work. PRs for team review, direct merge for solo speed.</div>
       <h4>Talking points</h4>
@@ -1722,8 +1683,8 @@ my-project/
       </ul>
     </div>
 
-    <!-- 18: The full picture -->
-    <div class="notes-content" data-slide="18">
+    <!-- 17: The full picture -->
+    <div class="notes-content" data-slide="17">
       <p class="timing">~1 min</p>
       <div class="key-point">Visual summary — this is what your git history looks like when you work this way.</div>
       <h4>Talking points</h4>
@@ -1734,8 +1695,8 @@ my-project/
       </ul>
     </div>
 
-    <!-- 19: Common pitfalls -->
-    <div class="notes-content" data-slide="19">
+    <!-- 18: Common pitfalls -->
+    <div class="notes-content" data-slide="18">
       <p class="timing">~2 min</p>
       <div class="key-point">Quick hits — warn them before they make these mistakes.</div>
       <h4>Talking points</h4>
@@ -1747,14 +1708,14 @@ my-project/
       </ul>
     </div>
 
-    <!-- 20: Act Title — Agent Teams -->
-    <div class="notes-content" data-slide="20">
+    <!-- 19: Act Title — Agent Teams -->
+    <div class="notes-content" data-slide="19">
       <p class="timing">~15 sec</p>
       <div class="key-point">Final concept section before the workshop.</div>
     </div>
 
-    <!-- 21: What are agent teams? -->
-    <div class="notes-content" data-slide="21">
+    <!-- 20: What are agent teams? -->
+    <div class="notes-content" data-slide="20">
       <p class="timing">~3 min</p>
       <div class="key-point">A step up from manual parallel sessions. Claude Code manages the coordination.</div>
       <h4>Talking points</h4>
@@ -1766,8 +1727,8 @@ my-project/
       </ul>
     </div>
 
-    <!-- 22: Subagents vs Agent Teams -->
-    <div class="notes-content" data-slide="22">
+    <!-- 21: Subagents vs Agent Teams -->
+    <div class="notes-content" data-slide="21">
       <p class="timing">~3 min</p>
       <div class="key-point">Use subagents when you just need a result. Use agent teams when agents need to talk.</div>
       <h4>Talking points</h4>
@@ -1779,34 +1740,37 @@ my-project/
       </ul>
     </div>
 
-    <!-- 23: Architecture comparison -->
-    <div class="notes-content" data-slide="23">
+    <!-- 22: Architecture comparison -->
+    <div class="notes-content" data-slide="22">
       <p class="timing">~2 min</p>
       <div class="key-point">Visual reinforcement of the table. Point to the diagrams.</div>
       <h4>Talking points</h4>
       <ul>
-        <li><strong>Left (Subagent):</strong> Hub-and-spoke. One orchestrator, independent workers, results flow back up.</li>
-        <li><strong>Right (Agent Team):</strong> Mesh. Agents can communicate laterally. Shared context.</li>
+        <li><strong>Left (Subagent):</strong> Hub-and-spoke. One orchestrator, independent workers, results flow back up. Most token-efficient — each subagent gets its own 200K context, does its work, and only the final output goes back to the parent. The parent checks the output, which acts as a built-in safeguard.</li>
+        <li><strong>Right (Agent Team):</strong> Mesh. Claude's agent teams feature lets teammates work independently in their own context windows and communicate directly with each other — not just back to a lead. You can also interact with individual teammates directly without going through the lead agent.</li>
+        <li><strong>Key advantage of teams:</strong> agents can cross-check each other's work and collaborate around the same problem over time. Subagents are fire-and-forget; teammates can challenge, build on, and refine each other's output.</li>
+        <li><strong>The cost trade-off:</strong> agent teams run at roughly 15x standard token usage (every inter-agent message is a model round trip), vs ~4-7x for subagents. Use teams when collaboration justifies the cost.</li>
         <li>"The mesh model is more powerful but harder to control — that's the trade-off."</li>
       </ul>
     </div>
 
-    <!-- 24: My honest take -->
-    <div class="notes-content" data-slide="24">
+    <!-- 23: My honest take -->
+    <div class="notes-content" data-slide="23">
       <p class="timing">~2 min</p>
-      <div class="key-point">Be real with the audience. Agent teams are great for planning, not for implementation orchestration.</div>
+      <div class="key-point">Agent teams are my go-to for executing implementation plans within a single feature scope.</div>
       <h4>Talking points</h4>
       <ul>
-        <li>"I want to be honest about where this is today"</li>
-        <li>Agent teams shine at: brainstorming, planning, code review, research</li>
-        <li>They struggle at: long-running implementation, file-heavy tasks, anything needing precise coordination</li>
-        <li>"For building features, the worktree approach we just learned is more reliable today"</li>
-        <li>This will improve — but set expectations correctly for your team</li>
+        <li>"Here's how I actually use Claude's agent teams day-to-day"</li>
+        <li>I write a plan (or have Claude write one), then hand it to an agent team — the lead decomposes it and spins up teammates to work on different parts in parallel</li>
+        <li>The lead coordinates: it knows the full plan, assigns tasks, and merges the pieces back together</li>
+        <li>This works well for single-feature implementation — e.g. "build this API endpoint with tests and docs"</li>
+        <li>For larger cross-feature work or when you need file-level isolation, worktrees and parallel sessions give you more control and visibility</li>
+        <li>"Think of agent teams as your fast lane for feature-scoped plans, and worktrees as your heavy machinery for bigger jobs"</li>
       </ul>
     </div>
 
-    <!-- 25: Where agent teams struggle -->
-    <div class="notes-content" data-slide="25">
+    <!-- 24: Where agent teams struggle -->
+    <div class="notes-content" data-slide="24">
       <p class="timing">~2 min</p>
       <div class="key-point">Don't oversell. These are real limitations.</div>
       <h4>Talking points</h4>
@@ -1818,8 +1782,8 @@ my-project/
       </ul>
     </div>
 
-    <!-- 26: Best practices -->
-    <div class="notes-content" data-slide="26">
+    <!-- 25: Best practices -->
+    <div class="notes-content" data-slide="25">
       <p class="timing">~1 min</p>
       <div class="key-point">Quick practical tips if they want to try agent teams after this session.</div>
       <h4>Talking points</h4>
@@ -1830,8 +1794,8 @@ my-project/
       </ul>
     </div>
 
-    <!-- 27: For higher-level orchestration -->
-    <div class="notes-content" data-slide="27">
+    <!-- 26: For higher-level orchestration -->
+    <div class="notes-content" data-slide="26">
       <p class="timing">~1 min</p>
       <div class="key-point">Pointer for self-study. Don't go deep here.</div>
       <h4>Talking points</h4>
@@ -1842,8 +1806,8 @@ my-project/
       </ul>
     </div>
 
-    <!-- 28: The spectrum -->
-    <div class="notes-content" data-slide="28">
+    <!-- 27: The spectrum -->
+    <div class="notes-content" data-slide="27">
       <p class="timing">~1 min</p>
       <div class="key-point">Position what we've learned on the spectrum. Today we practice the sweet spot.</div>
       <ul>
@@ -1852,8 +1816,8 @@ my-project/
       </ul>
     </div>
 
-    <!-- 29: Questions? -->
-    <div class="notes-content" data-slide="29">
+    <!-- 28: Questions? -->
+    <div class="notes-content" data-slide="28">
       <p class="timing">~5 min</p>
       <div class="key-point">5 min buffer. Take questions. If no questions, let people set up early.</div>
       <h4>Common questions to prepare for</h4>
@@ -1865,8 +1829,8 @@ my-project/
       </ul>
     </div>
 
-    <!-- 30: Let's put this into practice -->
-    <div class="notes-content" data-slide="30">
+    <!-- 29: Let's put this into practice -->
+    <div class="notes-content" data-slide="29">
       <p class="timing">~2 min</p>
       <div class="key-point">Bridge to the hands-on section. Build excitement.</div>
       <h4>Talking points</h4>
@@ -1877,19 +1841,20 @@ my-project/
       </ul>
     </div>
 
-    <!-- 31: What you're building -->
-    <div class="notes-content" data-slide="31">
+    <!-- 30: What you're building -->
+    <div class="notes-content" data-slide="30">
       <p class="timing">~1 min</p>
       <div class="key-point">Quick preview of what they'll build. Don't over-explain — they'll discover it.</div>
       <ul>
         <li>Walk through the feature list briefly</li>
         <li>"Each of these is an independent task — perfect for parallel worktrees"</li>
+        <li>"But note — while the analyzers are independent of each other, they may share files like types or utility modules. Think about this when you decompose. If two analyzers both need to add to a shared types file, that's a merge conflict waiting to happen."</li>
         <li>Point to EPIC.md — "All the details are in here. Read it first."</li>
       </ul>
     </div>
 
-    <!-- 32: Your next 1h45 -->
-    <div class="notes-content" data-slide="32">
+    <!-- 31: Your next 1h45 -->
+    <div class="notes-content" data-slide="31">
       <p class="timing">~1 min</p>
       <div class="key-point">Set expectations for timing.</div>
       <ul>
@@ -1899,8 +1864,8 @@ my-project/
       </ul>
     </div>
 
-    <!-- 33: Quick start -->
-    <div class="notes-content" data-slide="33">
+    <!-- 32: Quick start -->
+    <div class="notes-content" data-slide="32">
       <p class="timing">~1 min</p>
       <div class="key-point">Concrete commands they'll run. Reference slide they can come back to.</div>
       <ul>
@@ -1909,17 +1874,8 @@ my-project/
       </ul>
     </div>
 
-    <!-- 34: The parallel workflow -->
-    <div class="notes-content" data-slide="34">
-      <p class="timing">~30 sec</p>
-      <div class="key-point">Reference slide for during the workshop.</div>
-      <ul>
-        <li>"This is the workflow loop. Keep this slide open as a reference while you work."</li>
-      </ul>
-    </div>
-
-    <!-- 35: Go build -->
-    <div class="notes-content" data-slide="35">
+    <!-- 33: Go build -->
+    <div class="notes-content" data-slide="33">
       <p class="timing">~15 sec</p>
       <div class="key-point">Release them. Walk around and help.</div>
       <ul>
