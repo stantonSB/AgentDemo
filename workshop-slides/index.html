@@ -582,7 +582,7 @@
     <section class="slide">
       <h1>Parallel Workflows,<br>Worktrees <span class="accent">&amp;</span> Agent Teams</h1>
       <p class="subtitle">From one agent to many</p>
-      <div class="speaker-notes">Welcome, introduce yourself. Frame this as sharing strategies that work well for me — not the only way, but an approach I've found effective. What works for me may not be the best fit for everyone.</div>
+      <div class="speaker-notes">Welcome, introduce yourself. Frame the session: share how you run multiple Claude Code sessions in parallel — what's worked for you, what hasn't, and when the overhead is worth it. Qualify that there may be better approaches and you encourage experimentation.</div>
     </section>
 
     <!-- Slide 2: The Scenario -->
@@ -677,7 +677,7 @@
         </div>
         <div class="time-label accent2" style="margin-top:1.5rem;">~2 hours <span style="color:var(--text-muted); font-size:0.8em;">(2 waves &times; 4 agents)</span></div>
       </div>
-      <div class="speaker-notes">This is the approach I use now — batch work into waves, run a wave, merge, review, then launch the next. It's worked well for me and I find it helps me stay productive, though your mileage may vary depending on the project.</div>
+      <div class="speaker-notes">The idea: batch independent tasks into waves — run a wave, merge, review, then launch the next. In practice the speedup depends on how cleanly tasks separate. We'll dig into the trade-offs.</div>
     </section>
 
     <!-- Slide 5: The Hook -->
@@ -692,8 +692,8 @@
         <span style="font-size:1.5rem; color:var(--text-muted); margin:0 0.5rem;">&rarr;</span>
         <div style="font-family:var(--font-mono); font-size:0.9rem; color:var(--accent2); background:rgba(63,185,80,0.1); border:1px solid rgba(63,185,80,0.3); padding:0.5rem 1rem; border-radius:8px;">git merge &check;</div>
       </div>
-      <p style="margin-top:2rem; font-size:clamp(0.95rem,1.5vw,1.2rem); color:var(--text-muted);">Next 40 minutes: <span class="accent">worktrees</span> &rarr; <span class="accent2">parallel workflows</span> &rarr; <span class="accent3">agent teams</span></p>
-      <div class="speaker-notes">This is the agenda for the next 40 minutes. Let's start with the foundation.</div>
+      <p style="margin-top:2rem; font-size:clamp(0.95rem,1.5vw,1.2rem); color:var(--text-muted);">Next 20 minutes: <span class="accent">worktrees</span> &rarr; <span class="accent2">parallel workflows</span> &rarr; <span class="accent3">agent teams</span></p>
+      <div class="speaker-notes">Set the agenda. Acknowledge this sounds ideal — the rest of the talk covers the mechanics AND the constraints that determine when this actually pays off.</div>
     </section>
 
     <!-- ==================== ACT 2: WORKTREES ==================== -->
@@ -770,7 +770,7 @@
 
     <!-- Slide 9: The command -->
     <section class="slide">
-      <h3>Two ways to get a worktree</h3>
+      <h3>Easiest two ways to get a worktree</h3>
       <div class="columns" style="max-width:950px; gap:2rem; margin-top:1rem;">
         <div class="column" style="background:rgba(63,185,80,0.06); border:1px solid rgba(63,185,80,0.3); border-radius:8px; position:relative;">
           <div style="position:absolute; top:-12px; right:12px; background:var(--accent2); color:var(--bg); font-size:0.7rem; font-weight:700; padding:0.2rem 0.8rem; border-radius:999px; text-transform:uppercase;">My preference</div>
@@ -795,6 +795,44 @@
       </div>
       <p style="margin-top:1.5rem; font-size:clamp(0.95rem,1.6vw,1.2rem); color:var(--text-muted);">Both work great — <code>claude --worktree</code> is the fastest path to get going</p>
       <div class="speaker-notes">Two options: the CLI flag is the simplest and my personal go-to. Skills and plugins can also generate worktrees with more customisation — useful if your team has specific branch naming or setup conventions. Either way, it's just git under the hood.</div>
+    </section>
+
+    <!-- Slide 9b: Agent Orchestrator -->
+    <section class="slide">
+      <h3>Agent Orchestrator</h3>
+      <p style="font-size:clamp(0.95rem,1.6vw,1.2rem); color:var(--text); margin-bottom:1rem;">You'll see me using this throughout the demo — it's an infosec-approved tool I built to manage parallel workflows. Each session is a worktree.</p>
+      <div style="display:flex; gap:2rem; align-items:flex-start; margin-top:1rem; width:100%; max-width:900px;">
+        <div style="display:flex; flex-direction:column; gap:0.8rem; flex-shrink:0;">
+          <div style="display:flex; align-items:center; gap:1rem;">
+            <span style="width:16px; height:16px; border-radius:50%; background:var(--accent2); display:inline-block; animation:pulse 2s infinite;"></span>
+            <span style="color:var(--accent2); font-weight:600; width:120px;">Working</span>
+            <span style="color:var(--text-muted);">Agent is actively coding</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:1rem;">
+            <span style="width:16px; height:16px; border-radius:50%; background:#e3b341; display:inline-block;"></span>
+            <span style="color:#e3b341; font-weight:600; width:120px;">Idle</span>
+            <span style="color:var(--text-muted);">Waiting for input</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:1rem;">
+            <span style="width:16px; height:16px; border-radius:50%; background:var(--accent4); display:inline-block;"></span>
+            <span style="color:var(--accent4); font-weight:600; width:120px;">Needs Attention</span>
+            <span style="color:var(--text-muted);">Agent is stuck or has a question</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:1rem;">
+            <span style="width:16px; height:16px; border-radius:50%; background:var(--accent); display:inline-block;"></span>
+            <span style="color:var(--accent); font-weight:600; width:120px;">Finished</span>
+            <span style="color:var(--text-muted);">Ready for review</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:1rem;">
+            <span style="width:16px; height:16px; border-radius:50%; background:var(--accent5); display:inline-block;"></span>
+            <span style="color:var(--accent5); font-weight:600; width:120px;">Error</span>
+            <span style="color:var(--text-muted);">Something went wrong</span>
+          </div>
+        </div>
+        <img src="assets/hero-demo.gif" alt="Agent Orchestrator demo" style="max-width:700px; width:100%; border-radius:8px; border:1px solid var(--border-color); box-shadow:0 4px 16px rgba(0,0,0,0.3);"/>
+      </div>
+      <p style="margin-top:1rem; font-size:clamp(0.85rem,1.3vw,1rem); color:var(--text-muted);">Status monitoring &bull; One-click terminal into any worktree &bull; Session management</p>
+      <div class="speaker-notes">Quick intro to the tool they'll see in demos. Infosec approved, built to manage worktree-based workflows. Each session is a worktree with status tracking and easy terminal access.</div>
     </section>
 
     <!-- Slide 10: Directory structure -->
@@ -829,6 +867,28 @@ my-project/
       <div class="speaker-notes">Make sure this is crystal clear before moving on.</div>
     </section>
 
+    <!-- Slide 12b: Worktree gotchas -->
+    <section class="slide">
+      <h2>Worktree gotchas</h2>
+      <div style="display:flex; gap:2rem; margin-top:2rem; align-items:flex-start; flex-wrap:wrap;">
+        <div style="flex:1; min-width:300px; display:flex; flex-direction:column; gap:1.5rem;">
+          <div style="background:rgba(248,81,73,0.08); border:1px solid rgba(248,81,73,0.25); border-radius:8px; padding:1.2rem 1.5rem;">
+            <p style="font-size:clamp(1rem,1.8vw,1.3rem); font-weight:600; color:var(--accent5);">You're not on main</p>
+            <p style="font-size:clamp(0.9rem,1.4vw,1.1rem); color:var(--text); margin-top:0.5rem;">If you <code style="background:rgba(255,255,255,0.06); padding:0.15rem 0.4rem; border-radius:4px;">yarn dev</code> or <code style="background:rgba(255,255,255,0.06); padding:0.15rem 0.4rem; border-radius:4px;">npm start</code>, make sure you've <code style="background:rgba(255,255,255,0.06); padding:0.15rem 0.4rem; border-radius:4px;">cd</code>'d into the worktree directory — otherwise you'll be running from main and wondering where your changes went.</p>
+          </div>
+          <div style="background:rgba(248,81,73,0.08); border:1px solid rgba(248,81,73,0.25); border-radius:8px; padding:1.2rem 1.5rem;">
+            <p style="font-size:clamp(1rem,1.8vw,1.3rem); font-weight:600; color:var(--accent5);"><code style="background:rgba(255,255,255,0.06); padding:0.15rem 0.4rem; border-radius:4px;">.gitignore</code>'d files aren't copied</p>
+            <p style="font-size:clamp(0.9rem,1.4vw,1.1rem); color:var(--text); margin-top:0.5rem;">Files like <code style="background:rgba(255,255,255,0.06); padding:0.15rem 0.4rem; border-radius:4px;">.env</code> won't exist in the worktree. Copy them manually or use symlinks.</p>
+            <p style="font-size:clamp(0.8rem,1.2vw,0.95rem); color:var(--text-muted); margin-top:0.5rem; font-family:var(--font-mono);">cp .env .claude/worktrees/&lt;name&gt;/.env</p>
+          </div>
+        </div>
+        <div style="flex:0 0 220px;">
+          <img src="worktreechildterminal.png" alt="Worktree child terminal showing working directory" style="width:100%; border-radius:8px; border:1px solid rgba(255,255,255,0.1);">
+        </div>
+      </div>
+      <div class="speaker-notes">Two common surprises when starting with worktrees. Worth flagging before the hands-on so people don't lose time debugging.</div>
+    </section>
+
     <!-- ==================== ACT 3: PARALLEL WORKFLOWS ==================== -->
 
     <!-- Slide 13: Act Title -->
@@ -841,7 +901,7 @@ my-project/
     <section class="slide">
       <div style="display:flex; align-items:center; gap:2rem; justify-content:center; height:100%;">
         <div style="flex:0 0 auto;">
-          <h3 style="margin-bottom:1rem;">The pattern</h3>
+          <h3 style="margin-bottom:1rem;">Init a Claude session per worktree &amp; execute plan</h3>
           <div class="flow-steps">
             <div class="flow-step">
               <div class="step-number">1</div>
@@ -853,7 +913,7 @@ my-project/
             </div>
             <div class="flow-step">
               <div class="step-number">3</div>
-              <div class="step-text">Assign each task to an agent</div>
+              <div class="step-text">Init a Claude session in each worktree with its plan</div>
             </div>
             <div class="flow-step">
               <div class="step-number">4</div>
@@ -869,7 +929,7 @@ my-project/
           <img src="assets/brainstorm.png" alt="Claude Code brainstorming session" style="width:100%; border-radius:8px; border:1px solid var(--border); box-shadow:0 4px 12px rgba(0,0,0,0.3);">
         </div>
       </div>
-      <div class="speaker-notes">This is the workflow you'll practice in the hands-on session.</div>
+      <div class="speaker-notes">Each worktree gets its own Claude session with a specific plan to execute. This is the workflow you'll practice in the hands-on session.</div>
     </section>
 
     <!-- Slide 15: Independence -->
@@ -896,7 +956,8 @@ my-project/
       <div style="margin-top:1.2rem; text-align:center;">
         <img src="assets/MultiWavesCropped.png" alt="Multi-wave parallel task execution" style="max-width:56rem; width:100%; border-radius:8px; border:1px solid var(--border); box-shadow:0 4px 12px rgba(0,0,0,0.3);">
       </div>
-      <div class="speaker-notes">This is the most common mistake. Spend time on decomposition.</div>
+      <p style="margin-top:1rem; font-size:clamp(0.85rem,1.3vw,1rem); color:var(--text-muted); background:rgba(210,168,255,0.08); border:1px solid rgba(210,168,255,0.2); border-radius:6px; padding:0.6rem 1rem; display:inline-block;">Tip: Claude's brainstorming mode is great at figuring out how to decompose tasks and identify dependencies</p>
+      <div class="speaker-notes">This is the most common mistake. Spend time on decomposition. Claude's brainstorming mode can help identify which tasks are truly independent.</div>
     </section>
 
     <!-- Slide 16: Demo parallel sessions -->
@@ -909,43 +970,7 @@ my-project/
         <li>Show status indicators (Working, Idle, Finished)</li>
         <li>Show all worktree branches in git</li>
       </ul>
-      <div class="speaker-notes">Switch to Agent Orchestrator. Show how multiple sessions look running side by side.</div>
-    </section>
-
-    <!-- Slide 17: Agent Orchestrator status monitoring -->
-    <section class="slide">
-      <h3>Agent Orchestrator — status monitoring</h3>
-      <div style="display:flex; gap:2rem; align-items:flex-start; margin-top:1rem; width:100%; max-width:900px;">
-        <div style="display:flex; flex-direction:column; gap:0.8rem; flex-shrink:0;">
-          <div style="display:flex; align-items:center; gap:1rem;">
-            <span style="width:16px; height:16px; border-radius:50%; background:var(--accent2); display:inline-block; animation:pulse 2s infinite;"></span>
-            <span style="color:var(--accent2); font-weight:600; width:120px;">Working</span>
-            <span style="color:var(--text-muted);">Agent is actively coding</span>
-          </div>
-          <div style="display:flex; align-items:center; gap:1rem;">
-            <span style="width:16px; height:16px; border-radius:50%; background:#e3b341; display:inline-block;"></span>
-            <span style="color:#e3b341; font-weight:600; width:120px;">Idle</span>
-            <span style="color:var(--text-muted);">Waiting for input</span>
-          </div>
-          <div style="display:flex; align-items:center; gap:1rem;">
-            <span style="width:16px; height:16px; border-radius:50%; background:var(--accent4); display:inline-block;"></span>
-            <span style="color:var(--accent4); font-weight:600; width:120px;">Needs Attention</span>
-            <span style="color:var(--text-muted);">Agent is stuck or has a question</span>
-          </div>
-          <div style="display:flex; align-items:center; gap:1rem;">
-            <span style="width:16px; height:16px; border-radius:50%; background:var(--accent); display:inline-block;"></span>
-            <span style="color:var(--accent); font-weight:600; width:120px;">Finished</span>
-            <span style="color:var(--text-muted);">Ready for review</span>
-          </div>
-          <div style="display:flex; align-items:center; gap:1rem;">
-            <span style="width:16px; height:16px; border-radius:50%; background:var(--accent5); display:inline-block;"></span>
-            <span style="color:var(--accent5); font-weight:600; width:120px;">Error</span>
-            <span style="color:var(--text-muted);">Something went wrong</span>
-          </div>
-        </div>
-        <img src="assets/hero-demo.gif" alt="Agent Orchestrator demo" style="max-width:700px; width:100%; border-radius:8px; border:1px solid var(--border-color); box-shadow:0 4px 16px rgba(0,0,0,0.3);"/>
-      </div>
-      <div class="speaker-notes">You need visibility into what each agent is doing. Agent Orchestrator gives you this dashboard.</div>
+      <div class="speaker-notes">Switch to Agent Orchestrator. Show the sessions running side by side — this is where it clicks for most people.</div>
     </section>
 
     <!-- Slide 18: Demo merging -->
