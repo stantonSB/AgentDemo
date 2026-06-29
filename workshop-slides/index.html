@@ -1379,20 +1379,20 @@ exit 2   <span class="comment"># PreToolUse: block + show stderr to Claude</span
     <section class="slide" style="background:linear-gradient(135deg, var(--bg) 0%, #0a1628 100%);">
       <h2 style="font-size:clamp(2.5rem,5vw,4rem);">Let's put this into practice</h2>
       <div class="stagger" style="margin-top:2rem;">
-        <p style="font-size:clamp(1.2rem,2vw,1.6rem); color:var(--text);">You'll build a <span class="accent">Repo Doctor</span> tool using parallel worktrees</p>
+        <p style="font-size:clamp(1.2rem,2vw,1.6rem); color:var(--text);">You'll build <span class="accent">3 Claude Code hooks</span> in parallel worktrees</p>
       </div>
       <div style="display:flex; gap:1.5rem; margin-top:2.5rem; flex-wrap:wrap; justify-content:center;">
         <div style="background:rgba(88,166,255,0.08); border:1px solid rgba(88,166,255,0.25); border-radius:8px; padding:0.8rem 1.2rem; text-align:center;">
-          <p style="font-size:clamp(1.5rem,3vw,2.5rem); font-weight:700; color:var(--accent);">5</p>
-          <p style="font-size:0.85rem; color:var(--text-muted);">Core analyzers</p>
+          <p style="font-size:clamp(1.5rem,3vw,2.5rem); font-weight:700; color:var(--accent);">3</p>
+          <p style="font-size:0.85rem; color:var(--text-muted);">Hooks to build</p>
         </div>
         <div style="background:rgba(210,168,255,0.08); border:1px solid rgba(210,168,255,0.25); border-radius:8px; padding:0.8rem 1.2rem; text-align:center;">
           <p style="font-size:clamp(1.5rem,3vw,2.5rem); font-weight:700; color:var(--accent3);">3</p>
-          <p style="font-size:0.85rem; color:var(--text-muted);">Stretch goals</p>
+          <p style="font-size:0.85rem; color:var(--text-muted);">Parallel worktrees</p>
         </div>
         <div style="background:rgba(63,185,80,0.08); border:1px solid rgba(63,185,80,0.25); border-radius:8px; padding:0.8rem 1.2rem; text-align:center;">
-          <p style="font-size:clamp(1.5rem,3vw,2.5rem); font-weight:700; color:var(--accent2);">1</p>
-          <p style="font-size:0.85rem; color:var(--text-muted);">HTML report</p>
+          <p style="font-size:clamp(1.5rem,3vw,2.5rem); font-weight:700; color:var(--accent2);">&check;</p>
+          <p style="font-size:0.85rem; color:var(--text-muted);">Keep what you like</p>
         </div>
       </div>
       <div class="speaker-notes">Bridge to the hands-on section. The numbers give a quick sense of scope.</div>
@@ -1401,13 +1401,12 @@ exit 2   <span class="comment"># PreToolUse: block + show stderr to Claude</span
     <!-- Slide 32: Workshop overview -->
     <section class="slide">
       <h3>What you're building</h3>
-      <p style="margin-bottom:1rem; color:var(--text);"><code>repo-doctor</code> — a CLI that produces an HTML health report</p>
-      <pre><code><span class="cmd">repo-doctor</span> /path/to/any/repo <span class="flag">--output</span> report.html</code></pre>
-      <ul style="margin-top:1.5rem;">
-        <li><span class="accent">5 core analyzers</span> — everyone should complete</li>
-        <li><span class="accent3">3 stretch analyzers</span> — for fast finishers</li>
-        <li>Each analyzer is <span class="accent2">independent</span> — perfect for parallel worktrees</li>
-        <li>While independent, analyzers <span class="accent5">may share files</span> (e.g. types, utils) — factor this into your decomposition</li>
+      <p style="margin-bottom:1rem; color:var(--text);">Three independent hooks, each its own self-contained script file</p>
+      <ul style="margin-top:1rem;">
+        <li><code>format-on-save</code> — <span class="accent">PostToolUse</span>: format the file Claude just edited</li>
+        <li><code>codacy-analyze-on-save</code> — <span class="accent2">PostToolUse</span>: run Codacy on the edited file, surface issues back to Claude</li>
+        <li><code>worktree-session-primer</code> — <span class="accent3">SessionStart</span>: inject worktree context + copy <code>.env</code></li>
+        <li>Independent files &rarr; <span class="accent5">clean parallel work</span>; keep the ones you like</li>
       </ul>
       <div class="speaker-notes">Quick preview of what they'll build.</div>
     </section>
@@ -1416,15 +1415,15 @@ exit 2   <span class="comment"># PreToolUse: block + show stderr to Claude</span
     <section class="slide">
       <h3>Quick start</h3>
       <pre><code><span class="cmd">git</span> clone https://github.com/stantonSB/AgentDemo.git
-<span class="cmd">cd</span> AgentDemo/repo-doctor-ts   <span class="comment"># or: repo-doctor-ruby</span>
-<span class="cmd">bun</span> install                    <span class="comment"># or: bundle install</span>
-<span class="cmd">bun</span> run doctor test-fixtures/unhealthy-repo/</code></pre>
+<span class="cmd">cd</span> AgentDemo/claude-hooks-workshop
+<span class="cmd">bash</span> test/run-tests.sh                 <span class="comment"># scaffold sanity check</span>
+<span class="cmd">cat</span> test/payloads/pretooluse-bash.json | hooks/tool-logger.sh  <span class="comment"># try the example</span></code></pre>
       <div class="callout" style="margin-top:1.5rem; border-left-color:var(--accent2);">
-        <p style="font-size:clamp(0.9rem,1.4vw,1.1rem);"><span class="accent2" style="font-weight:600;">What you'll see:</span> The skeleton runs a sample "file count" analyzer against the test fixture repo and generates an HTML report. This proves everything works before you start building your own analyzers.</p>
+        <p style="font-size:clamp(0.9rem,1.4vw,1.1rem);"><span class="accent2" style="font-weight:600;">What you'll see:</span> The worked-example hook (<code>tool-logger</code>) appends tool invocations to a log. Read <code>EPIC.md</code> to see the three hooks you'll build.</p>
       </div>
       <div style="display:flex; gap:1rem; margin-top:1.2rem; justify-content:center; flex-wrap:wrap;">
-        <span style="font-family:var(--font-mono); font-size:0.85rem; background:var(--bg-alt); border:1px solid var(--border); padding:0.4rem 1rem; border-radius:6px; color:var(--text-muted);">Node 20+ &check;</span>
-        <span style="font-family:var(--font-mono); font-size:0.85rem; background:var(--bg-alt); border:1px solid var(--border); padding:0.4rem 1rem; border-radius:6px; color:var(--text-muted);">bun or yarn &check;</span>
+        <span style="font-family:var(--font-mono); font-size:0.85rem; background:var(--bg-alt); border:1px solid var(--border); padding:0.4rem 1rem; border-radius:6px; color:var(--text-muted);">jq &check;</span>
+        <span style="font-family:var(--font-mono); font-size:0.85rem; background:var(--bg-alt); border:1px solid var(--border); padding:0.4rem 1rem; border-radius:6px; color:var(--text-muted);">codacy-cli &check;</span>
         <span style="font-family:var(--font-mono); font-size:0.85rem; background:var(--bg-alt); border:1px solid var(--border); padding:0.4rem 1rem; border-radius:6px; color:var(--text-muted);">Claude Code v2.1.32+ &check;</span>
       </div>
       <div class="speaker-notes">This is what they do in the first 10 minutes. The prerequisite badges remind them what they need installed.</div>
@@ -1442,7 +1441,7 @@ exit 2   <span class="comment"># PreToolUse: block + show stderr to Claude</span
         <li style="margin-bottom:1rem; padding-left:2.2rem; position:relative;">
           <span style="position:absolute; left:0; top:0.1em; font-weight:700; color:var(--accent2); font-size:1.2em;">2.</span>
           <span class="accent2" style="font-weight:600;">Create plans</span> — write an implementation plan for each feature
-          <pre style="margin-top:0.4rem;"><code><span class="prompt">&gt;</span> <span class="string">"Write an implementation plan for the TODO Debt Tracker feature"</span></code></pre>
+          <pre style="margin-top:0.4rem;"><code><span class="prompt">&gt;</span> <span class="string">"Write an implementation plan for the format-on-save hook"</span></code></pre>
         </li>
         <li style="margin-bottom:1rem; padding-left:2.2rem; position:relative;">
           <span style="position:absolute; left:0; top:0.1em; font-weight:700; color:var(--accent3); font-size:1.2em;">3.</span>
@@ -1458,7 +1457,7 @@ exit 2   <span class="comment"># PreToolUse: block + show stderr to Claude</span
     <!-- Slide 35: Go! -->
     <section class="slide" style="background:linear-gradient(135deg, var(--bg) 0%, #0a1628 100%);">
       <h1 style="font-size:clamp(4rem,8vw,8rem); background:linear-gradient(135deg, var(--accent2), var(--accent)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;">Go build.</h1>
-      <p class="subtitle" style="margin-top:1rem;">Read EPIC.md. Decompose. Parallelise. Merge.</p>
+      <p class="subtitle" style="margin-top:1rem;">Read EPIC.md. Build 3 hooks in parallel. Keep what you like.</p>
       <div class="speaker-notes">Release them. Walk around and help.</div>
     </section>
 
