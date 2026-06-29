@@ -1288,6 +1288,84 @@ my-project/
       <div class="speaker-notes">Position what we've covered on the spectrum. The worktree approach in the middle is where I spend most of my time — it's the sweet spot for my workflow.</div>
     </section>
 
+    <!-- ==================== ACT 5: HOOKS ==================== -->
+
+    <!-- Hooks 1: Act Title -->
+    <section class="slide act-title">
+      <h2>Hooks: Automate &amp; Enforce</h2>
+      <div class="speaker-notes">The new pillar. Worktrees and agents are about parallelism; hooks are about making each session automatically do the right thing.</div>
+    </section>
+
+    <!-- Hooks 2: What is a hook? -->
+    <section class="slide">
+      <h3>What is a hook?</h3>
+      <p class="big-text">Claude Code runs <span class="accent">your shell command</span> at lifecycle events.</p>
+      <p style="margin-top:1.5rem; font-size:clamp(1.1rem,2vw,1.5rem); color:var(--text);">A hook can <span class="accent2">observe</span>, <span class="accent3">inject context</span>, or <span class="accent5">block</span> an action.</p>
+      <div class="speaker-notes">The simplest mental model: at certain moments, Claude shells out to a script you control, hands it JSON, and reacts to what the script says.</div>
+    </section>
+
+    <!-- Hooks 3: The event lifecycle -->
+    <section class="slide">
+      <h3>The event lifecycle</h3>
+      <table>
+        <thead><tr><th>Event</th><th>Use it to&hellip;</th></tr></thead>
+        <tbody>
+          <tr><td><code>PreToolUse</code></td><td>Gate or deny a tool before it runs</td></tr>
+          <tr><td><code>PostToolUse</code></td><td>React after a tool — format, lint, verify</td></tr>
+          <tr><td><code>UserPromptSubmit</code></td><td>Inspect / augment a prompt</td></tr>
+          <tr><td><code>Notification</code></td><td>Surface "needs you" to your environment</td></tr>
+          <tr><td><code>Stop</code> / <code>SubagentStop</code></td><td>Act when a session / subagent finishes</td></tr>
+          <tr><td><code>SessionStart</code> / <code>SessionEnd</code></td><td>Prime context / clean up</td></tr>
+        </tbody>
+      </table>
+      <div class="speaker-notes">There are more events than this; these are the ones worth knowing first. Today's demo uses PostToolUse and SessionStart.</div>
+    </section>
+
+    <!-- Hooks 4: The contract -->
+    <section class="slide">
+      <h3>The contract</h3>
+      <pre><code><span class="comment"># stdin: the event as JSON</span>
+{ <span class="string">"hook_event_name"</span>: <span class="string">"PostToolUse"</span>,
+  <span class="string">"tool_name"</span>: <span class="string">"Edit"</span>,
+  <span class="string">"tool_input"</span>: { <span class="string">"file_path"</span>: <span class="string">"src/app.ts"</span> } }
+
+<span class="comment"># control by exit code…</span>
+exit 0   <span class="comment"># proceed</span>
+exit 2   <span class="comment"># PreToolUse: block + show stderr to Claude</span>
+
+<span class="comment"># …or by JSON on stdout</span>
+{ <span class="string">"hookSpecificOutput"</span>: { <span class="string">"additionalContext"</span>: <span class="string">"…"</span> } }</code></pre>
+      <p style="margin-top:1rem; font-size:clamp(0.9rem,1.5vw,1.2rem); color:var(--text-muted);">Registered in <code>settings.json</code> as <span class="accent">event &rarr; matcher &rarr; command</span></p>
+      <div class="speaker-notes">Two ways to talk back: exit codes for allow/block, JSON on stdout for richer control like adding context.</div>
+    </section>
+
+    <!-- Hooks 5: Real-world anchor -->
+    <section class="slide">
+      <h3>You've already seen one</h3>
+      <p style="font-size:clamp(1.1rem,2vw,1.5rem); color:var(--text);">The <span class="accent">Agent Orchestrator</span> status you watched all session is driven by a hook.</p>
+      <pre style="margin-top:1.5rem;"><code><span class="comment"># ~/.claude/settings.json (simplified)</span>
+<span class="string">"Notification"</span>, <span class="string">"Stop"</span>, <span class="string">"PreToolUse"</span>
+   &rarr; agent-orchestrator-notify.sh
+   &rarr; <span class="cmd">POST</span> session status to a local server</code></pre>
+      <p style="margin-top:1rem; font-size:clamp(0.9rem,1.5vw,1.2rem); color:var(--text-muted);">A handful of lines of bash. That's the whole trick.</p>
+      <div class="speaker-notes">Tie it back to the orchestrator demo from earlier. The "magic" status updates are just a Stop/Notification/PreToolUse hook POSTing to a local endpoint.</div>
+    </section>
+
+    <!-- Hooks 6: Gotchas & safety -->
+    <section class="slide">
+      <h3>Gotchas &amp; safety</h3>
+      <ul style="margin-top:1rem;">
+        <li>Hooks run <span class="accent5">arbitrary commands with your credentials</span> — review before wiring one in</li>
+        <li>They fire on <span class="accent4">every matching event</span> — keep them fast</li>
+        <li><span class="accent">Scope the matcher</span> tightly so they only run when relevant</li>
+        <li>Test against a sample payload <span class="accent2">before</span> keeping one</li>
+      </ul>
+      <div class="callout" style="margin-top:1.5rem;">
+        <p style="font-size:clamp(0.9rem,1.5vw,1.1rem);"><span class="accent4" style="font-weight:600;">The upside:</span> hooks turn soft policy ("don't commit secrets") into hard enforcement.</p>
+      </div>
+      <div class="speaker-notes">Be honest about the risk: a hook is code that runs automatically with your access. The payoff is real enforcement — exactly what we'll build next.</div>
+    </section>
+
     <!-- Slide 30: Questions -->
     <section class="slide">
       <h1>Questions?</h1>
