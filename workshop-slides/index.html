@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Worktrees, Agents & Hooks</title>
+  <title>Worktrees, Agents &amp; Hooks</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -1332,6 +1332,7 @@ my-project/
 <span class="comment"># control by exit code…</span>
 exit 0   <span class="comment"># proceed</span>
 exit 2   <span class="comment"># PreToolUse: block + show stderr to Claude</span>
+         <span class="comment"># PostToolUse: tool already ran; stderr surfaces to Claude</span>
 
 <span class="comment"># …or by JSON on stdout</span>
 { <span class="string">"hookSpecificOutput"</span>: { <span class="string">"additionalContext"</span>: <span class="string">"…"</span> } }</code></pre>
@@ -1429,7 +1430,7 @@ exit 2   <span class="comment"># PreToolUse: block + show stderr to Claude</span
       <div class="speaker-notes">This is what they do in the first 10 minutes. The prerequisite badges remind them what they need installed.</div>
     </section>
 
-    <!-- Slide 35: Planning before building -->
+    <!-- Slide 34: Planning before building -->
     <section class="slide">
       <h3>Plan before you build</h3>
       <ol style="text-align:left; max-width:44rem; margin:0 auto; list-style:none; counter-reset:steps; padding:0;">
