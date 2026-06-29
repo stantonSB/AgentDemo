@@ -16,9 +16,9 @@ Each hook is a **self-contained single file** under `hooks/`. A worked example,
 
 - A hook receives the event as JSON on **stdin** (`hook_event_name`, `cwd`, `tool_name`,
   `tool_input`, …).
-- Control Claude via **exit code** (`0` proceed; `2` block on `PreToolUse` / surface stderr to
-  Claude) or **JSON on stdout** (`hookSpecificOutput.additionalContext`,
-  `hookSpecificOutput.permissionDecision`).
+- Control Claude via **exit code** — `0` proceed; on `PreToolUse`, `2` blocks the tool; on
+  `PostToolUse`, `2` surfaces stderr to Claude so it can follow up — or **JSON on stdout**
+  (`hookSpecificOutput.additionalContext`, `hookSpecificOutput.permissionDecision`).
 - Read stdin inline (no shared lib):
   ```bash
   payload="$(cat)"
@@ -37,6 +37,10 @@ Each hook is a **self-contained single file** under `hooks/`. A worked example,
 
 1. Copy `hooks/<name>.sh` into `~/.claude/hooks/` (create the dir if needed).
 2. Back up `~/.claude/settings.json`, then paste the hook's header-comment snippet under the right event.
+
+> Note: `format-on-save` and `codacy-analyze-on-save` both register under `PostToolUse`. When
+> keeping both, merge their `hooks` entries into the **same** `PostToolUse` array — don't add a
+> second `PostToolUse` key.
 
 ---
 
@@ -111,6 +115,11 @@ minimal context and exit `0`.
       branch and stating it is a worktree (not `main`).
 - [ ] When a root `.env` is present and the worktree lacks one, the `.env` is copied in.
 - [ ] Outside a git repo, exits `0` with minimal context and no error.
+
+> Implementation/test note: derive the branch with `git -C "$cwd" ...`; the committed payload's
+> `cwd` is a placeholder path with no git history, so for the local test create a throwaway git
+> repo and point the payload `cwd` at it (or accept a branch-override env var, like `tool-logger`
+> uses `CLAUDE_TOOL_LOG`).
 
 ---
 
