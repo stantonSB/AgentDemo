@@ -1,47 +1,27 @@
-# Repo Doctor — AI Parallel Workflows Workshop
+# Worktrees, Agents & Hooks — Workshop
 
-A hands-on workshop for building a **repository health checker** using parallel Claude Code sessions with git worktrees. Participants implement independent analyzers concurrently, then merge them into a unified CLI tool that generates HTML health reports.
+A hands-on workshop on parallel Claude Code workflows. You'll learn git worktrees and agent
+patterns, then practise building **three useful Claude Code hooks in parallel worktrees** and copy
+the ones you like into your own `~/.claude`.
 
-## Choose Your Track
+## Contents
 
-| Track | Directory | Runtime | Guide |
-|-------|-----------|---------|-------|
-| TypeScript | `repo-doctor-ts/` | Bun | [Setup Guide](docs/setup-typescript.md) |
-| Ruby | `repo-doctor-ruby/` | Ruby + Bundler | [Setup Guide](docs/setup-ruby.md) |
+| Path | What |
+|------|------|
+| `workshop-slides/index.html` | The slide deck (presenter) |
+| `workshop-slides/speaker.html` | Same deck with always-visible speaker notes |
+| `claude-hooks-workshop/` | The hands-on scaffold — build several hooks in parallel |
+| `docs/setup-hooks-workshop.md` | Prerequisites & one-time setup |
 
-Both tracks produce the same result — a CLI that scans a git repo and outputs a scored health report. Pick whichever language you're most comfortable with.
+## How the hands-on works
 
-## How the Workshop Works
+1. Read `claude-hooks-workshop/EPIC.md` — three hook specs + a worked example.
+2. `claude --worktree` once per hook — build each in its own worktree, in parallel.
+3. Test each hook locally.
+4. Keep the ones you like by copying them into `~/.claude` (no merge or installer required).
 
-1. **Read the epic** — Each track has an `EPIC.md` listing 8 independent analyzers to build
-2. **Spin up parallel sessions** — Open multiple terminals and run `claude --worktree` in each
-3. **Assign analyzers** — Give each Claude session a different analyzer from the epic
-4. **Monitor and review** — Watch progress, review code as branches complete
-5. **Merge and run** — Merge worktree branches back to main, run the full tool
-6. **View your report** — Open the generated HTML report in a browser
-
-## Project Structure
-
-```
-.
-├── README.md                  # You are here
-├── docs/
-│   ├── setup-typescript.md    # TypeScript track setup guide
-│   └── setup-ruby.md         # Ruby track setup guide
-├── repo-doctor-ts/            # TypeScript track
-│   ├── EPIC.md                # Analyzer specifications
-│   ├── CLAUDE.md              # Claude Code project context
-│   └── src/                   # Source code
-├── repo-doctor-ruby/          # Ruby track
-│   ├── EPIC.md                # Analyzer specifications
-│   ├── CLAUDE.md              # Claude Code project context
-│   └── lib/                   # Source code
-└── workshop-slides/           # Presentation slides
-```
-
-## Prerequisites (All Tracks)
+## Prerequisites
 
 - [Claude Code](https://docs.anthropic.com/en/docs/claude-code) v2.1.32+
 - Git 2.15+ (worktree support)
-
-Track-specific prerequisites are listed in each setup guide.
+- `jq`, and `codacy-cli` for the Codacy hook — see `docs/setup-hooks-workshop.md`.
