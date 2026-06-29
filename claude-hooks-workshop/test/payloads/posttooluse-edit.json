@@ -1,0 +1,6 @@
+{
+  "hook_event_name": "PostToolUse",
+  "tool_name": "Edit",
+  "cwd": "/tmp/example-repo",
+  "tool_input": { "file_path": "samples/messy.js" }
+}
