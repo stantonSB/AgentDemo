@@ -1909,7 +1909,7 @@ my-project/
       });
       // Sync notes panel
       notesContents.forEach(n => n.classList.remove('active'));
-      const activeNote = document.querySelector(`.notes-content[data-slide="${current}"]`);
+      const activeNote = notesContents[current];
       if (activeNote) activeNote.classList.add('active');
       counter.textContent = `${current + 1} / ${slides.length}`;
       progress.style.width = `${((current + 1) / slides.length) * 100}%`;
