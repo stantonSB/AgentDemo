@@ -8,7 +8,7 @@
 set -euo pipefail
 
 payload="$(cat)"
-tool="$(printf '%s' "$payload" | jq -r '.tool_name // empty')"
+tool="$(printf '%s' "$payload" | jq -r '.tool_name // empty' 2>/dev/null || true)"
 
 log="${CLAUDE_TOOL_LOG:-$HOME/.claude/logs/tool-usage.log}"
 mkdir -p "$(dirname "$log")"

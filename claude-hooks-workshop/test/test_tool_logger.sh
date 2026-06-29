@@ -5,6 +5,7 @@ ROOT="$(cd "$HERE/.." && pwd)"
 . "$ROOT/test/lib/assert.sh"
 
 tmp="$(mktemp -d)"
+trap 'rm -rf "$tmp"' EXIT
 export CLAUDE_TOOL_LOG="$tmp/usage.log"
 
 # Appends the tool name to the log and exits 0
@@ -18,5 +19,8 @@ cat "$ROOT/test/payloads/pretooluse-bash.json" | "$ROOT/hooks/tool-logger.sh" >/
 lines="$(wc -l < "$CLAUDE_TOOL_LOG" | tr -d ' ')"
 assert_eq "2" "$lines" "second invocation appends a line"
 
-rm -rf "$tmp"
+# Malformed JSON still exits 0 (hook must not hard-fail on a bad payload)
+out="$(printf '%s' '{not json' | "$ROOT/hooks/tool-logger.sh"; echo "rc=$?")"
+assert_contains "$out" "rc=0" "tool-logger exits 0 on malformed JSON"
+
 echo "PASS: tool_logger"
