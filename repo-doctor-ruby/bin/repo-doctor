@@ -1,3 +1,0 @@
-#!/usr/bin/env ruby
-require_relative "../lib/cli"
-RepoDoctorCLI.run(ARGV)

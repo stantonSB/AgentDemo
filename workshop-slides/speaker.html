@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Parallel Workflows, Worktrees & Agent Teams — Speaker Notes</title>
+  <title>Worktrees, Agents &amp; Hooks — Speaker Notes</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -653,8 +653,8 @@
 
     <!-- Slide 1: Title -->
     <section class="slide">
-      <h1>Parallel Workflows,<br>Worktrees <span class="accent">&amp;</span> Agent Teams</h1>
-      <p class="subtitle">From one agent to many</p>
+      <h1>Worktrees, Agents <span class="accent">&amp;</span> Hooks</h1>
+      <p class="subtitle">From one agent to many — guided by hooks</p>
       <div style="margin-top:2rem; font-size:clamp(0.85rem,1.3vw,1.05rem); color:var(--text-muted);">
         <p><strong style="color:var(--text);">Stanton Borthwick</strong> &middot; Engineering Lead</p>
         <p style="margin-top:0.4rem;">Claude Code user since the closed beta &middot; GitHub Copilot closed beta (2022)</p>
@@ -769,7 +769,7 @@
         <span style="font-size:1.5rem; color:var(--text-muted); margin:0 0.5rem;">&rarr;</span>
         <div style="font-family:var(--font-mono); font-size:0.9rem; color:var(--accent2); background:rgba(63,185,80,0.1); border:1px solid rgba(63,185,80,0.3); padding:0.5rem 1rem; border-radius:8px;">git merge &check;</div>
       </div>
-      <p style="margin-top:2rem; font-size:clamp(0.95rem,1.5vw,1.2rem); color:var(--text-muted);">Next 20 minutes: <span class="accent">worktrees</span> &rarr; <span class="accent2">parallel workflows</span> &rarr; <span class="accent3">agent teams</span></p>
+      <p style="margin-top:2rem; font-size:clamp(0.95rem,1.5vw,1.2rem); color:var(--text-muted);">Next 20 minutes: <span class="accent">worktrees</span> &rarr; <span class="accent2">agents</span> &rarr; <span class="accent3">hooks</span></p>
       <div class="speaker-notes">Set the agenda. Acknowledge this sounds ideal — the rest of the talk covers the mechanics AND the constraints that determine when this actually pays off.</div>
     </section>
 
@@ -1076,7 +1076,7 @@ my-project/
     <!-- Slide 19: Full lifecycle -->
     <section class="slide">
       <h3>The full picture</h3>
-      <svg class="lifecycle-svg" viewBox="0 0 800 360" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <svg class="lifecycle-svg" viewBox="0 0 800 300" fill="none" xmlns="http://www.w3.org/2000/svg">
         <!-- Main branch line -->
         <line x1="50" y1="40" x2="750" y2="40" stroke="#8b949e" stroke-width="3"/>
         <text x="30" y="44" fill="#8b949e" font-size="13" text-anchor="end">main</text>
@@ -1088,39 +1088,31 @@ my-project/
         <line x1="180" y1="110" x2="500" y2="110" stroke="#58a6ff" stroke-width="3"/>
         <path d="M 500,110 H 570 Q 580,110 580,100 V 40" stroke="#58a6ff" stroke-width="2" stroke-dasharray="6,3" fill="none"/>
         <rect x="200" y="94" width="280" height="32" rx="6" fill="#18273a" stroke="#58a6ff" stroke-width="1.5"/>
-        <text x="340" y="115" fill="#58a6ff" font-size="13" text-anchor="middle">Feature: TODO Debt Tracker</text>
+        <text x="340" y="115" fill="#58a6ff" font-size="13" text-anchor="middle">Hook: format-on-save</text>
 
         <!-- Branch 2 (green) -->
         <path d="M 100,40 V 170 Q 100,180 110,180 H 180" stroke="#3fb950" stroke-width="2" stroke-dasharray="6,3" fill="none"/>
         <line x1="180" y1="180" x2="550" y2="180" stroke="#3fb950" stroke-width="3"/>
         <path d="M 550,180 H 630 Q 640,180 640,170 V 40" stroke="#3fb950" stroke-width="2" stroke-dasharray="6,3" fill="none"/>
         <rect x="200" y="164" width="330" height="32" rx="6" fill="#152a20" stroke="#3fb950" stroke-width="1.5"/>
-        <text x="365" y="185" fill="#3fb950" font-size="13" text-anchor="middle">Feature: Dead Code Detector</text>
+        <text x="365" y="185" fill="#3fb950" font-size="13" text-anchor="middle">Hook: codacy-analyze-on-save</text>
 
         <!-- Branch 3 (purple) -->
         <path d="M 100,40 V 240 Q 100,250 110,250 H 180" stroke="#d2a8ff" stroke-width="2" stroke-dasharray="6,3" fill="none"/>
         <line x1="180" y1="250" x2="450" y2="250" stroke="#d2a8ff" stroke-width="3"/>
         <path d="M 450,250 H 530 Q 540,250 540,240 V 40" stroke="#d2a8ff" stroke-width="2" stroke-dasharray="6,3" fill="none"/>
         <rect x="200" y="234" width="230" height="32" rx="6" fill="#2b283a" stroke="#d2a8ff" stroke-width="1.5"/>
-        <text x="315" y="255" fill="#d2a8ff" font-size="13" text-anchor="middle">Feature: Doc Health</text>
-
-        <!-- Branch 4 (orange) -->
-        <path d="M 100,40 V 310 Q 100,320 110,320 H 180" stroke="#f0883e" stroke-width="2" stroke-dasharray="6,3" fill="none"/>
-        <line x1="180" y1="320" x2="580" y2="320" stroke="#f0883e" stroke-width="3"/>
-        <path d="M 580,320 H 650 Q 660,320 660,310 V 40" stroke="#f0883e" stroke-width="2" stroke-dasharray="6,3" fill="none"/>
-        <rect x="200" y="304" width="360" height="32" rx="6" fill="#2f231d" stroke="#f0883e" stroke-width="1.5"/>
-        <text x="380" y="325" fill="#f0883e" font-size="13" text-anchor="middle">Feature: Dependency Staleness</text>
+        <text x="315" y="255" fill="#d2a8ff" font-size="13" text-anchor="middle">Hook: worktree-session-primer</text>
 
         <!-- Merge dots -->
         <circle cx="540" cy="40" r="5" fill="#d2a8ff"/>
         <circle cx="580" cy="40" r="5" fill="#58a6ff"/>
         <circle cx="640" cy="40" r="5" fill="#3fb950"/>
-        <circle cx="660" cy="40" r="5" fill="#f0883e"/>
 
         <!-- Time arrow -->
-        <line x1="50" y1="350" x2="750" y2="350" stroke="#30363d" stroke-width="1"/>
-        <polygon points="750,346 750,354 762,350" fill="#30363d"/>
-        <text x="400" y="345" fill="#8b949e" font-size="11" text-anchor="middle">time &rarr; parallel execution</text>
+        <line x1="50" y1="290" x2="750" y2="290" stroke="#30363d" stroke-width="1"/>
+        <polygon points="750,286 750,294 762,290" fill="#30363d"/>
+        <text x="400" y="285" fill="#8b949e" font-size="11" text-anchor="middle">time &rarr; build in worktrees &rarr; test &rarr; keep what you like</text>
       </svg>
       <div class="speaker-notes">This is what your git history looks like when you work this way.</div>
     </section>
@@ -1368,6 +1360,85 @@ my-project/
       <div class="speaker-notes">Position what we've covered on the spectrum. The worktree approach in the middle is where I spend most of my time — it's the sweet spot for my workflow.</div>
     </section>
 
+    <!-- ==================== ACT 5: HOOKS ==================== -->
+
+    <!-- Hooks 1: Act Title -->
+    <section class="slide act-title">
+      <h2>Hooks: Automate &amp; Enforce</h2>
+      <div class="speaker-notes">The new pillar. Worktrees and agents are about parallelism; hooks are about making each session automatically do the right thing.</div>
+    </section>
+
+    <!-- Hooks 2: What is a hook? -->
+    <section class="slide">
+      <h3>What is a hook?</h3>
+      <p class="big-text">Claude Code runs <span class="accent">your shell command</span> at lifecycle events.</p>
+      <p style="margin-top:1.5rem; font-size:clamp(1.1rem,2vw,1.5rem); color:var(--text);">A hook can <span class="accent2">observe</span>, <span class="accent3">inject context</span>, or <span class="accent5">block</span> an action.</p>
+      <div class="speaker-notes">The simplest mental model: at certain moments, Claude shells out to a script you control, hands it JSON, and reacts to what the script says.</div>
+    </section>
+
+    <!-- Hooks 3: The event lifecycle -->
+    <section class="slide">
+      <h3>The event lifecycle</h3>
+      <table>
+        <thead><tr><th>Event</th><th>Use it to&hellip;</th></tr></thead>
+        <tbody>
+          <tr><td><code>PreToolUse</code></td><td>Gate or deny a tool before it runs</td></tr>
+          <tr><td><code>PostToolUse</code></td><td>React after a tool — format, lint, verify</td></tr>
+          <tr><td><code>UserPromptSubmit</code></td><td>Inspect / augment a prompt</td></tr>
+          <tr><td><code>Notification</code></td><td>Surface "needs you" to your environment</td></tr>
+          <tr><td><code>Stop</code> / <code>SubagentStop</code></td><td>Act when a session / subagent finishes</td></tr>
+          <tr><td><code>SessionStart</code> / <code>SessionEnd</code></td><td>Prime context / clean up</td></tr>
+        </tbody>
+      </table>
+      <div class="speaker-notes">There are more events than this; these are the ones worth knowing first. Today's demo uses PostToolUse and SessionStart.</div>
+    </section>
+
+    <!-- Hooks 4: The contract -->
+    <section class="slide">
+      <h3>The contract</h3>
+      <pre><code><span class="comment"># stdin: the event as JSON</span>
+{ <span class="string">"hook_event_name"</span>: <span class="string">"PostToolUse"</span>,
+  <span class="string">"tool_name"</span>: <span class="string">"Edit"</span>,
+  <span class="string">"tool_input"</span>: { <span class="string">"file_path"</span>: <span class="string">"src/app.ts"</span> } }
+
+<span class="comment"># control by exit code…</span>
+exit 0   <span class="comment"># proceed</span>
+exit 2   <span class="comment"># PreToolUse: block + show stderr to Claude</span>
+         <span class="comment"># PostToolUse: tool already ran; stderr surfaces to Claude</span>
+
+<span class="comment"># …or by JSON on stdout</span>
+{ <span class="string">"hookSpecificOutput"</span>: { <span class="string">"additionalContext"</span>: <span class="string">"…"</span> } }</code></pre>
+      <p style="margin-top:1rem; font-size:clamp(0.9rem,1.5vw,1.2rem); color:var(--text-muted);">Registered in <code>settings.json</code> as <span class="accent">event &rarr; matcher &rarr; command</span></p>
+      <div class="speaker-notes">Two ways to talk back: exit codes for allow/block, JSON on stdout for richer control like adding context.</div>
+    </section>
+
+    <!-- Hooks 5: Real-world anchor -->
+    <section class="slide">
+      <h3>You've already seen one</h3>
+      <p style="font-size:clamp(1.1rem,2vw,1.5rem); color:var(--text);">The <span class="accent">Agent Orchestrator</span> status you watched all session is driven by a hook.</p>
+      <pre style="margin-top:1.5rem;"><code><span class="comment"># ~/.claude/settings.json (simplified)</span>
+<span class="string">"Notification"</span>, <span class="string">"Stop"</span>, <span class="string">"PreToolUse"</span>
+   &rarr; agent-orchestrator-notify.sh
+   &rarr; <span class="cmd">POST</span> session status to a local server</code></pre>
+      <p style="margin-top:1rem; font-size:clamp(0.9rem,1.5vw,1.2rem); color:var(--text-muted);">A handful of lines of bash. That's the whole trick.</p>
+      <div class="speaker-notes">Tie it back to the orchestrator demo from earlier. The "magic" status updates are just a Stop/Notification/PreToolUse hook POSTing to a local endpoint.</div>
+    </section>
+
+    <!-- Hooks 6: Gotchas & safety -->
+    <section class="slide">
+      <h3>Gotchas &amp; safety</h3>
+      <ul style="margin-top:1rem;">
+        <li>Hooks run <span class="accent5">arbitrary commands with your credentials</span> — review before wiring one in</li>
+        <li>They fire on <span class="accent4">every matching event</span> — keep them fast</li>
+        <li><span class="accent">Scope the matcher</span> tightly so they only run when relevant</li>
+        <li>Test against a sample payload <span class="accent2">before</span> keeping one</li>
+      </ul>
+      <div class="callout" style="margin-top:1.5rem;">
+        <p style="font-size:clamp(0.9rem,1.5vw,1.1rem);"><span class="accent4" style="font-weight:600;">The upside:</span> hooks turn soft policy ("don't commit secrets") into hard enforcement.</p>
+      </div>
+      <div class="speaker-notes">Be honest about the risk: a hook is code that runs automatically with your access. The payoff is real enforcement — exactly what we'll build next.</div>
+    </section>
+
     <!-- Slide 30: Questions -->
     <section class="slide">
       <h1>Questions?</h1>
@@ -1381,20 +1452,20 @@ my-project/
     <section class="slide" style="background:linear-gradient(135deg, var(--bg) 0%, #0a1628 100%);">
       <h2 style="font-size:clamp(2.5rem,5vw,4rem);">Let's put this into practice</h2>
       <div class="stagger" style="margin-top:2rem;">
-        <p style="font-size:clamp(1.2rem,2vw,1.6rem); color:var(--text);">You'll build a <span class="accent">Repo Doctor</span> tool using parallel worktrees</p>
+        <p style="font-size:clamp(1.2rem,2vw,1.6rem); color:var(--text);">You'll build <span class="accent">3 Claude Code hooks</span> in parallel worktrees</p>
       </div>
       <div style="display:flex; gap:1.5rem; margin-top:2.5rem; flex-wrap:wrap; justify-content:center;">
         <div style="background:rgba(88,166,255,0.08); border:1px solid rgba(88,166,255,0.25); border-radius:8px; padding:0.8rem 1.2rem; text-align:center;">
-          <p style="font-size:clamp(1.5rem,3vw,2.5rem); font-weight:700; color:var(--accent);">5</p>
-          <p style="font-size:0.85rem; color:var(--text-muted);">Core analyzers</p>
+          <p style="font-size:clamp(1.5rem,3vw,2.5rem); font-weight:700; color:var(--accent);">3</p>
+          <p style="font-size:0.85rem; color:var(--text-muted);">Hooks to build</p>
         </div>
         <div style="background:rgba(210,168,255,0.08); border:1px solid rgba(210,168,255,0.25); border-radius:8px; padding:0.8rem 1.2rem; text-align:center;">
           <p style="font-size:clamp(1.5rem,3vw,2.5rem); font-weight:700; color:var(--accent3);">3</p>
-          <p style="font-size:0.85rem; color:var(--text-muted);">Stretch goals</p>
+          <p style="font-size:0.85rem; color:var(--text-muted);">Parallel worktrees</p>
         </div>
         <div style="background:rgba(63,185,80,0.08); border:1px solid rgba(63,185,80,0.25); border-radius:8px; padding:0.8rem 1.2rem; text-align:center;">
-          <p style="font-size:clamp(1.5rem,3vw,2.5rem); font-weight:700; color:var(--accent2);">1</p>
-          <p style="font-size:0.85rem; color:var(--text-muted);">HTML report</p>
+          <p style="font-size:clamp(1.5rem,3vw,2.5rem); font-weight:700; color:var(--accent2);">&check;</p>
+          <p style="font-size:0.85rem; color:var(--text-muted);">Keep what you like</p>
         </div>
       </div>
       <div class="speaker-notes">Bridge to the hands-on section. The numbers give a quick sense of scope.</div>
@@ -1403,13 +1474,12 @@ my-project/
     <!-- Slide 32: Workshop overview -->
     <section class="slide">
       <h3>What you're building</h3>
-      <p style="margin-bottom:1rem; color:var(--text);"><code>repo-doctor</code> — a CLI that produces an HTML health report</p>
-      <pre><code><span class="cmd">repo-doctor</span> /path/to/any/repo <span class="flag">--output</span> report.html</code></pre>
-      <ul style="margin-top:1.5rem;">
-        <li><span class="accent">5 core analyzers</span> — everyone should complete</li>
-        <li><span class="accent3">3 stretch analyzers</span> — for fast finishers</li>
-        <li>Each analyzer is <span class="accent2">independent</span> — perfect for parallel worktrees</li>
-        <li>While independent, analyzers <span class="accent5">may share files</span> (e.g. types, utils) — factor this into your decomposition</li>
+      <p style="margin-bottom:1rem; color:var(--text);">Three independent hooks, each its own self-contained script file</p>
+      <ul style="margin-top:1rem;">
+        <li><code>format-on-save</code> — <span class="accent">PostToolUse</span>: format the file Claude just edited</li>
+        <li><code>codacy-analyze-on-save</code> — <span class="accent2">PostToolUse</span>: run Codacy on the edited file, surface issues back to Claude</li>
+        <li><code>worktree-session-primer</code> — <span class="accent3">SessionStart</span>: inject worktree context + copy <code>.env</code></li>
+        <li>Independent files &rarr; <span class="accent5">clean parallel work</span>; keep the ones you like</li>
       </ul>
       <div class="speaker-notes">Quick preview of what they'll build.</div>
     </section>
@@ -1419,31 +1489,11 @@ my-project/
       <h3>Your next 1h45</h3>
       <table class="workshop-timeline">
         <tbody>
-          <tr>
-            <td>0:00-0:10</td>
-            <td>Setup</td>
-            <td>Clone, install, run skeleton</td>
-          </tr>
-          <tr>
-            <td>0:10-0:20</td>
-            <td>Plan</td>
-            <td>Read EPIC.md, set up worktrees</td>
-          </tr>
-          <tr>
-            <td>0:20-1:20</td>
-            <td>Build</td>
-            <td>Parallel agents, one per worktree</td>
-          </tr>
-          <tr>
-            <td>1:20-1:35</td>
-            <td>Merge &amp; Run</td>
-            <td>Merge branches, view report</td>
-          </tr>
-          <tr>
-            <td>1:35-1:45</td>
-            <td>Show &amp; Tell</td>
-            <td>Share results, discuss workflow</td>
-          </tr>
+          <tr><td>0:00-0:10</td><td>Setup</td><td>Clone, install jq + codacy-cli, run test/run-tests.sh</td></tr>
+          <tr><td>0:10-0:20</td><td>Plan</td><td>Read EPIC.md, set up a worktree per hook</td></tr>
+          <tr><td>0:20-1:20</td><td>Build</td><td>Parallel sessions, one hook per worktree</td></tr>
+          <tr><td>1:20-1:35</td><td>Keep</td><td>Copy the hooks you like into ~/.claude</td></tr>
+          <tr><td>1:35-1:45</td><td>Show &amp; Tell</td><td>Share what you built, discuss workflow</td></tr>
         </tbody>
       </table>
       <div class="speaker-notes">Set expectations for timing.</div>
@@ -1452,16 +1502,16 @@ my-project/
     <!-- Slide 34: Quick start -->
     <section class="slide">
       <h3>Quick start</h3>
-      <pre><code><span class="cmd">git</span> clone &lt;repo-url&gt;
-<span class="cmd">cd</span> repo-doctor
-<span class="cmd">bun</span> install          <span class="comment"># or: bundle install</span>
-<span class="cmd">bun</span> run doctor test-fixtures/unhealthy-repo/</code></pre>
+      <pre><code><span class="cmd">git</span> clone https://github.com/stantonSB/AgentDemo.git
+<span class="cmd">cd</span> AgentDemo/claude-hooks-workshop
+<span class="cmd">bash</span> test/run-tests.sh                 <span class="comment"># scaffold sanity check</span>
+<span class="cmd">cat</span> test/payloads/pretooluse-bash.json | hooks/tool-logger.sh  <span class="comment"># try the example</span></code></pre>
       <div class="callout" style="margin-top:1.5rem; border-left-color:var(--accent2);">
-        <p style="font-size:clamp(0.9rem,1.4vw,1.1rem);"><span class="accent2" style="font-weight:600;">What you'll see:</span> The skeleton runs a sample "file count" analyzer against the test fixture repo and generates an HTML report. This proves everything works before you start building your own analyzers.</p>
+        <p style="font-size:clamp(0.9rem,1.4vw,1.1rem);"><span class="accent2" style="font-weight:600;">What you'll see:</span> The worked-example hook (<code>tool-logger</code>) appends tool invocations to a log. Read <code>EPIC.md</code> to see the three hooks you'll build.</p>
       </div>
       <div style="display:flex; gap:1rem; margin-top:1.2rem; justify-content:center; flex-wrap:wrap;">
-        <span style="font-family:var(--font-mono); font-size:0.85rem; background:var(--bg-alt); border:1px solid var(--border); padding:0.4rem 1rem; border-radius:6px; color:var(--text-muted);">Node 20+ &check;</span>
-        <span style="font-family:var(--font-mono); font-size:0.85rem; background:var(--bg-alt); border:1px solid var(--border); padding:0.4rem 1rem; border-radius:6px; color:var(--text-muted);">bun or yarn &check;</span>
+        <span style="font-family:var(--font-mono); font-size:0.85rem; background:var(--bg-alt); border:1px solid var(--border); padding:0.4rem 1rem; border-radius:6px; color:var(--text-muted);">jq &check;</span>
+        <span style="font-family:var(--font-mono); font-size:0.85rem; background:var(--bg-alt); border:1px solid var(--border); padding:0.4rem 1rem; border-radius:6px; color:var(--text-muted);">codacy-cli &check;</span>
         <span style="font-family:var(--font-mono); font-size:0.85rem; background:var(--bg-alt); border:1px solid var(--border); padding:0.4rem 1rem; border-radius:6px; color:var(--text-muted);">Claude Code v2.1.32+ &check;</span>
       </div>
       <div class="speaker-notes">This is what they do in the first 10 minutes. The prerequisite badges remind them what they need installed.</div>
@@ -1470,7 +1520,7 @@ my-project/
     <!-- Slide 35: Go! -->
     <section class="slide" style="background:linear-gradient(135deg, var(--bg) 0%, #0a1628 100%);">
       <h1 style="font-size:clamp(4rem,8vw,8rem); background:linear-gradient(135deg, var(--accent2), var(--accent)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;">Go build.</h1>
-      <p class="subtitle" style="margin-top:1rem;">Read EPIC.md. Decompose. Parallelise. Merge.</p>
+      <p class="subtitle" style="margin-top:1rem;">Read EPIC.md. Build 3 hooks in parallel. Keep what you like.</p>
       <div class="speaker-notes">Release them. Walk around and help.</div>
     </section>
 
@@ -1816,6 +1866,48 @@ my-project/
       </ul>
     </div>
 
+    <!-- Hooks act notes (selection is by DOM order; data-slide is cosmetic) -->
+    <div class="notes-content" data-slide="h1">
+      <p class="timing">~15 sec</p>
+      <div class="key-point">The new pillar. Worktrees/agents are about parallelism; hooks make each session do the right thing automatically.</div>
+    </div>
+    <div class="notes-content" data-slide="h2">
+      <p class="timing">~1 min</p>
+      <div class="key-point">Mental model: at certain moments Claude shells out to a script you control, hands it JSON, and reacts.</div>
+      <ul>
+        <li>A hook can observe, inject context, or block an action</li>
+      </ul>
+    </div>
+    <div class="notes-content" data-slide="h3">
+      <p class="timing">~1 min</p>
+      <div class="key-point">Walk the events. There are more; these are the ones worth knowing first.</div>
+      <ul>
+        <li>Today's demo uses PostToolUse (format + Codacy) and SessionStart (primer)</li>
+      </ul>
+    </div>
+    <div class="notes-content" data-slide="h4">
+      <p class="timing">~1.5 min</p>
+      <div class="key-point">Two ways to talk back: exit codes (allow/block) and JSON on stdout (add context).</div>
+      <ul>
+        <li>Stdin carries the event JSON: hook_event_name, cwd, tool_name, tool_input</li>
+        <li>Exit 2 on PreToolUse blocks and shows stderr to Claude</li>
+      </ul>
+    </div>
+    <div class="notes-content" data-slide="h5">
+      <p class="timing">~1 min</p>
+      <div class="key-point">Tie back to the Agent Orchestrator demo — its status is just a hook POSTing to a local endpoint.</div>
+      <ul>
+        <li>Notification / Stop / PreToolUse → a few lines of bash</li>
+      </ul>
+    </div>
+    <div class="notes-content" data-slide="h6">
+      <p class="timing">~1 min</p>
+      <div class="key-point">Be honest about the risk: a hook runs automatically with your access. Payoff: real enforcement.</div>
+      <ul>
+        <li>Keep them fast, scope the matcher, test before keeping</li>
+      </ul>
+    </div>
+
     <!-- 28: Questions? -->
     <div class="notes-content" data-slide="28">
       <p class="timing">~5 min</p>
@@ -1835,7 +1927,7 @@ my-project/
       <div class="key-point">Bridge to the hands-on section. Build excitement.</div>
       <h4>Talking points</h4>
       <ul>
-        <li>"Now it's your turn. You're going to build a real project using everything we just covered."</li>
+        <li>"Now it's your turn. You'll build several Claude Code hooks in parallel — keep the ones you like."</li>
         <li>Briefly describe the project — the numbers give a quick sense of scope</li>
         <li>Mention the repo they'll fork/clone</li>
       </ul>
@@ -1846,9 +1938,9 @@ my-project/
       <p class="timing">~1 min</p>
       <div class="key-point">Quick preview of what they'll build. Don't over-explain — they'll discover it.</div>
       <ul>
-        <li>Walk through the feature list briefly</li>
+        <li>Walk through the three hooks briefly</li>
         <li>"Each of these is an independent task — perfect for parallel worktrees"</li>
-        <li>"But note — while the analyzers are independent of each other, they may share files like types or utility modules. Think about this when you decompose. If two analyzers both need to add to a shared types file, that's a merge conflict waiting to happen."</li>
+        <li>"Each hook is its own self-contained file — naturally independent, no shared files, no merge conflicts."</li>
         <li>Point to EPIC.md — "All the details are in here. Read it first."</li>
       </ul>
     </div>
@@ -1879,7 +1971,7 @@ my-project/
       <p class="timing">~15 sec</p>
       <div class="key-point">Release them. Walk around and help.</div>
       <ul>
-        <li>"Go! Read EPIC.md. Decompose. Parallelise. Merge. I'll be walking around."</li>
+        <li>"Go! Read EPIC.md. Build 3 hooks in parallel. Keep what you like. I'll be walking around."</li>
         <li>Start a timer visible to the room if possible</li>
       </ul>
     </div>
@@ -1909,7 +2001,7 @@ my-project/
       });
       // Sync notes panel
       notesContents.forEach(n => n.classList.remove('active'));
-      const activeNote = document.querySelector(`.notes-content[data-slide="${current}"]`);
+      const activeNote = notesContents[current];
       if (activeNote) activeNote.classList.add('active');
       counter.textContent = `${current + 1} / ${slides.length}`;
       progress.style.width = `${((current + 1) / slides.length) * 100}%`;
