@@ -10,7 +10,7 @@ the ones you like into your own `~/.claude`.
 |------|------|
 | `workshop-slides/index.html` | The slide deck (presenter) |
 | `workshop-slides/speaker.html` | Same deck with always-visible speaker notes |
-| `claude-hooks-workshop/` | The hands-on scaffold — build several hooks in parallel |
+| `claude-hooks-workshop/` | The hands-on scaffold — build three hooks in parallel |
 | `docs/setup-hooks-workshop.md` | Prerequisites & one-time setup |
 
 ## How the hands-on works
@@ -22,6 +22,6 @@ the ones you like into your own `~/.claude`.
 
 ## Prerequisites
 
-- [Claude Code](https://docs.anthropic.com/en/docs/claude-code) v2.1.32+
+- [Claude Code](https://code.claude.com/docs) v2.1.32+
 - Git 2.15+ (worktree support)
 - `jq`, and `codacy-cli` for the Codacy hook — see `docs/setup-hooks-workshop.md`.

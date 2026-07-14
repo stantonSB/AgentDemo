@@ -586,7 +586,8 @@
         <p><strong style="color:var(--text);">Stanton Borthwick</strong> &middot; Engineering Lead</p>
         <p style="margin-top:0.4rem;">Claude Code user since the closed beta &middot; GitHub Copilot closed beta (2022)</p>
       </div>
-      <div class="speaker-notes">Welcome, introduce yourself. Frame the session: share how you run multiple Claude Code sessions in parallel — what's worked for you, what hasn't, and when the overhead is worth it. Qualify that there may be better approaches and you encourage experimentation.</div>
+      <p style="margin-top:2rem; font-size:clamp(0.8rem,1.2vw,0.95rem); color:var(--text-muted); font-style:italic; max-width:640px;">Disclaimer: I don't have all the answers — this is just how <span style="color:var(--text);">I</span> work. Experiment, trial different ways of working, and share what you find.</p>
+      <div class="speaker-notes">Welcome, introduce yourself. Frame the session: share how you run multiple Claude Code sessions in parallel — what's worked for you, what hasn't, and when the overhead is worth it. Point at the disclaimer: there may be better approaches, and you encourage experimentation.</div>
     </section>
 
     <!-- Slide 2: The Scenario -->
@@ -696,8 +697,9 @@
         <span style="font-size:1.5rem; color:var(--text-muted); margin:0 0.5rem;">&rarr;</span>
         <div style="font-family:var(--font-mono); font-size:0.9rem; color:var(--accent2); background:rgba(63,185,80,0.1); border:1px solid rgba(63,185,80,0.3); padding:0.5rem 1rem; border-radius:8px;">git merge &check;</div>
       </div>
-      <p style="margin-top:2rem; font-size:clamp(0.95rem,1.5vw,1.2rem); color:var(--text-muted);">Next 20 minutes: <span class="accent">worktrees</span> &rarr; <span class="accent2">agents</span> &rarr; <span class="accent3">hooks</span></p>
-      <div class="speaker-notes">Set the agenda. Acknowledge this sounds ideal — the rest of the talk covers the mechanics AND the constraints that determine when this actually pays off.</div>
+      <p style="margin-top:2rem; font-size:clamp(0.95rem,1.5vw,1.2rem); color:var(--text-muted);">Not hypothetical — Claude Code's creator works this way: <span class="accent">~5 parallel sessions</span>, each in its own worktree.</p>
+      <p style="margin-top:1rem; font-size:clamp(0.95rem,1.5vw,1.2rem); color:var(--text-muted);">Up next: <span class="accent">worktrees</span> &rarr; <span class="accent2">agents</span> &rarr; <span class="accent3">hooks</span></p>
+      <div class="speaker-notes">Set the agenda. Acknowledge this sounds ideal — the rest of the talk covers the mechanics AND the constraints that determine when this actually pays off. Credibility anchor: Boris Cherny, who created Claude Code, publicly runs ~5 instances in parallel worktrees with numbered terminal tabs (howborisusesclaudecode.com; InfoQ, Jan 2026).</div>
     </section>
 
     <!-- ==================== ACT 2: WORKTREES ==================== -->
@@ -833,7 +835,7 @@
             <span style="color:var(--text-muted);">Something went wrong</span>
           </div>
         </div>
-        <img src="assets/hero-demo.gif" alt="Agent Orchestrator demo" style="max-width:700px; width:100%; border-radius:8px; border:1px solid var(--border-color); box-shadow:0 4px 16px rgba(0,0,0,0.3);"/>
+        <img src="assets/hero-demo.gif" alt="Agent Orchestrator demo" style="max-width:700px; width:100%; border-radius:8px; border:1px solid var(--border); box-shadow:0 4px 16px rgba(0,0,0,0.3);"/>
       </div>
       <p style="margin-top:1rem; font-size:clamp(0.85rem,1.3vw,1rem); color:var(--text-muted);">Status monitoring &bull; One-click terminal into any worktree &bull; Session management</p>
       <p style="margin-top:0.75rem; font-size:clamp(0.85rem,1.3vw,1rem); color:var(--accent);">Interested? Join <strong>#agent-orchestrator-open-beta</strong> on Slack to learn more.</p>
@@ -922,7 +924,7 @@ my-project/
             </div>
             <div class="flow-step">
               <div class="step-number">4</div>
-              <div class="step-text">Monitor progress</div>
+              <div class="step-text">Monitor progress — <code>claude agents</code> shows every session on one screen</div>
             </div>
             <div class="flow-step">
               <div class="step-number">5</div>
@@ -964,41 +966,54 @@ my-project/
       <p style="margin-top:1rem; font-size:clamp(0.85rem,1.3vw,1rem); color:var(--text-muted); background:rgba(210,168,255,0.08); border:1px solid rgba(210,168,255,0.2); border-radius:6px; padding:0.6rem 1rem; display:inline-block;">Tip: Claude's brainstorming mode is great at figuring out how to decompose tasks and identify dependencies</p>
       <div class="speaker-notes">This is the most common mistake. Spend time on decomposition. Claude's brainstorming mode can help identify which tasks are truly independent.</div>
     </section>
-    <!-- Slide 18: Demo merging -->
+
+    <!-- Slide 16: Decompose with Claude -->
     <section class="slide">
-      <h2>Completing a worktree</h2>
-      <p class="subtitle">Two ways to land your work</p>
-      <div style="display:flex; gap:1.5rem; margin-top:1.5rem; width:100%; max-width:950px; flex-wrap:wrap; justify-content:center;">
-        <!-- Option A: Create PR via Claude -->
-        <div style="flex:1; min-width:380px; background:var(--bg-alt); border:1px solid var(--accent); border-radius:8px; padding:1.2rem 1.5rem; text-align:left;">
-          <h3 style="font-size:clamp(1rem,1.6vw,1.2rem); margin-bottom:0.8rem;"><span class="accent">Option A</span> — Create PR from worktree <span style="font-size:0.75em; background:rgba(88,166,255,0.15); color:var(--accent); padding:0.15rem 0.5rem; border-radius:4px; margin-left:0.3rem;">Recommended</span></h3>
-          <pre style="margin:0; font-size:clamp(0.8rem,1.2vw,0.95rem);"><code><span class="comment"># Inside the worktree, ask Claude:</span>
-<span class="prompt">&gt;</span> <span class="string">"Create a PR for this work"</span>
-
-<span class="comment"># Claude will:</span>
-<span class="comment">#   1. Commit &amp; push the branch</span>
-<span class="comment">#   2. Open a PR with summary + test plan</span>
-<span class="comment">#   3. Return the PR URL</span></code></pre>
+      <h3>Let Claude do the decomposition</h3>
+      <p class="subtitle">The split is the hardest part — so make it a Claude task too</p>
+      <div style="display:flex; align-items:center; gap:2rem; width:100%; max-width:1100px;">
+        <div style="flex:1 1 0; min-width:0; text-align:left;">
+          <ul style="margin-top:0.5rem;">
+            <li><span class="accent" style="font-weight:600;">Interview me first</span> — Claude asks about the edge cases and trade-offs you haven't considered, then writes the spec</li>
+            <li><span class="accent2" style="font-weight:600;">Split by file ownership</span> — every task names the files it owns; if two tasks share a file, they're one task</li>
+            <li><span class="accent3" style="font-weight:600;">Challenge the split</span> — "which of these would conflict? what must run sequentially?"</li>
+            <li><span class="accent4" style="font-weight:600;">Prompts are the deliverable</span> — one self-contained prompt per task: context, acceptance criteria, tests to run</li>
+          </ul>
         </div>
-        <!-- Option B: Manual merge -->
-        <div style="flex:1; min-width:380px; background:var(--bg-alt); border:1px solid var(--accent2); border-radius:8px; padding:1.2rem 1.5rem; text-align:left; opacity:0.5;">
-          <h3 style="font-size:clamp(1rem,1.6vw,1.2rem); margin-bottom:0.8rem;"><span class="accent2">Option B</span> — Direct merge to main</h3>
-          <pre style="margin:0; font-size:clamp(0.8rem,1.2vw,0.95rem);"><code><span class="comment"># 1. Switch to main</span>
-<span class="cmd">cd</span> /path/to/project
-<span class="cmd">git</span> checkout main
+        <div style="flex:1 1 0; min-width:0;">
+          <pre style="max-width:100%; margin:0; font-size:clamp(0.75rem,1.15vw,0.95rem);"><code><span class="comment"># In plan mode:</span>
+<span class="prompt">&gt;</span> <span class="string">"Interview me about this epic, then break
+   it into tasks that can run in parallel.
+   For each task list the files it owns —
+   flag any overlaps.
 
-<span class="comment"># 2. Merge the worktree branch</span>
-<span class="cmd">git</span> <span class="flag">merge</span> worktree-clever-fox-123
+   Then write a self-contained prompt per
+   task (context, acceptance criteria,
+   tests to run) into plans/task-*.md"</span>
 
-<span class="comment"># 3. Clean up</span>
-<span class="cmd">git</span> worktree remove .claude/worktrees/clever-fox-123</code></pre>
-          <p style="margin:0.8rem 0 0; font-size:clamp(0.75rem,1.1vw,0.9rem); color:var(--accent2); font-style:italic;">Not available at SB — branch protection rules require PRs for all merges to main.</p>
+<span class="comment"># One fresh session per prompt:</span>
+<span class="cmd">claude</span> <span class="flag">--worktree</span>  <span class="comment"># paste plans/task-1.md</span></code></pre>
         </div>
       </div>
       <div class="callout" style="margin-top:1rem;">
-        <p style="font-size:clamp(0.9rem,1.4vw,1.1rem);"><span class="accent2" style="font-weight:600;">Why no conflicts?</span> Each agent worked on different files in its own directory. Independent work = clean merges.</p>
+        <p style="font-size:clamp(0.9rem,1.4vw,1.1rem);"><span class="accent" style="font-weight:600;">Why self-contained?</span> Each worktree session starts with zero context — the prompt has to carry everything the agent needs.</p>
       </div>
-      <div class="speaker-notes">Show both paths. PRs are better for team workflows with review. Direct merge is faster for solo work.</div>
+      <div class="speaker-notes">Decomposition is itself a Claude task. Anthropic's docs recommend the interview pattern — Claude interviews you with questions, then writes the spec. Have it list file ownership per task to prove independence, then output one self-contained prompt per task. Fresh worktree sessions have zero planning context, so each prompt must stand alone. Practitioners' sweet spot: 3–5 parallel worktrees before review becomes the bottleneck.</div>
+    </section>
+
+    <!-- Slide 17b: Verification -->
+    <section class="slide">
+      <h3>Let agents verify their own work</h3>
+      <p class="big-text" style="font-size:clamp(1.5rem,2.8vw,2.2rem); margin-top:0.5rem;">Agents that can <span class="accent2">check their work</span> finish.<br>Agents that can't, <span class="accent5">drift</span>.</p>
+      <ul style="margin-top:1.5rem; max-width:44rem;">
+        <li>Give every session a <span class="accent">feedback loop</span> — tests to run, a browser to open, a payload to pipe</li>
+        <li>Make "run the tests" part of the <span class="accent2">plan</span>, not an afterthought</li>
+        <li>Claude Code's creator calls verification <span class="accent3">"probably the most important thing"</span> for quality</li>
+      </ul>
+      <div class="callout" style="margin-top:1rem; border-left-color:var(--accent2);">
+        <p style="font-size:clamp(0.9rem,1.4vw,1.1rem);"><span class="accent2" style="font-weight:600;">In today's lab:</span> every hook has acceptance tests — <code>bash test/run-tests.sh</code>. Tell your agent to make them pass before it reports done.</p>
+      </div>
+      <div class="speaker-notes">The most repeated lesson from heavy users: give the agent a way to validate its own output — tests, a browser, a linter. Without it, parallel agents multiply unreviewed mistakes; with it, they converge. This is why the workshop scaffold ships a test harness.</div>
     </section>
 
     <!-- Slide 19: Full lifecycle -->
@@ -1142,6 +1157,11 @@ my-project/
             <td>Shared task list with self-coordination</td>
           </tr>
           <tr>
+            <td style="color:var(--text); font-weight:600;">Execution</td>
+            <td>Background by default; can nest 5 levels deep</td>
+            <td>Live teammates alongside your session</td>
+          </tr>
+          <tr>
             <td style="color:var(--text); font-weight:600;">Best for</td>
             <td>Focused tasks — only the result matters</td>
             <td>Complex work requiring collaboration</td>
@@ -1153,7 +1173,7 @@ my-project/
           </tr>
         </tbody>
       </table>
-      <div class="speaker-notes">Use subagents when you just need a result. Use agent teams when agents need to talk.</div>
+      <div class="speaker-notes">Use subagents when you just need a result. Use agent teams when agents need to talk. Worth mentioning: subagents now run in the background by default, can spawn their own subagents (capped at 5 levels), and their permission prompts surface in your main session.</div>
     </section>
 
     <!-- Slide 24: Architecture comparison -->
@@ -1230,39 +1250,6 @@ my-project/
       <div class="speaker-notes">Don't oversell. These are real limitations.</div>
     </section>
 
-    <!-- Slide 27: Best practices -->
-    <section class="slide">
-      <h3>Best practices</h3>
-      <ul style="margin-top:1rem;">
-        <li><span class="accent">3-5 teammates</span> — sweet spot for coordination</li>
-        <li><span class="accent2">5-6 tasks per teammate</span> — enough to stay busy</li>
-        <li><span class="accent3">Each teammate owns different files</span> — avoid conflicts</li>
-        <li><span class="accent4">Start with research/review</span> — build confidence first</li>
-      </ul>
-      <div class="speaker-notes">Quick practical tips if they want to try agent teams after this session.</div>
-    </section>
-
-    <!-- Slide 28: Higher-level orchestration -->
-    <section class="slide">
-      <h3>For higher-level orchestration</h3>
-      <p style="margin-bottom:1.5rem; color:var(--text-muted);">Want multi-feature orchestration? These frameworks go beyond what we cover today:</p>
-      <div style="display:flex; flex-direction:column; gap:1rem; max-width:800px; width:100;">
-        <div style="display:flex; align-items:center; gap:1.2rem; background:rgba(88,166,255,0.06); border:1px solid rgba(88,166,255,0.2); border-radius:8px; padding:1rem 1.5rem; text-align:left;">
-          <span style="font-size:clamp(1.2rem,2vw,1.6rem); font-weight:700; color:var(--accent); min-width:160px;">Gastown</span>
-          <span style="font-size:clamp(0.85rem,1.3vw,1rem);">Multi-agent orchestration across repos. Coordinates feature-level work with cross-repo dependencies.</span>
-        </div>
-        <div style="display:flex; align-items:center; gap:1.2rem; background:rgba(63,185,80,0.06); border:1px solid rgba(63,185,80,0.2); border-radius:8px; padding:1rem 1.5rem; text-align:left;">
-          <span style="font-size:clamp(1.2rem,2vw,1.6rem); font-weight:700; color:var(--accent2); min-width:160px;">Citadel</span>
-          <span style="font-size:clamp(0.85rem,1.3vw,1rem);">Dependency-aware task scheduling. Knows which tasks block others and sequences them automatically.</span>
-        </div>
-        <div style="display:flex; align-items:center; gap:1.2rem; background:rgba(210,168,255,0.06); border:1px solid rgba(210,168,255,0.2); border-radius:8px; padding:1rem 1.5rem; text-align:left;">
-          <span style="font-size:clamp(1.2rem,2vw,1.6rem); font-weight:700; color:var(--accent3); min-width:160px;">Mission Control</span>
-          <span style="font-size:clamp(0.85rem,1.3vw,1rem);">Higher-level orchestration layer that manages agent teams across multiple features and projects.</span>
-        </div>
-      </div>
-      <div class="speaker-notes">Pointer for self-study. We won't cover these today.</div>
-    </section>
-
     <!-- Slide 29: The Spectrum -->
     <section class="slide">
       <h3>The spectrum</h3>
@@ -1282,7 +1269,7 @@ my-project/
         </div>
         <div class="spectrum-item" style="background:rgba(240,136,62,0.1); border:1px solid rgba(240,136,62,0.3); border-radius:0 8px 8px 0;">
           <div class="label">Full Orchestration</div>
-          <div class="sublabel">Gastown / Citadel / MC</div>
+          <div class="sublabel">Dynamic Workflows &middot; Gastown &middot; Citadel</div>
         </div>
       </div>
       <div class="speaker-notes">Position what we've covered on the spectrum. The worktree approach in the middle is where I spend most of my time — it's the sweet spot for my workflow.</div>
@@ -1301,7 +1288,8 @@ my-project/
       <h3>What is a hook?</h3>
       <p class="big-text">Claude Code runs <span class="accent">your shell command</span> at lifecycle events.</p>
       <p style="margin-top:1.5rem; font-size:clamp(1.1rem,2vw,1.5rem); color:var(--text);">A hook can <span class="accent2">observe</span>, <span class="accent3">inject context</span>, or <span class="accent5">block</span> an action.</p>
-      <div class="speaker-notes">The simplest mental model: at certain moments, Claude shells out to a script you control, hands it JSON, and reacts to what the script says.</div>
+      <p style="margin-top:1.5rem; font-size:clamp(1rem,1.7vw,1.3rem); color:var(--text-muted);">Instructions are <span class="accent4">suggestions</span>. Hooks are <span class="accent2">guarantees</span> — they always happen, whether or not Claude remembers.</p>
+      <div class="speaker-notes">The simplest mental model: at certain moments, Claude shells out to a script you control, hands it JSON, and reacts to what the script says. Land the thesis: hooks are for determinism — things that always happen, rather than things you hope the model chooses to do.</div>
     </section>
 
     <!-- Hooks 3: The event lifecycle -->
@@ -1318,7 +1306,10 @@ my-project/
           <tr><td><code>SessionStart</code> / <code>SessionEnd</code></td><td>Prime context / clean up</td></tr>
         </tbody>
       </table>
-      <div class="speaker-notes">There are more events than this; these are the ones worth knowing first. Today's demo uses PostToolUse and SessionStart.</div>
+      <div class="callout" style="margin-top:1rem;">
+        <p style="font-size:clamp(0.85rem,1.3vw,1rem);"><span class="accent" style="font-weight:600;">The starter set.</span> There are 20+ events today (<code>PostToolUseFailure</code>, <code>PreCompact</code>, <code>SubagentStart</code>, <code>PermissionRequest</code>, <code>WorktreeCreate</code>&hellip;), five handler types — command, HTTP, MCP tool, <em>prompt</em>, agent — and conditional matchers like <code>Bash(rm *)</code>. Browse yours with <code>/hooks</code>.</p>
+      </div>
+      <div class="speaker-notes">These six are the ones worth knowing first; today's demo uses PostToolUse and SessionStart. Mention the callout briefly: the surface is much bigger now — prompt hooks even let you put a small LLM judgment between Claude and a tool call. Point at code.claude.com/docs/en/hooks for the full list.</div>
     </section>
 
     <!-- Hooks 4: The contract -->
@@ -1360,18 +1351,41 @@ exit 2   <span class="comment"># PreToolUse: block + show stderr to Claude</span
         <li>They fire on <span class="accent4">every matching event</span> — keep them fast</li>
         <li><span class="accent">Scope the matcher</span> tightly so they only run when relevant</li>
         <li>Test against a sample payload <span class="accent2">before</span> keeping one</li>
+        <li>They buy <span class="accent3">determinism, not keystrokes</span> — fired at the wrong moment they just burn context</li>
       </ul>
       <div class="callout" style="margin-top:1.5rem;">
-        <p style="font-size:clamp(0.9rem,1.5vw,1.1rem);"><span class="accent4" style="font-weight:600;">The upside:</span> hooks turn soft policy ("don't commit secrets") into hard enforcement.</p>
+        <p style="font-size:clamp(0.9rem,1.5vw,1.1rem);"><span class="accent4" style="font-weight:600;">The upside:</span> hooks turn soft policy ("don't commit secrets") into hard enforcement. Auto mode gives you a classifier-run version of this for permissions out of the box — guards you write remain the hard floor.</p>
       </div>
-      <div class="speaker-notes">Be honest about the risk: a hook is code that runs automatically with your access. The payoff is real enforcement — exactly what we'll build next.</div>
+      <div class="speaker-notes">Be honest about the risk: a hook is code that runs automatically with your access. The payoff is real enforcement — exactly what we'll build next. Honest caveat worth naming: Armin Ronacher famously got "no efficiency gains" from hooks because they fired at the wrong granularity and wasted context. Today's lab hooks dodge that critique deliberately — single file, best-effort, exit 0.</div>
+    </section>
+
+    <!-- Hooks 7: Pick the right layer -->
+    <section class="slide">
+      <h3>Pick the right layer</h3>
+      <p style="margin-bottom:1.5rem; color:var(--text-muted);">Where should a rule live? Push it as far down the stack as it deserves:</p>
+      <div style="display:flex; flex-direction:column; gap:1rem; max-width:850px; width:100%;">
+        <div style="display:flex; align-items:center; gap:1.2rem; background:rgba(88,166,255,0.06); border:1px solid rgba(88,166,255,0.2); border-radius:8px; padding:1rem 1.5rem; text-align:left;">
+          <span style="font-family:var(--font-mono); font-size:clamp(0.95rem,1.6vw,1.2rem); font-weight:700; color:var(--accent); min-width:160px;">CLAUDE.md</span>
+          <span style="font-size:clamp(0.85rem,1.3vw,1rem);">Judgment &amp; conventions. Keep it under ~200 lines, and treat it as a living file — every time Claude gets something wrong, add the rule.</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:1.2rem; background:rgba(210,168,255,0.06); border:1px solid rgba(210,168,255,0.2); border-radius:8px; padding:1rem 1.5rem; text-align:left;">
+          <span style="font-family:var(--font-mono); font-size:clamp(0.95rem,1.6vw,1.2rem); font-weight:700; color:var(--accent3); min-width:160px;">Skills</span>
+          <span style="font-size:clamp(0.85rem,1.3vw,1rem);">Repeatable workflows, loaded on demand. ~8&ndash;12 well-chosen skills is the sweet spot before the context tax bites.</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:1.2rem; background:rgba(63,185,80,0.06); border:1px solid rgba(63,185,80,0.2); border-radius:8px; padding:1rem 1.5rem; text-align:left;">
+          <span style="font-family:var(--font-mono); font-size:clamp(0.95rem,1.6vw,1.2rem); font-weight:700; color:var(--accent2); min-width:160px;">Hooks</span>
+          <span style="font-size:clamp(0.85rem,1.3vw,1rem);">Guarantees. Anything that must <em>always</em> happen — formatting, guards, notifications — belongs here, not in prose.</span>
+        </div>
+      </div>
+      <p style="margin-top:1.5rem; font-size:clamp(1rem,1.8vw,1.4rem); color:var(--text); font-weight:600;">Instructions <span class="accent5">drift</span>. Hooks <span class="accent2">don't</span>.</p>
+      <div class="speaker-notes">Bloated CLAUDE.md is the community's #1 anti-pattern — past a few hundred lines adherence quietly collapses. Push automation down: prose for judgment, skills for workflows, hooks for enforcement. For bigger rule sets, .claude/rules/ supports path-scoped files that only load when matching files are touched.</div>
     </section>
 
     <!-- Slide 30: Questions -->
     <section class="slide">
       <h1>Questions?</h1>
       <p class="subtitle">Before we jump into the hands-on session</p>
-      <div class="speaker-notes">5 min buffer. Take questions. If no questions, use the time to let people set up early.</div>
+      <div class="speaker-notes">Take questions. If none, use the time to let people set up early.</div>
     </section>
 
     <!-- ==================== WORKSHOP TRANSITION ==================== -->
@@ -1412,22 +1426,37 @@ exit 2   <span class="comment"># PreToolUse: block + show stderr to Claude</span
       <div class="speaker-notes">Quick preview of what they'll build.</div>
     </section>
 
+    <!-- Slide 32b: How the hands-on runs -->
+    <section class="slide">
+      <h3>How the hands-on runs</h3>
+      <table class="workshop-timeline">
+        <tbody>
+          <tr><td>1</td><td>Setup</td><td>Clone, install jq + codacy-cli, run test/run-tests.sh</td></tr>
+          <tr><td>2</td><td>Plan</td><td>Read EPIC.md, set up a worktree per hook</td></tr>
+          <tr><td>3</td><td>Build</td><td>Parallel sessions, one hook per worktree</td></tr>
+          <tr><td>4</td><td>Keep</td><td>Copy the hooks you like into ~/.claude</td></tr>
+          <tr><td>5</td><td>Show &amp; Tell</td><td>Share what you built, discuss workflow</td></tr>
+        </tbody>
+      </table>
+      <div class="speaker-notes">Walk the phases in order. Don't rush the plan step — decomposition is the highest-leverage part. Mention you'll be walking around to help.</div>
+    </section>
+
     <!-- Slide 33: Quick start -->
     <section class="slide">
       <h3>Quick start</h3>
       <pre><code><span class="cmd">git</span> clone https://github.com/stantonSB/AgentDemo.git
 <span class="cmd">cd</span> AgentDemo/claude-hooks-workshop
-<span class="cmd">bash</span> test/run-tests.sh                 <span class="comment"># scaffold sanity check</span>
-<span class="cmd">cat</span> test/payloads/pretooluse-bash.json | hooks/tool-logger.sh  <span class="comment"># try the example</span></code></pre>
+<span class="cmd">claude</span> <span class="flag">--worktree</span>                      <span class="comment"># one per hook — repeat in 2 more terminals</span></code></pre>
       <div class="callout" style="margin-top:1.5rem; border-left-color:var(--accent2);">
-        <p style="font-size:clamp(0.9rem,1.4vw,1.1rem);"><span class="accent2" style="font-weight:600;">What you'll see:</span> The worked-example hook (<code>tool-logger</code>) appends tool invocations to a log. Read <code>EPIC.md</code> to see the three hooks you'll build.</p>
+        <p style="font-size:clamp(0.9rem,1.4vw,1.1rem);"><span class="accent2" style="font-weight:600;">Then:</span> read <code>EPIC.md</code> for the three hook specs. The worked example (<code>hooks/tool-logger.sh</code>) shows the full pattern — copy its shape.</p>
       </div>
       <div style="display:flex; gap:1rem; margin-top:1.2rem; justify-content:center; flex-wrap:wrap;">
         <span style="font-family:var(--font-mono); font-size:0.85rem; background:var(--bg-alt); border:1px solid var(--border); padding:0.4rem 1rem; border-radius:6px; color:var(--text-muted);">jq &check;</span>
         <span style="font-family:var(--font-mono); font-size:0.85rem; background:var(--bg-alt); border:1px solid var(--border); padding:0.4rem 1rem; border-radius:6px; color:var(--text-muted);">codacy-cli &check;</span>
         <span style="font-family:var(--font-mono); font-size:0.85rem; background:var(--bg-alt); border:1px solid var(--border); padding:0.4rem 1rem; border-radius:6px; color:var(--text-muted);">Claude Code v2.1.32+ &check;</span>
       </div>
-      <div class="speaker-notes">This is what they do in the first 10 minutes. The prerequisite badges remind them what they need installed.</div>
+      <p style="margin-top:1rem; font-size:clamp(0.8rem,1.2vw,0.95rem); color:var(--text-muted);">Bonus while agents work: run <code>/statusline</code> — Claude generates a status line showing model, session cost, and context remaining.</p>
+      <div class="speaker-notes">Straight to parallel: clone, cd, then claude --worktree once per hook in separate terminals — the goal is parallel branches running within minutes. EPIC.md has the specs; tool-logger.sh is the reference pattern. The prerequisite badges remind them what they need installed. The /statusline aside is a 30-second delight — Claude writes the script for you.</div>
     </section>
 
     <!-- Slide 34: Planning before building -->
@@ -1452,7 +1481,10 @@ exit 2   <span class="comment"># PreToolUse: block + show stderr to Claude</span
       <div class="callout" style="margin-top:1.2rem; max-width:44rem; border-left-color:var(--accent4); text-align:left;">
         <p style="font-size:clamp(0.85rem,1.3vw,1rem);"><span class="accent4" style="font-weight:600;">Pro tip:</span> Ask Claude to generate an implementation prompt for each plan. Once plans are merged to main, copy those prompts into fresh sessions with <code>claude --worktree</code> to kick off parallel agent teams.</p>
       </div>
-      <div class="speaker-notes">Planning phase is critical — brainstorm the decomposition, write plans, review them, then hand off to parallel agents. The prompt-copy trick avoids context pollution between planning and implementation.</div>
+      <div class="callout" style="margin-top:0.8rem; max-width:44rem; border-left-color:var(--accent2); text-align:left;">
+        <p style="font-size:clamp(0.85rem,1.3vw,1rem);"><span class="accent2" style="font-weight:600;">Running behind?</span> Ready-made plans (with kickoff prompts) are committed in <code>plans/</code> — skip straight to <code>claude --worktree</code>.</p>
+      </div>
+      <div class="speaker-notes">Planning phase is critical — brainstorm the decomposition, write plans, review them, then hand off to parallel agents. The prompt-copy trick avoids context pollution between planning and implementation. Time fallback: pre-baked plans with kickoff prompts are committed in plans/ — if the session is running long, point people there and go straight to implementation.</div>
     </section>
 
     <!-- Slide 35: Go! -->
