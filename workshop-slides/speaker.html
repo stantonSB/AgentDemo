@@ -11,6 +11,7 @@
       --bg: #0d1117;
       --bg-alt: #161b22;
       --text: #e6edf3;
+      --text-body: #b6c2cf;
       --text-muted: #8b949e;
       --accent: #58a6ff;
       --accent2: #3fb950;
@@ -141,6 +142,23 @@
       transform: translateX(-40px);
     }
 
+    /* Content slides: fixed header zone, title anchored near top (S1) */
+    .slide.content {
+      justify-content: flex-start;
+      padding-top: 10.5vh;
+    }
+
+    /* Act eyebrow above content titles (S1) */
+    .eyebrow {
+      font-family: var(--font-mono);
+      font-size: clamp(0.95rem, 1.3vw, 1.1rem);
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.6rem;
+    }
+
     /* Typography */
     h1 {
       font-size: clamp(2.5rem, 5vw, 4.5rem);
@@ -159,7 +177,7 @@
     }
 
     h3 {
-      font-size: clamp(1.5rem, 3vw, 2.5rem);
+      font-size: clamp(1.7rem, 2.8vw, 2.5rem);
       font-weight: 600;
       line-height: 1.3;
       margin-bottom: 0.75rem;
@@ -168,7 +186,7 @@
     p, li {
       font-size: clamp(1.1rem, 2vw, 1.6rem);
       line-height: 1.6;
-      color: var(--text-muted);
+      color: var(--text-body);
     }
 
     .subtitle {
@@ -253,17 +271,21 @@
     ol { padding-left: 1.5rem; }
     ol li::marker { color: var(--accent); font-weight: 700; }
 
+    /* Semantic bullet markers (H5) */
+    ul.bullets-x li::before   { content: "\2717"; color: var(--accent5); }
+    ul.bullets-check li::before { content: "\2713"; color: var(--accent2); }
+
     /* Tables */
     table {
       border-collapse: collapse;
       width: 100%;
       max-width: 900px;
       margin: 1rem 0;
-      font-size: clamp(0.85rem, 1.4vw, 1.1rem);
+      font-size: clamp(0.95rem, 1.5vw, 1.2rem);
     }
 
     th, td {
-      padding: 0.75rem 1rem;
+      padding: 0.9rem 1.1rem;
       text-align: left;
       border-bottom: 1px solid var(--border);
     }
@@ -274,7 +296,7 @@
       border-bottom: 2px solid var(--accent);
     }
 
-    td { color: var(--text-muted); }
+    td { color: var(--text-body); }
 
     /* Two-column layout */
     .columns {
@@ -295,6 +317,20 @@
       font-size: clamp(1.2rem, 2vw, 1.6rem);
       margin-bottom: 1rem;
     }
+
+    /* Shared card (C2) — one padding/radius/border convention + tint modifiers */
+    .card {
+      background: var(--bg-alt);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.2rem 1.5rem;
+      text-align: left;
+    }
+    .card.blue   { background: rgba(88,166,255,0.08);  border-color: rgba(88,166,255,0.3); }
+    .card.green  { background: rgba(63,185,80,0.08);   border-color: rgba(63,185,80,0.3); }
+    .card.orange { background: rgba(240,136,62,0.08);  border-color: rgba(240,136,62,0.3); }
+    .card.purple { background: rgba(210,168,255,0.08); border-color: rgba(210,168,255,0.3); }
+    .card.neutral { background: var(--bg-alt); border-color: var(--border); }
 
     /* Diagrams */
     .diagram {
@@ -319,8 +355,8 @@
 
     .timeline-label {
       width: 80px;
-      font-size: 0.85rem;
-      color: var(--text-muted);
+      font-size: 0.95rem;
+      color: var(--text-body);
       font-family: var(--font-mono);
       text-align: right;
       padding-right: 12px;
@@ -333,7 +369,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 0.8rem;
+      font-size: 0.95rem;
       font-weight: 600;
       font-family: var(--font-mono);
       color: var(--bg);
@@ -345,6 +381,131 @@
       font-size: clamp(1rem, 1.8vw, 1.4rem);
       font-weight: 700;
       margin-top: 1rem;
+    }
+
+    /* Shared-time-axis comparison diagram (H1) */
+    .timeaxis {
+      --lbl: 96px;
+      --gap: 12px;
+      --sum: 168px;
+      max-width: 1180px;
+      width: 100%;
+      margin: 0.5rem auto 0;
+    }
+    .ta-row {
+      display: flex;
+      align-items: center;
+      gap: var(--gap);
+      margin-bottom: 9px;
+    }
+    .ta-label {
+      width: var(--lbl);
+      flex-shrink: 0;
+      text-align: right;
+      font-family: var(--font-mono);
+      font-size: 0.95rem;
+      color: var(--text-body);
+    }
+    .ta-track {
+      flex: 1;
+      position: relative;
+      display: flex;
+      gap: 0;
+      height: 42px;
+    }
+    .ta-track .task-block { border: 1px solid var(--bg); }
+    .ta-sum {
+      width: var(--sum);
+      flex-shrink: 0;
+      font-family: var(--font-mono);
+      font-weight: 700;
+      font-size: clamp(1rem, 1.5vw, 1.3rem);
+      text-align: left;
+    }
+    .ta-axis { margin-bottom: 6px; }
+    .ta-axis .ta-track { height: 1.2rem; }
+    .ta-tick {
+      position: absolute;
+      transform: translateX(-50%);
+      top: 0;
+      font-family: var(--font-mono);
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+    .task-block.seq { background: #30363d; color: #c9d1d9; }
+    .task-block.w1  { background: var(--accent);  color: var(--bg); }
+    .task-block.w2  { background: var(--accent2); color: var(--bg); }
+    .ta-pargroup { position: relative; }
+    .ta-pargroup .ta-track {
+      background: rgba(255,255,255,0.025);
+      border-radius: 6px;
+    }
+    .ta-reclaimed {
+      position: absolute;
+      top: 2px;
+      bottom: 2px;
+      left: calc(var(--lbl) + var(--gap) + (100% - var(--lbl) - (2 * var(--gap)) - var(--sum)) * 0.25);
+      right: calc(var(--sum) + var(--gap));
+      border: 2px dashed rgba(63,185,80,0.7);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--accent2);
+      font-family: var(--font-mono);
+      font-weight: 700;
+      font-size: clamp(1rem, 1.6vw, 1.35rem);
+      pointer-events: none;
+    }
+    .ta-par-sum {
+      position: absolute;
+      right: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: var(--sum);
+      font-family: var(--font-mono);
+      font-weight: 700;
+      font-size: clamp(1rem, 1.5vw, 1.3rem);
+      color: var(--accent2);
+    }
+    .ta-par-sum .sub { color: var(--text-muted); font-weight: 400; font-size: 0.8em; }
+    .wave-legend {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      margin-top: 1.75rem;
+      flex-wrap: wrap;
+    }
+    .wave-pill {
+      font-family: var(--font-mono);
+      font-size: clamp(0.95rem, 1.3vw, 1.1rem);
+      font-weight: 700;
+      padding: 0.3rem 1rem;
+      border-radius: 999px;
+    }
+    .wave-pill.blue  { color: var(--accent);  background: rgba(88,166,255,0.12); border: 1px solid rgba(88,166,255,0.35); }
+    .wave-pill.green { color: var(--accent2); background: rgba(63,185,80,0.12);  border: 1px solid rgba(63,185,80,0.35); }
+    .wave-chev { color: var(--text-muted); font-size: 1.4rem; font-weight: 700; }
+    .wave-caption {
+      font-family: var(--font-mono);
+      font-size: clamp(0.95rem, 1.3vw, 1.1rem);
+      color: var(--text-muted);
+      margin-left: 0.75rem;
+    }
+
+    /* Image caption + mono footnote (S4 / C10) */
+    .img-caption {
+      font-size: clamp(0.9rem, 1.3vw, 1.05rem);
+      color: var(--text-muted);
+      margin-top: 0.75rem;
+      text-align: center;
+    }
+    .step-footnote {
+      font-family: var(--font-mono);
+      font-size: clamp(0.9rem, 1.2vw, 1rem);
+      color: var(--text-muted);
+      margin-top: 1.1rem;
     }
 
     /* Flow steps */
@@ -382,53 +543,86 @@
       color: var(--text);
     }
 
-    /* Spectrum */
+    /* Spectrum (H4) */
     .spectrum {
       display: flex;
       align-items: stretch;
-      max-width: 1000px;
+      max-width: 1050px;
       width: 100%;
-      gap: 4px;
-      margin: 2rem 0;
+      gap: 10px;
+      margin: 2.5rem 0 0;
     }
 
     .spectrum-item {
       flex: 1;
-      padding: 1.2rem 0.8rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 1.4rem 1rem;
       border-radius: 8px;
       text-align: center;
       position: relative;
+      background: var(--bg-alt);
+      border: 1px solid var(--border);
+    }
+
+    .spectrum-item.here {
+      background: rgba(63,185,80,0.12);
+      border: 2px solid var(--accent2);
     }
 
     .spectrum-item .label {
-      font-size: clamp(0.75rem, 1.2vw, 0.95rem);
+      font-size: clamp(0.95rem, 1.4vw, 1.15rem);
       font-weight: 600;
       color: var(--text);
     }
 
     .spectrum-item .sublabel {
-      font-size: clamp(0.65rem, 1vw, 0.8rem);
+      font-size: clamp(0.85rem, 1.1vw, 0.98rem);
       color: var(--text-muted);
-      margin-top: 0.3rem;
+      margin-top: 0.4rem;
+    }
+
+    /* Continuum track beneath the spectrum cards */
+    .spectrum-track {
+      max-width: 1050px;
+      width: 100%;
+      height: 8px;
+      margin-top: 14px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, rgba(88,166,255,0.15), var(--accent));
+      position: relative;
+    }
+    .spectrum-track::after {
+      content: "";
+      position: absolute;
+      right: -2px;
+      top: 50%;
+      transform: translateY(-50%);
+      border-left: 14px solid var(--accent);
+      border-top: 8px solid transparent;
+      border-bottom: 8px solid transparent;
     }
 
     .you-are-here {
       position: absolute;
-      top: -28px;
+      top: -34px;
       left: 50%;
       transform: translateX(-50%);
-      font-size: 0.75rem;
+      font-size: clamp(0.95rem, 1.3vw, 1.1rem);
       font-weight: 700;
       color: var(--accent2);
       white-space: nowrap;
       font-family: var(--font-mono);
+      letter-spacing: 0.08em;
     }
 
     .you-are-here::after {
       content: "\25BC";
       display: block;
       text-align: center;
-      margin-top: 2px;
+      margin-top: 0;
+      font-size: 1.1em;
     }
 
     /* Staggered reveal animation */
@@ -437,12 +631,12 @@
       transform: translateY(20px);
     }
 
-    .slide.active .stagger > *:nth-child(1) { animation: fadeUp 0.5s 0.2s forwards; }
-    .slide.active .stagger > *:nth-child(2) { animation: fadeUp 0.5s 0.5s forwards; }
-    .slide.active .stagger > *:nth-child(3) { animation: fadeUp 0.5s 0.8s forwards; }
-    .slide.active .stagger > *:nth-child(4) { animation: fadeUp 0.5s 1.1s forwards; }
-    .slide.active .stagger > *:nth-child(5) { animation: fadeUp 0.5s 1.4s forwards; }
-    .slide.active .stagger > *:nth-child(6) { animation: fadeUp 0.5s 1.7s forwards; }
+    .slide.active .stagger > *:nth-child(1) { animation: fadeUp 0.5s 0.1s forwards; }
+    .slide.active .stagger > *:nth-child(2) { animation: fadeUp 0.5s 0.25s forwards; }
+    .slide.active .stagger > *:nth-child(3) { animation: fadeUp 0.5s 0.4s forwards; }
+    .slide.active .stagger > *:nth-child(4) { animation: fadeUp 0.5s 0.55s forwards; }
+    .slide.active .stagger > *:nth-child(5) { animation: fadeUp 0.5s 0.7s forwards; }
+    .slide.active .stagger > *:nth-child(6) { animation: fadeUp 0.5s 0.85s forwards; }
 
     @keyframes fadeUp {
       to { opacity: 1; transform: translateY(0); }
@@ -466,6 +660,55 @@
     @keyframes pulse {
       0%, 100% { opacity: 1; }
       50% { opacity: 0.7; }
+    }
+
+    /* Agent Orchestrator status strip (H2) */
+    .status-strip {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 0.9rem;
+    }
+    .status-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: clamp(0.95rem, 1.3vw, 1.1rem);
+      font-weight: 600;
+      color: var(--text-body);
+      background: var(--bg-alt);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 0.4rem 0.9rem;
+    }
+    .status-chip .dot {
+      width: 12px; height: 12px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .infosec-chip {
+      display: inline-block;
+      font-size: clamp(0.8rem, 1.1vw, 0.95rem);
+      font-weight: 700;
+      color: var(--accent2);
+      background: rgba(63,185,80,0.12);
+      border: 1px solid rgba(63,185,80,0.35);
+      border-radius: 999px;
+      padding: 0.2rem 0.8rem;
+      margin-left: 0.5rem;
+      vertical-align: middle;
+    }
+    .slack-badge {
+      display: inline-block;
+      margin-top: 0.9rem;
+      font-family: var(--font-mono);
+      font-size: clamp(0.9rem, 1.3vw, 1.05rem);
+      color: var(--accent);
+      background: rgba(88,166,255,0.08);
+      border: 1px solid rgba(88,166,255,0.3);
+      border-radius: 999px;
+      padding: 0.45rem 1.1rem;
     }
 
     /* Checklist for demo slides */
@@ -560,6 +803,7 @@
     /* Act title slides */
     .slide.act-title {
       background: linear-gradient(135deg, var(--bg) 0%, var(--bg-alt) 100%);
+      overflow: hidden;
     }
 
     .slide.act-title h2 {
@@ -568,12 +812,38 @@
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Ghost act numeral + one-line promise (C3) */
+    .act-numeral {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -54%);
+      font-size: clamp(14rem, 34vw, 30rem);
+      font-weight: 800;
+      line-height: 1;
+      color: var(--accent);
+      opacity: 0.05;
+      z-index: 0;
+      pointer-events: none;
+      letter-spacing: -0.03em;
+    }
+
+    .act-promise {
+      position: relative;
+      z-index: 1;
+      margin-top: 1.25rem;
+      color: var(--text-muted);
+      font-size: clamp(1rem, 1.8vw, 1.4rem);
     }
 
     /* Warn/info boxes */
     .callout {
       background: var(--bg-alt);
-      border-left: 4px solid var(--accent4);
+      border-left: 4px solid var(--accent);
       padding: 1rem 1.5rem;
       border-radius: 0 8px 8px 0;
       text-align: left;
@@ -581,6 +851,8 @@
       width: 100%;
       margin: 1rem 0;
     }
+    .callout.caution { border-left-color: var(--accent4); }
+    .callout.good { border-left-color: var(--accent2); }
 
     /* Workshop timeline table */
     .workshop-timeline {
@@ -624,8 +896,9 @@
 
     /* SVG lifecycle diagram */
     .lifecycle-svg {
-      max-width: 900px;
+      max-width: 1150px;
       width: 100%;
+      margin-top: 1.5rem;
     }
 
     .lifecycle-svg text {
@@ -654,9 +927,10 @@
     </section>
 
     <!-- Slide 2: The Scenario -->
-    <section class="slide">
+    <section class="slide content">
       <div class="stagger">
-        <h2>The scenario</h2>
+        <p class="eyebrow">The problem</p>
+        <h3>The scenario</h3>
         <p style="font-size:clamp(1.3rem,2.5vw,2rem); color:var(--text);">You have <span class="accent">8 features</span> to build.</p>
         <p style="font-size:clamp(1.3rem,2.5vw,2rem); color:var(--text);">You open Claude Code.</p>
         <p style="font-size:clamp(1.3rem,2.5vw,2rem); color:var(--text);">You do them <span class="accent5">one at a time</span>.</p>
@@ -665,103 +939,106 @@
       <div class="speaker-notes">Relatable scenario — who has been here?</div>
     </section>
 
-    <!-- Slide 3: Sequential Timeline -->
-    <section class="slide">
-      <h3>Sequential execution</h3>
-      <div class="diagram">
-        <div class="timeline">
-          <div class="timeline-row">
-            <span class="timeline-label">Agent 1</span>
-            <div class="task-block" style="width:12%; background:#58a6ff;">F1</div>
-            <div class="task-block" style="width:12%; background:#3fb950;">F2</div>
-            <div class="task-block" style="width:12%; background:#d2a8ff;">F3</div>
-            <div class="task-block" style="width:12%; background:#f0883e;">F4</div>
-            <div class="task-block" style="width:12%; background:#f85149;">F5</div>
-            <div class="task-block" style="width:12%; background:#79c0ff;">F6</div>
-            <div class="task-block" style="width:12%; background:#56d364;">F7</div>
-            <div class="task-block" style="width:12%; background:#bc8cff;">F8</div>
+    <!-- Slide 3+4 (merged): Sequential vs parallel on one time axis (H1) -->
+    <section class="slide content">
+      <p class="eyebrow">The problem</p>
+      <h3>Sequential vs parallel</h3>
+      <div class="timeaxis" style="margin-top:2.5rem;">
+        <!-- Shared 0–8h axis -->
+        <div class="ta-row ta-axis">
+          <span class="ta-label"></span>
+          <div class="ta-track">
+            <span class="ta-tick" style="left:0%;">0</span>
+            <span class="ta-tick" style="left:12.5%;">1</span>
+            <span class="ta-tick" style="left:25%;">2</span>
+            <span class="ta-tick" style="left:37.5%;">3</span>
+            <span class="ta-tick" style="left:50%;">4</span>
+            <span class="ta-tick" style="left:62.5%;">5</span>
+            <span class="ta-tick" style="left:75%;">6</span>
+            <span class="ta-tick" style="left:87.5%;">7</span>
+            <span class="ta-tick" style="left:100%;">8h</span>
           </div>
+          <span class="ta-sum"></span>
         </div>
-        <div class="time-label accent5">~8 hours</div>
-      </div>
-      <div class="speaker-notes">This is how I started out — one task at a time, waiting for each to finish before starting the next.</div>
-    </section>
 
-    <!-- Slide 4: Parallel Waves Timeline -->
-    <section class="slide">
-      <h3>Parallel execution <span class="accent">in waves</span></h3>
-      <div class="diagram">
-        <div style="display:flex; gap:2rem; width:100%; justify-content:center; align-items:flex-start;">
-          <!-- Wave 1 -->
-          <div style="flex:1; max-width:420px;">
-            <div style="text-align:center; margin-bottom:0.75rem;">
-              <span style="font-family:var(--font-mono); font-size:0.9rem; font-weight:700; color:var(--accent); background:rgba(88,166,255,0.12); padding:0.3rem 1rem; border-radius:999px; border:1px solid rgba(88,166,255,0.3);">Wave 1</span>
-            </div>
-            <div class="timeline">
-              <div class="timeline-row">
-                <span class="timeline-label">Agent 1</span>
-                <div class="task-block" style="width:90%; background:#58a6ff;">F1</div>
-              </div>
-              <div class="timeline-row">
-                <span class="timeline-label">Agent 2</span>
-                <div class="task-block" style="width:90%; background:#3fb950;">F2</div>
-              </div>
-              <div class="timeline-row">
-                <span class="timeline-label">Agent 3</span>
-                <div class="task-block" style="width:90%; background:#d2a8ff;">F3</div>
-              </div>
-              <div class="timeline-row">
-                <span class="timeline-label">Agent 4</span>
-                <div class="task-block" style="width:90%; background:#f0883e;">F4</div>
-              </div>
-            </div>
-            <div style="text-align:center; margin-top:0.5rem; font-family:var(--font-mono); font-size:0.8rem; color:var(--text-muted);">merge &rarr; review &rarr;</div>
+        <!-- Sequential: 8 tasks fill the full track, monotone grey -->
+        <div class="ta-row">
+          <span class="ta-label">Sequential</span>
+          <div class="ta-track">
+            <div class="task-block seq" style="width:12.5%;">F1</div>
+            <div class="task-block seq" style="width:12.5%;">F2</div>
+            <div class="task-block seq" style="width:12.5%;">F3</div>
+            <div class="task-block seq" style="width:12.5%;">F4</div>
+            <div class="task-block seq" style="width:12.5%;">F5</div>
+            <div class="task-block seq" style="width:12.5%;">F6</div>
+            <div class="task-block seq" style="width:12.5%;">F7</div>
+            <div class="task-block seq" style="width:12.5%;">F8</div>
           </div>
-          <!-- Wave 2 -->
-          <div style="flex:1; max-width:420px;">
-            <div style="text-align:center; margin-bottom:0.75rem;">
-              <span style="font-family:var(--font-mono); font-size:0.9rem; font-weight:700; color:var(--accent2); background:rgba(63,185,80,0.12); padding:0.3rem 1rem; border-radius:999px; border:1px solid rgba(63,185,80,0.3);">Wave 2</span>
-            </div>
-            <div class="timeline">
-              <div class="timeline-row">
-                <span class="timeline-label">Agent 1</span>
-                <div class="task-block" style="width:90%; background:#79c0ff;">F5</div>
-              </div>
-              <div class="timeline-row">
-                <span class="timeline-label">Agent 2</span>
-                <div class="task-block" style="width:90%; background:#56d364;">F6</div>
-              </div>
-              <div class="timeline-row">
-                <span class="timeline-label">Agent 3</span>
-                <div class="task-block" style="width:90%; background:#bc8cff;">F7</div>
-              </div>
-              <div class="timeline-row">
-                <span class="timeline-label">Agent 4</span>
-                <div class="task-block" style="width:90%; background:#f85149;">F8</div>
-              </div>
-            </div>
-            <div style="text-align:center; margin-top:0.5rem; font-family:var(--font-mono); font-size:0.8rem; color:var(--text-muted);">merge &rarr; done</div>
-          </div>
+          <span class="ta-sum accent5">~8 hours</span>
         </div>
-        <div class="time-label accent2" style="margin-top:1.5rem;">~2 hours <span style="color:var(--text-muted); font-size:0.8em;">(2 waves &times; 4 agents)</span></div>
+
+        <!-- Parallel: 4 agents, Wave 1 (blue) then Wave 2 (green); work stops at ¼ -->
+        <div class="ta-pargroup" style="margin-top:1.5rem;">
+          <div class="ta-row">
+            <span class="ta-label">Agent 1</span>
+            <div class="ta-track">
+              <div class="task-block w1" style="width:12.5%;">F1</div>
+              <div class="task-block w2" style="width:12.5%;">F5</div>
+            </div>
+            <span class="ta-sum"></span>
+          </div>
+          <div class="ta-row">
+            <span class="ta-label">Agent 2</span>
+            <div class="ta-track">
+              <div class="task-block w1" style="width:12.5%;">F2</div>
+              <div class="task-block w2" style="width:12.5%;">F6</div>
+            </div>
+            <span class="ta-sum"></span>
+          </div>
+          <div class="ta-row">
+            <span class="ta-label">Agent 3</span>
+            <div class="ta-track">
+              <div class="task-block w1" style="width:12.5%;">F3</div>
+              <div class="task-block w2" style="width:12.5%;">F7</div>
+            </div>
+            <span class="ta-sum"></span>
+          </div>
+          <div class="ta-row" style="margin-bottom:0;">
+            <span class="ta-label">Agent 4</span>
+            <div class="ta-track">
+              <div class="task-block w1" style="width:12.5%;">F4</div>
+              <div class="task-block w2" style="width:12.5%;">F8</div>
+            </div>
+            <span class="ta-sum"></span>
+          </div>
+          <div class="ta-reclaimed">6 hours reclaimed</div>
+          <div class="ta-par-sum">~2 hours<br><span class="sub">(2 waves &times; 4 agents)</span></div>
+        </div>
+
+        <div class="wave-legend">
+          <span class="wave-pill blue">Wave 1</span>
+          <span class="wave-chev">&rsaquo;</span>
+          <span class="wave-pill green">Wave 2</span>
+          <span class="wave-caption">merge &rarr; review between waves</span>
+        </div>
       </div>
-      <div class="speaker-notes">The idea: batch independent tasks into waves — run a wave, merge, review, then launch the next. In practice the speedup depends on how cleanly tasks separate. We'll dig into the trade-offs.</div>
+      <div class="speaker-notes">This is how I started out — one task at a time, waiting for each to finish before starting the next. The alternative: batch independent tasks into waves — run a wave, merge, review, then launch the next. In practice the speedup depends on how cleanly tasks separate. We'll dig into the trade-offs.</div>
     </section>
 
     <!-- Slide 5: The Hook -->
     <section class="slide">
-      <p class="big-text">What if you could run <span class="accent">5 agents</span> at once, each in its own <span class="accent2">isolated branch</span>, and <span class="accent3">merge them all</span>?</p>
+      <p class="big-text">What if you could run <span class="accent">5 agents</span> at once, each in its own <span class="accent">isolated branch</span>, and <span class="accent">merge them all</span>?</p>
       <div style="display:flex; gap:0.6rem; margin-top:2.5rem; align-items:center;">
-        <div style="width:40px; height:40px; border-radius:50%; background:var(--accent); opacity:0.8; display:flex; align-items:center; justify-content:center; font-size:0.75rem; font-weight:700; color:var(--bg);">1</div>
-        <div style="width:40px; height:40px; border-radius:50%; background:var(--accent2); opacity:0.8; display:flex; align-items:center; justify-content:center; font-size:0.75rem; font-weight:700; color:var(--bg);">2</div>
-        <div style="width:40px; height:40px; border-radius:50%; background:var(--accent3); opacity:0.8; display:flex; align-items:center; justify-content:center; font-size:0.75rem; font-weight:700; color:var(--bg);">3</div>
-        <div style="width:40px; height:40px; border-radius:50%; background:var(--accent4); opacity:0.8; display:flex; align-items:center; justify-content:center; font-size:0.75rem; font-weight:700; color:var(--bg);">4</div>
-        <div style="width:40px; height:40px; border-radius:50%; background:var(--accent5); opacity:0.8; display:flex; align-items:center; justify-content:center; font-size:0.75rem; font-weight:700; color:var(--bg);">5</div>
+        <div style="width:40px; height:40px; border-radius:50%; background:var(--accent); opacity:0.9; display:flex; align-items:center; justify-content:center; font-size:0.9rem; font-weight:700; color:var(--bg);">1</div>
+        <div style="width:40px; height:40px; border-radius:50%; background:var(--accent); opacity:0.9; display:flex; align-items:center; justify-content:center; font-size:0.9rem; font-weight:700; color:var(--bg);">2</div>
+        <div style="width:40px; height:40px; border-radius:50%; background:var(--accent); opacity:0.9; display:flex; align-items:center; justify-content:center; font-size:0.9rem; font-weight:700; color:var(--bg);">3</div>
+        <div style="width:40px; height:40px; border-radius:50%; background:var(--accent); opacity:0.9; display:flex; align-items:center; justify-content:center; font-size:0.9rem; font-weight:700; color:var(--bg);">4</div>
+        <div style="width:40px; height:40px; border-radius:50%; background:var(--accent); opacity:0.9; display:flex; align-items:center; justify-content:center; font-size:0.9rem; font-weight:700; color:var(--bg);">5</div>
         <span style="font-size:1.5rem; color:var(--text-muted); margin:0 0.5rem;">&rarr;</span>
         <div style="font-family:var(--font-mono); font-size:0.9rem; color:var(--accent2); background:rgba(63,185,80,0.1); border:1px solid rgba(63,185,80,0.3); padding:0.5rem 1rem; border-radius:8px;">git merge &check;</div>
       </div>
       <p style="margin-top:2rem; font-size:clamp(0.95rem,1.5vw,1.2rem); color:var(--text-muted);">Not hypothetical — Claude Code's creator runs <span class="accent">~5 parallel sessions</span> (numbered tabs); most of his team runs theirs in worktrees.</p>
-      <p style="margin-top:1rem; font-size:clamp(0.95rem,1.5vw,1.2rem); color:var(--text-muted);">Up next: <span class="accent">worktrees</span> &rarr; <span class="accent2">agents</span> &rarr; <span class="accent3">hooks</span></p>
+      <p style="margin-top:1rem; font-size:clamp(0.95rem,1.5vw,1.2rem); color:var(--text-muted);">Up next: <span class="accent">worktrees</span> &rarr; <span class="accent">agents</span> &rarr; <span class="accent">hooks</span></p>
       <div class="speaker-notes">Set the agenda. Acknowledge this sounds ideal — the rest of the talk covers the mechanics AND the constraints that determine when this actually pays off. Credibility anchor: Boris Cherny, who created Claude Code, publicly runs ~5 parallel instances in numbered terminal tabs — personally in separate git checkouts, while most of the Claude Code team prefers worktrees (howborisusesclaudecode.com; InfoQ, Jan 2026).</div>
     </section>
 
@@ -769,39 +1046,42 @@
 
     <!-- Slide 6: Act Title -->
     <section class="slide act-title">
+      <div class="act-numeral">01</div>
       <h2>Worktrees: The Foundation</h2>
+      <p class="act-promise">One repo, many isolated checkouts.</p>
       <div class="speaker-notes">Transition — now let's understand the key primitive.</div>
     </section>
 
     <!-- Slide 7: What is a git worktree? -->
-    <section class="slide">
+    <section class="slide content">
+      <p class="eyebrow">Worktrees</p>
       <h3>What is a git worktree?</h3>
-      <div class="diagram" style="max-width:700px;">
+      <div class="diagram" style="max-width:700px; margin-top:2rem;">
         <div style="display:flex; flex-direction:column; align-items:center; gap:0.5rem;">
-          <div class="arch-box" style="border-color:var(--accent4); background:rgba(240,136,62,0.1); width:200px;">
-            <span style="font-weight:700; color:var(--accent4);">.git</span><br>
-            <span style="font-size:0.8rem; color:var(--text-muted);">One repo</span>
+          <div class="arch-box" style="border-color:var(--accent); background:rgba(88,166,255,0.1); width:200px;">
+            <span style="font-weight:700; color:var(--accent);">.git</span><br>
+            <span style="font-size:0.9rem; color:var(--text-muted);">One repo</span>
           </div>
           <div style="display:flex; gap:2rem; margin-top:0.5rem;">
             <div style="display:flex; flex-direction:column; align-items:center;">
               <span class="arrow-down">|</span>
-              <div class="arch-box" style="border-color:var(--accent); width:180px;">
-                <span style="font-size:0.85rem; color:var(--accent);">main/</span><br>
-                <span style="font-size:0.75rem; color:var(--text-muted);">Working dir</span>
+              <div class="arch-box" style="border-color:var(--border); width:180px;">
+                <span style="font-size:0.95rem; color:var(--text);">main/</span><br>
+                <span style="font-size:0.9rem; color:var(--text-muted);">Working dir</span>
               </div>
             </div>
             <div style="display:flex; flex-direction:column; align-items:center;">
               <span class="arrow-down">|</span>
-              <div class="arch-box" style="border-color:var(--accent2); width:180px;">
-                <span style="font-size:0.85rem; color:var(--accent2);">feature-a/</span><br>
-                <span style="font-size:0.75rem; color:var(--text-muted);">Working dir</span>
+              <div class="arch-box" style="border-color:var(--border); width:180px;">
+                <span style="font-size:0.95rem; color:var(--text);">feature-a/</span><br>
+                <span style="font-size:0.9rem; color:var(--text-muted);">Working dir</span>
               </div>
             </div>
             <div style="display:flex; flex-direction:column; align-items:center;">
               <span class="arrow-down">|</span>
-              <div class="arch-box" style="border-color:var(--accent3); width:180px;">
-                <span style="font-size:0.85rem; color:var(--accent3);">feature-b/</span><br>
-                <span style="font-size:0.75rem; color:var(--text-muted);">Working dir</span>
+              <div class="arch-box" style="border-color:var(--border); width:180px;">
+                <span style="font-size:0.95rem; color:var(--text);">feature-b/</span><br>
+                <span style="font-size:0.9rem; color:var(--text-muted);">Working dir</span>
               </div>
             </div>
           </div>
@@ -812,12 +1092,13 @@
     </section>
 
     <!-- Slide 8: Why worktrees matter -->
-    <section class="slide">
+    <section class="slide content">
+      <p class="eyebrow">Worktrees</p>
       <h3>Why worktrees matter for agents</h3>
-      <div class="columns">
+      <div class="columns" style="margin-top:2rem;">
         <div class="column" style="background:rgba(248,81,73,0.06); border:1px solid rgba(248,81,73,0.3); border-radius:8px;">
           <h3 class="accent5">Without worktrees</h3>
-          <ul>
+          <ul class="bullets-x">
             <li>Agents fight over the same files</li>
             <li>Branch switching chaos</li>
             <li>Uncommitted changes get trampled</li>
@@ -826,7 +1107,7 @@
         </div>
         <div class="column" style="background:rgba(63,185,80,0.06); border:1px solid rgba(63,185,80,0.3); border-radius:8px;">
           <h3 class="accent2">With worktrees</h3>
-          <ul>
+          <ul class="bullets-check">
             <li>Each agent has its own copy</li>
             <li>Zero file conflicts</li>
             <li>Parallel work is safe</li>
@@ -838,122 +1119,98 @@
     </section>
 
     <!-- Slide 9: The command -->
-    <section class="slide">
+    <section class="slide content">
+      <p class="eyebrow">Worktrees</p>
       <h3>Easiest two ways to get a worktree</h3>
-      <div class="columns" style="max-width:950px; gap:2rem; margin-top:1rem;">
+      <div class="columns" style="max-width:950px; gap:2rem; margin-top:2rem;">
         <div class="column" style="background:rgba(63,185,80,0.06); border:1px solid rgba(63,185,80,0.3); border-radius:8px; position:relative;">
-          <div style="position:absolute; top:-12px; right:12px; background:var(--accent2); color:var(--bg); font-size:0.7rem; font-weight:700; padding:0.2rem 0.8rem; border-radius:999px; text-transform:uppercase;">My preference</div>
+          <div style="position:absolute; top:-12px; right:12px; background:var(--accent2); color:var(--bg); font-size:0.75rem; font-weight:700; padding:0.2rem 0.8rem; border-radius:999px; text-transform:uppercase;">My preference</div>
           <h3 class="accent2">Claude CLI</h3>
           <pre style="max-width:100%; margin:0.75rem 0;"><code><span class="cmd">claude</span> <span class="flag">--worktree</span></code></pre>
-          <ul style="font-size:clamp(0.85rem,1.4vw,1rem);">
+          <ul style="font-size:clamp(0.95rem,1.4vw,1.1rem);">
             <li>One flag, instant worktree</li>
             <li>Agent starts in its own branch</li>
             <li>Minimal setup, maximum speed</li>
           </ul>
         </div>
-        <div class="column" style="background:rgba(210,168,255,0.06); border:1px solid rgba(210,168,255,0.3); border-radius:8px;">
-          <h3 class="accent3">Skills / Plugins</h3>
+        <div class="column" style="background:var(--bg-alt); border:1px solid var(--border); border-radius:8px;">
+          <h3 class="accent">Skills / Plugins</h3>
           <pre style="max-width:100%; margin:0.75rem 0;"><code><span class="comment"># e.g. using-git-worktrees skill</span>
 <span class="cmd">/worktree</span></code></pre>
-          <ul style="font-size:clamp(0.85rem,1.4vw,1rem);">
+          <ul style="font-size:clamp(0.95rem,1.4vw,1.1rem);">
             <li>Skills can automate worktree creation</li>
             <li>Custom hooks for setup &amp; cleanup</li>
             <li>Good for team-wide conventions</li>
           </ul>
         </div>
       </div>
-      <p style="margin-top:1.5rem; font-size:clamp(0.95rem,1.6vw,1.2rem); color:var(--text-muted);">Both work great — <code>claude --worktree</code> is the fastest path to get going</p>
       <div class="speaker-notes">Two options: the CLI flag is the simplest and my personal go-to. Skills and plugins can also generate worktrees with more customisation — useful if your team has specific branch naming or setup conventions. Either way, it's just git under the hood.</div>
     </section>
 
-    <!-- Slide 9b: Agent Orchestrator -->
-    <section class="slide">
+    <!-- Slide 9b: Agent Orchestrator (H2) -->
+    <section class="slide content">
+      <p class="eyebrow">Worktrees</p>
       <h3>Agent Orchestrator</h3>
-      <p style="font-size:clamp(0.95rem,1.6vw,1.2rem); color:var(--text); margin-bottom:1rem;">You'll see me using this throughout the demo — it's an infosec-approved tool I built to manage parallel workflows. Each session is a worktree.</p>
-      <div style="display:flex; gap:2rem; align-items:flex-start; margin-top:1rem; width:100%; max-width:900px;">
-        <div style="display:flex; flex-direction:column; gap:0.8rem; flex-shrink:0;">
-          <div style="display:flex; align-items:center; gap:1rem;">
-            <span style="width:16px; height:16px; border-radius:50%; background:var(--accent2); display:inline-block; animation:pulse 2s infinite;"></span>
-            <span style="color:var(--accent2); font-weight:600; width:120px;">Working</span>
-            <span style="color:var(--text-muted);">Agent is actively coding</span>
-          </div>
-          <div style="display:flex; align-items:center; gap:1rem;">
-            <span style="width:16px; height:16px; border-radius:50%; background:#e3b341; display:inline-block;"></span>
-            <span style="color:#e3b341; font-weight:600; width:120px;">Idle</span>
-            <span style="color:var(--text-muted);">Waiting for input</span>
-          </div>
-          <div style="display:flex; align-items:center; gap:1rem;">
-            <span style="width:16px; height:16px; border-radius:50%; background:var(--accent4); display:inline-block;"></span>
-            <span style="color:var(--accent4); font-weight:600; width:120px;">Needs Attention</span>
-            <span style="color:var(--text-muted);">Agent is stuck or has a question</span>
-          </div>
-          <div style="display:flex; align-items:center; gap:1rem;">
-            <span style="width:16px; height:16px; border-radius:50%; background:var(--accent); display:inline-block;"></span>
-            <span style="color:var(--accent); font-weight:600; width:120px;">Finished</span>
-            <span style="color:var(--text-muted);">Ready for review</span>
-          </div>
-          <div style="display:flex; align-items:center; gap:1rem;">
-            <span style="width:16px; height:16px; border-radius:50%; background:var(--accent5); display:inline-block;"></span>
-            <span style="color:var(--accent5); font-weight:600; width:120px;">Error</span>
-            <span style="color:var(--text-muted);">Something went wrong</span>
-          </div>
-        </div>
-        <img src="assets/hero-demo.gif" alt="Agent Orchestrator demo" style="max-width:700px; width:100%; border-radius:8px; border:1px solid var(--border); box-shadow:0 4px 16px rgba(0,0,0,0.3);"/>
+      <p style="font-size:clamp(1rem,1.6vw,1.3rem); color:var(--text); margin-top:0.5rem;">A tool I built to manage parallel worktree workflows — every session is a worktree.<span class="infosec-chip">Infosec-approved</span></p>
+      <img src="assets/hero-demo.gif" alt="Agent Orchestrator demo" style="width:60%; max-width:1150px; max-height:61vh; margin-top:1rem; border-radius:10px; border:1px solid rgba(255,255,255,0.18); box-shadow:0 16px 48px rgba(0,0,0,0.55);"/>
+      <div class="status-strip">
+        <span class="status-chip"><span class="dot" style="background:var(--accent2);"></span>Working</span>
+        <span class="status-chip"><span class="dot" style="background:#e3b341;"></span>Idle</span>
+        <span class="status-chip"><span class="dot" style="background:var(--accent4);"></span>Needs attention</span>
+        <span class="status-chip"><span class="dot" style="background:var(--accent);"></span>Finished</span>
+        <span class="status-chip"><span class="dot" style="background:var(--accent5);"></span>Error</span>
       </div>
-      <p style="margin-top:1rem; font-size:clamp(0.85rem,1.3vw,1rem); color:var(--text-muted);">Status monitoring &bull; One-click terminal into any worktree &bull; Session management</p>
-      <p style="margin-top:0.75rem; font-size:clamp(0.85rem,1.3vw,1rem); color:var(--accent);">Interested? Join <strong>#agent-orchestrator-open-beta</strong> on Slack to learn more.</p>
+      <div class="slack-badge">Join <strong>#agent-orchestrator-open-beta</strong> on Slack</div>
       <div class="speaker-notes">Quick intro to the tool they'll see in demos. Infosec approved, built to manage worktree-based workflows. Each session is a worktree with status tracking and easy terminal access. Point people to #agent-orchestrator-open-beta on Slack if they want to try it out or learn more.</div>
     </section>
 
     <!-- Slide 10: Directory structure -->
-    <section class="slide">
+    <section class="slide content">
+      <p class="eyebrow">Worktrees</p>
       <h3>Worktree directory structure</h3>
-      <pre><code><span class="comment"># Your project</span>
+      <pre style="margin-top:2rem;"><code><span class="comment"># Your project</span>
 my-project/
   .git/
   .claude/
     worktrees/
-      <span class="accent2">clever-fox-123/</span>        <span class="comment"># &larr; Agent 1's workspace</span>
+      <span class="accent">clever-fox-123/</span>       <span class="comment"># &larr; Agent 1's workspace</span>
         src/
         package.json
         ...
-      <span class="accent3">brave-owl-456/</span>         <span class="comment"># &larr; Agent 2's workspace</span>
+      <span class="accent">brave-owl-456/</span>        <span class="comment"># &larr; Agent 2's workspace</span>
         src/
         package.json
         ...
-  src/                          <span class="comment"># &larr; Original (main)</span>
+  src/                      <span class="comment"># &larr; Original (main)</span>
   package.json</code></pre>
       <div class="speaker-notes">If the demo didn't work or was too fast, this is the reference.</div>
     </section>
 
     <!-- Slide 12: Key takeaway -->
-    <section class="slide">
+    <section class="slide content">
       <div class="stagger">
+        <p class="eyebrow">Worktrees</p>
         <h3>Key takeaway</h3>
-        <p style="font-size:clamp(1.3rem,2.2vw,1.8rem); color:var(--text);">Worktree = <span class="accent">isolated branch</span> + <span class="accent2">working directory</span></p>
-        <p style="font-size:clamp(1.3rem,2.2vw,1.8rem); color:var(--text);">Each agent gets its own <span class="accent3">sandbox</span></p>
-        <p style="font-size:clamp(1.3rem,2.2vw,1.8rem); color:var(--text);">Create a <span class="accent4">PR</span>, review, then merge — just like a <span class="accent4">feature branch</span></p>
+        <p style="font-size:clamp(1.3rem,2.2vw,1.8rem); color:var(--text);">Worktree = <span class="accent">isolated branch</span> + <span class="accent">working directory</span></p>
+        <p style="font-size:clamp(1.3rem,2.2vw,1.8rem); color:var(--text);">Each agent gets its own <span class="accent">sandbox</span></p>
+        <p style="font-size:clamp(1.3rem,2.2vw,1.8rem); color:var(--text);">Create a <span class="accent">PR</span>, review, then merge — just like a <span class="accent">feature branch</span></p>
       </div>
       <div class="speaker-notes">Make sure this is crystal clear before moving on.</div>
     </section>
 
-    <!-- Slide 12b: Worktree gotchas -->
-    <section class="slide">
-      <h2>Worktree gotchas</h2>
-      <div style="display:flex; gap:2rem; margin-top:2rem; align-items:flex-start; flex-wrap:wrap;">
-        <div style="flex:1; min-width:300px; display:flex; flex-direction:column; gap:1.5rem;">
-          <div style="background:rgba(248,81,73,0.08); border:1px solid rgba(248,81,73,0.25); border-radius:8px; padding:1.2rem 1.5rem;">
-            <p style="font-size:clamp(1rem,1.8vw,1.3rem); font-weight:600; color:var(--accent5);">You're not on main</p>
-            <p style="font-size:clamp(0.9rem,1.4vw,1.1rem); color:var(--text); margin-top:0.5rem;">If you <code style="background:rgba(255,255,255,0.06); padding:0.15rem 0.4rem; border-radius:4px;">yarn dev</code> or <code style="background:rgba(255,255,255,0.06); padding:0.15rem 0.4rem; border-radius:4px;">npm start</code>, make sure you've <code style="background:rgba(255,255,255,0.06); padding:0.15rem 0.4rem; border-radius:4px;">cd</code>'d into the worktree directory — otherwise you'll be running from main and wondering where your changes went.</p>
-          </div>
-          <div style="background:rgba(248,81,73,0.08); border:1px solid rgba(248,81,73,0.25); border-radius:8px; padding:1.2rem 1.5rem;">
-            <p style="font-size:clamp(1rem,1.8vw,1.3rem); font-weight:600; color:var(--accent5);"><code style="background:rgba(255,255,255,0.06); padding:0.15rem 0.4rem; border-radius:4px;">.gitignore</code>'d files aren't copied</p>
-            <p style="font-size:clamp(0.9rem,1.4vw,1.1rem); color:var(--text); margin-top:0.5rem;">Files like <code style="background:rgba(255,255,255,0.06); padding:0.15rem 0.4rem; border-radius:4px;">.env</code> won't exist in the worktree. Copy them manually or use symlinks.</p>
-            <p style="font-size:clamp(0.8rem,1.2vw,0.95rem); color:var(--text-muted); margin-top:0.5rem; font-family:var(--font-mono);">cp .env .claude/worktrees/&lt;name&gt;/.env</p>
-          </div>
+    <!-- Slide 12b: Worktree gotchas (H7) -->
+    <section class="slide content">
+      <p class="eyebrow">Worktrees</p>
+      <h3>Worktree gotchas</h3>
+      <div style="display:flex; flex-direction:column; gap:1.5rem; max-width:900px; width:100%; margin-top:2rem;">
+        <div class="card orange">
+          <p style="font-size:clamp(1.1rem,1.8vw,1.4rem); font-weight:600; color:var(--accent4);">You're not on main</p>
+          <p style="font-size:clamp(0.95rem,1.4vw,1.15rem); color:var(--text); margin-top:0.5rem;">If you <code>yarn dev</code> or <code>npm start</code>, make sure you've <code>cd</code>'d into the worktree directory — otherwise you'll be running from main and wondering where your changes went.</p>
         </div>
-        <div style="flex:1; min-width:280px;">
-          <img src="worktreechildterminal.png" alt="Worktree child terminal showing working directory" style="width:100%; border-radius:8px; border:1px solid rgba(255,255,255,0.1);">
+        <div class="card orange">
+          <p style="font-size:clamp(1.1rem,1.8vw,1.4rem); font-weight:600; color:var(--accent4);"><code>.gitignore</code>'d files aren't copied</p>
+          <p style="font-size:clamp(0.95rem,1.4vw,1.15rem); color:var(--text); margin-top:0.5rem;">Files like <code>.env</code> won't exist in the worktree. Copy them manually or use symlinks.</p>
+          <p style="font-size:clamp(0.9rem,1.3vw,1rem); color:var(--text-muted); margin-top:0.6rem; font-family:var(--font-mono);">cp .env .claude/worktrees/&lt;name&gt;/.env</p>
         </div>
       </div>
       <div class="speaker-notes">Two common surprises when starting with worktrees. Worth flagging before the hands-on so people don't lose time debugging.</div>
@@ -963,15 +1220,18 @@ my-project/
 
     <!-- Slide 13: Act Title -->
     <section class="slide act-title">
+      <div class="act-numeral">02</div>
       <h2>Parallel Workflows</h2>
+      <p class="act-promise">Decompose, parallelise, merge.</p>
       <div class="speaker-notes">Now we combine worktrees with multiple agents.</div>
     </section>
 
     <!-- Slide 14: The Pattern -->
-    <section class="slide">
-      <div style="display:flex; align-items:center; gap:2rem; justify-content:center; height:100%;">
-        <div style="flex:0 0 auto;">
-          <h3 style="margin-bottom:1rem;">Init a Claude session per worktree &amp; execute plan</h3>
+    <section class="slide content">
+      <p class="eyebrow">Parallel</p>
+      <h3>The workflow</h3>
+      <div style="display:flex; align-items:center; gap:2.5rem; justify-content:center; width:100%; max-width:1500px; margin-top:2rem;">
+        <div style="flex:0 0 auto; max-width:560px;">
           <div class="flow-steps">
             <div class="flow-step">
               <div class="step-number">1</div>
@@ -987,91 +1247,91 @@ my-project/
             </div>
             <div class="flow-step">
               <div class="step-number">4</div>
-              <div class="step-text">Monitor progress — <code>claude agents</code> shows every session on one screen</div>
+              <div class="step-text">Monitor progress across sessions</div>
             </div>
             <div class="flow-step">
               <div class="step-number">5</div>
               <div class="step-text">Review and merge</div>
             </div>
           </div>
+          <p class="step-footnote"><code>claude agents</code> shows every session on one screen</p>
         </div>
         <div style="flex:1 1 0; min-width:0;">
-          <img src="assets/brainstorm.png" alt="Claude Code brainstorming session" style="width:100%; border-radius:8px; border:1px solid var(--border); box-shadow:0 4px 12px rgba(0,0,0,0.3);">
+          <img src="assets/brainstorm.png" alt="Claude Code brainstorming session" style="width:100%; border-radius:10px; border:1px solid rgba(255,255,255,0.18); box-shadow:0 16px 48px rgba(0,0,0,0.55);">
+          <p class="img-caption">Claude decomposing an epic in plan mode</p>
         </div>
       </div>
       <div class="speaker-notes">Each worktree gets its own Claude session with a specific plan to execute. This is the workflow you'll practice in the hands-on session.</div>
     </section>
 
     <!-- Slide 15: Independence -->
-    <section class="slide">
-      <h2>Tasks <span class="accent5">MUST</span> be independent</h2>
-      <p class="subtitle" style="margin-bottom:2rem;">If Feature B depends on Feature A's output, they can't run in parallel</p>
-      <div class="columns" style="max-width:800px;">
+    <section class="slide content">
+      <p class="eyebrow">Parallel</p>
+      <h3>Tasks <span class="accent5">MUST</span> be independent</h3>
+      <p class="subtitle" style="margin-bottom:3rem;">If Feature B depends on Feature A's output, they can't run in parallel</p>
+      <div class="columns" style="max-width:900px; align-items:center;">
         <div style="text-align:center;">
-          <div style="display:flex; gap:1rem; justify-content:center; margin-bottom:1rem;">
-            <div class="arch-box" style="border-color:var(--accent2); width:100px;"><span class="accent2">A</span></div>
-            <div class="arch-box" style="border-color:var(--accent2); width:100px;"><span class="accent2">B</span></div>
+          <div style="display:flex; gap:1.5rem; justify-content:center; margin-bottom:1.25rem;">
+            <div class="arch-box" style="border-color:var(--accent2); width:150px; padding:1.6rem;"><span class="accent2" style="font-size:2rem; font-weight:700;">A</span></div>
+            <div class="arch-box" style="border-color:var(--accent2); width:150px; padding:1.6rem;"><span class="accent2" style="font-size:2rem; font-weight:700;">B</span></div>
           </div>
-          <p style="color:var(--accent2); font-weight:600;">Parallel OK</p>
+          <p style="color:var(--accent2); font-weight:600; font-size:clamp(1.1rem,1.8vw,1.4rem);">Parallel OK</p>
         </div>
         <div style="text-align:center;">
-          <div style="display:flex; gap:0.5rem; justify-content:center; align-items:center; margin-bottom:1rem;">
-            <div class="arch-box" style="border-color:var(--accent5); width:100px;"><span class="accent5">A</span></div>
-            <span style="font-size:1.5rem; color:var(--accent5);">&rarr;</span>
-            <div class="arch-box" style="border-color:var(--accent5); width:100px;"><span class="accent5">B</span></div>
+          <div style="display:flex; gap:0.75rem; justify-content:center; align-items:center; margin-bottom:1.25rem;">
+            <div class="arch-box" style="border-color:var(--accent5); width:150px; padding:1.6rem;"><span class="accent5" style="font-size:2rem; font-weight:700;">A</span></div>
+            <span style="font-size:2.2rem; color:var(--accent5);">&rarr;</span>
+            <div class="arch-box" style="border-color:var(--accent5); width:150px; padding:1.6rem;"><span class="accent5" style="font-size:2rem; font-weight:700;">B</span></div>
           </div>
-          <p style="color:var(--accent5); font-weight:600;">Must be sequential</p>
+          <p style="color:var(--accent5); font-weight:600; font-size:clamp(1.1rem,1.8vw,1.4rem);">Must be sequential</p>
         </div>
       </div>
-      <div style="margin-top:1.2rem; text-align:center;">
-        <img src="assets/MultiWavesCropped.png" alt="Multi-wave parallel task execution" style="max-width:56rem; width:100%; border-radius:8px; border:1px solid var(--border); box-shadow:0 4px 12px rgba(0,0,0,0.3);">
-      </div>
-      <p style="margin-top:1rem; font-size:clamp(0.85rem,1.3vw,1rem); color:var(--text-muted); background:rgba(210,168,255,0.08); border:1px solid rgba(210,168,255,0.2); border-radius:6px; padding:0.6rem 1rem; display:inline-block;">Tip: Claude's plan mode is great at figuring out how to decompose tasks and identify dependencies</p>
+      <p style="margin-top:2.5rem; font-size:clamp(0.95rem,1.4vw,1.15rem); color:var(--accent); background:rgba(88,166,255,0.08); border:1px solid rgba(88,166,255,0.3); border-radius:8px; padding:0.7rem 1.2rem; display:inline-block;">Tip: Claude's plan mode is great at figuring out how to decompose tasks and identify dependencies</p>
       <div class="speaker-notes">This is the most common mistake. Spend time on decomposition. Claude's plan mode can help identify which tasks are truly independent.</div>
     </section>
 
-    <!-- Slide 16: Decompose with Claude -->
-    <section class="slide">
+    <!-- Slide 16: Decompose with Claude (H6) -->
+    <section class="slide content">
+      <p class="eyebrow">Parallel</p>
       <h3>Let Claude do the decomposition</h3>
       <p class="subtitle">The split is the hardest part — so make it a Claude task too</p>
-      <div style="display:flex; align-items:center; gap:2rem; width:100%; max-width:1100px;">
-        <div style="flex:1 1 0; min-width:0; text-align:left;">
-          <ul style="margin-top:0.5rem;">
-            <li><span class="accent" style="font-weight:600;">Interview me first</span> — Claude asks about the edge cases and trade-offs you haven't considered, then writes the spec</li>
-            <li><span class="accent2" style="font-weight:600;">Split by file ownership</span> — every task names the files it owns; if two tasks share a file, they're one task</li>
-            <li><span class="accent3" style="font-weight:600;">Challenge the split</span> — "which of these would conflict? what must run sequentially?"</li>
-            <li><span class="accent4" style="font-weight:600;">Prompts are the deliverable</span> — one self-contained prompt per task: context, acceptance criteria, tests to run</li>
-          </ul>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; max-width:1050px; width:100%; margin-top:1.5rem;">
+        <div class="card">
+          <p style="font-size:clamp(0.95rem,1.35vw,1.15rem);"><span class="accent" style="font-weight:600;">Interview me first</span> — Claude asks about the edge cases and trade-offs you haven't considered, then writes the spec</p>
         </div>
-        <div style="flex:1 1 0; min-width:0;">
-          <pre style="max-width:100%; margin:0; font-size:clamp(0.75rem,1.15vw,0.95rem);"><code><span class="comment"># In plan mode:</span>
-<span class="prompt">&gt;</span> <span class="string">"Interview me about this epic, then break
-   it into tasks that can run in parallel.
-   For each task list the files it owns —
-   flag any overlaps.
-
-   Then write a self-contained prompt per
-   task (context, acceptance criteria,
-   tests to run) into plans/task-*.md"</span>
+        <div class="card">
+          <p style="font-size:clamp(0.95rem,1.35vw,1.15rem);"><span class="accent" style="font-weight:600;">Split by file ownership</span> — every task names the files it owns; if two tasks share a file, they're one task</p>
+        </div>
+        <div class="card">
+          <p style="font-size:clamp(0.95rem,1.35vw,1.15rem);"><span class="accent" style="font-weight:600;">Challenge the split</span> — "which of these would conflict? what must run sequentially?"</p>
+        </div>
+        <div class="card">
+          <p style="font-size:clamp(0.95rem,1.35vw,1.15rem);"><span class="accent" style="font-weight:600;">Prompts are the deliverable</span> — one self-contained prompt per task: context, acceptance criteria, tests to run</p>
+        </div>
+      </div>
+      <pre style="max-width:1050px; margin-top:1.25rem; font-size:clamp(0.8rem,1.1vw,1rem);"><code><span class="comment"># In plan mode:</span>
+<span class="prompt">&gt;</span> <span class="string">"Interview me about this epic, then break it into tasks that can run in
+   parallel. For each task list the files it owns — flag any overlaps.
+   Then write a self-contained prompt per task (context, acceptance
+   criteria, tests to run) into plans/task-*.md"</span>
 
 <span class="comment"># One fresh session per prompt:</span>
 <span class="cmd">claude</span> <span class="flag">--worktree</span>  <span class="comment"># paste plans/task-1.md</span></code></pre>
-        </div>
-      </div>
-      <div class="callout" style="margin-top:1rem;">
+      <div class="callout" style="margin-top:1rem; max-width:1050px;">
         <p style="font-size:clamp(0.9rem,1.4vw,1.1rem);"><span class="accent" style="font-weight:600;">Why self-contained?</span> Each worktree session starts with zero context — the prompt has to carry everything the agent needs.</p>
       </div>
       <div class="speaker-notes">Decomposition is itself a Claude task. Anthropic's docs recommend the interview pattern — Claude interviews you with questions, then writes the spec. Have it list file ownership per task to prove independence, then output one self-contained prompt per task. Fresh worktree sessions have zero planning context, so each prompt must stand alone. Practitioners' sweet spot: 3–5 parallel worktrees before review becomes the bottleneck.</div>
     </section>
 
     <!-- Slide 17b: Verification -->
-    <section class="slide">
+    <section class="slide content">
+      <p class="eyebrow">Parallel</p>
       <h3>Let agents verify their own work</h3>
       <p class="big-text" style="font-size:clamp(1.5rem,2.8vw,2.2rem); margin-top:0.5rem;">Agents that can <span class="accent2">check their work</span> finish.<br>Agents that can't, <span class="accent5">drift</span>.</p>
       <ul style="margin-top:1.5rem; max-width:44rem;">
         <li>Give every session a <span class="accent">feedback loop</span> — tests to run, a browser to open, a payload to pipe</li>
-        <li>Make "run the tests" part of the <span class="accent2">plan</span>, not an afterthought</li>
-        <li>Claude Code's creator calls verification <span class="accent3">"probably the most important thing"</span> for quality</li>
+        <li>Make "run the tests" part of the <span class="accent">plan</span>, not an afterthought</li>
+        <li>Claude Code's creator calls verification <span class="accent">"probably the most important thing"</span> for quality</li>
       </ul>
       <div class="callout" style="margin-top:1rem; border-left-color:var(--accent2);">
         <p style="font-size:clamp(0.9rem,1.4vw,1.1rem);"><span class="accent2" style="font-weight:600;">In today's lab:</span> every hook has acceptance criteria — your agent writes the tests, then <code>bash test/run-tests.sh</code> runs the suite. Tell it to make them pass before it reports done.</p>
@@ -1079,73 +1339,77 @@ my-project/
       <div class="speaker-notes">The most repeated lesson from heavy users: give the agent a way to validate its own output — tests, a browser, a linter. Without it, parallel agents multiply unreviewed mistakes; with it, they converge. This is why the workshop scaffold ships a test harness.</div>
     </section>
 
-    <!-- Slide 19: Full lifecycle -->
-    <section class="slide">
-      <h3>The full picture</h3>
+    <!-- Slide 19: Full lifecycle (H3) -->
+    <section class="slide content">
+      <p class="eyebrow">Parallel</p>
+      <h3>What your git history looks like</h3>
       <svg class="lifecycle-svg" viewBox="0 0 800 300" fill="none" xmlns="http://www.w3.org/2000/svg">
         <!-- Main branch line -->
-        <line x1="50" y1="40" x2="750" y2="40" stroke="#8b949e" stroke-width="3"/>
-        <text x="30" y="44" fill="#8b949e" font-size="13" text-anchor="end">main</text>
-        <circle cx="100" cy="40" r="6" fill="#8b949e"/>
-        <circle cx="700" cy="40" r="6" fill="#8b949e"/>
+        <line x1="70" y1="40" x2="750" y2="40" stroke="#adbac7" stroke-width="5"/>
+        <text x="60" y="46" fill="#c9d1d9" font-size="18" font-weight="600" text-anchor="end">main</text>
+        <circle cx="100" cy="40" r="7" fill="#adbac7"/>
+        <circle cx="700" cy="40" r="7" fill="#adbac7"/>
 
         <!-- Branch 1 (blue) -->
-        <path d="M 100,40 V 100 Q 100,110 110,110 H 180" stroke="#58a6ff" stroke-width="2" stroke-dasharray="6,3" fill="none"/>
-        <line x1="180" y1="110" x2="500" y2="110" stroke="#58a6ff" stroke-width="3"/>
-        <path d="M 500,110 H 570 Q 580,110 580,100 V 40" stroke="#58a6ff" stroke-width="2" stroke-dasharray="6,3" fill="none"/>
-        <rect x="200" y="94" width="280" height="32" rx="6" fill="#18273a" stroke="#58a6ff" stroke-width="1.5"/>
-        <text x="340" y="115" fill="#58a6ff" font-size="13" text-anchor="middle">Hook: format-on-save</text>
+        <path d="M 100,40 V 100 Q 100,110 110,110 H 180" stroke="#58a6ff" stroke-width="3" stroke-dasharray="6,3" fill="none"/>
+        <line x1="180" y1="110" x2="500" y2="110" stroke="#58a6ff" stroke-width="5"/>
+        <path d="M 500,110 H 570 Q 580,110 580,100 V 40" stroke="#58a6ff" stroke-width="3" stroke-dasharray="6,3" fill="none"/>
+        <rect x="200" y="92" width="290" height="36" rx="6" fill="#18273a" stroke="#58a6ff" stroke-width="2"/>
+        <text x="345" y="116" fill="#79c0ff" font-size="17" text-anchor="middle">Hook: format-on-save</text>
 
         <!-- Branch 2 (green) -->
-        <path d="M 100,40 V 170 Q 100,180 110,180 H 180" stroke="#3fb950" stroke-width="2" stroke-dasharray="6,3" fill="none"/>
-        <line x1="180" y1="180" x2="550" y2="180" stroke="#3fb950" stroke-width="3"/>
-        <path d="M 550,180 H 630 Q 640,180 640,170 V 40" stroke="#3fb950" stroke-width="2" stroke-dasharray="6,3" fill="none"/>
-        <rect x="200" y="164" width="330" height="32" rx="6" fill="#152a20" stroke="#3fb950" stroke-width="1.5"/>
-        <text x="365" y="185" fill="#3fb950" font-size="13" text-anchor="middle">Hook: codacy-analyze-on-save</text>
+        <path d="M 100,40 V 170 Q 100,180 110,180 H 180" stroke="#3fb950" stroke-width="3" stroke-dasharray="6,3" fill="none"/>
+        <line x1="180" y1="180" x2="550" y2="180" stroke="#3fb950" stroke-width="5"/>
+        <path d="M 550,180 H 630 Q 640,180 640,170 V 40" stroke="#3fb950" stroke-width="3" stroke-dasharray="6,3" fill="none"/>
+        <rect x="200" y="162" width="340" height="36" rx="6" fill="#152a20" stroke="#3fb950" stroke-width="2"/>
+        <text x="370" y="186" fill="#56d364" font-size="17" text-anchor="middle">Hook: codacy-analyze-on-save</text>
 
         <!-- Branch 3 (purple) -->
-        <path d="M 100,40 V 240 Q 100,250 110,250 H 180" stroke="#d2a8ff" stroke-width="2" stroke-dasharray="6,3" fill="none"/>
-        <line x1="180" y1="250" x2="450" y2="250" stroke="#d2a8ff" stroke-width="3"/>
-        <path d="M 450,250 H 530 Q 540,250 540,240 V 40" stroke="#d2a8ff" stroke-width="2" stroke-dasharray="6,3" fill="none"/>
-        <rect x="200" y="234" width="230" height="32" rx="6" fill="#2b283a" stroke="#d2a8ff" stroke-width="1.5"/>
-        <text x="315" y="255" fill="#d2a8ff" font-size="13" text-anchor="middle">Hook: worktree-session-primer</text>
+        <path d="M 100,40 V 240 Q 100,250 110,250 H 180" stroke="#d2a8ff" stroke-width="3" stroke-dasharray="6,3" fill="none"/>
+        <line x1="180" y1="250" x2="500" y2="250" stroke="#d2a8ff" stroke-width="5"/>
+        <path d="M 500,250 H 535 Q 540,250 540,240 V 40" stroke="#d2a8ff" stroke-width="3" stroke-dasharray="6,3" fill="none"/>
+        <rect x="188" y="232" width="308" height="36" rx="6" fill="#2b283a" stroke="#d2a8ff" stroke-width="2"/>
+        <text x="342" y="256" fill="#d2a8ff" font-size="17" text-anchor="middle">Hook: worktree-session-primer</text>
 
-        <!-- Merge dots -->
-        <circle cx="540" cy="40" r="5" fill="#d2a8ff"/>
-        <circle cx="580" cy="40" r="5" fill="#58a6ff"/>
-        <circle cx="640" cy="40" r="5" fill="#3fb950"/>
+        <!-- Merge dots + annotation -->
+        <circle cx="540" cy="40" r="6" fill="#d2a8ff"/>
+        <circle cx="580" cy="40" r="6" fill="#58a6ff"/>
+        <circle cx="640" cy="40" r="6" fill="#3fb950"/>
+        <line x1="590" y1="18" x2="590" y2="32" stroke="#768390" stroke-width="1.5"/>
+        <text x="590" y="14" fill="#c9d1d9" font-size="15" text-anchor="middle">merges</text>
 
         <!-- Time arrow -->
-        <line x1="50" y1="290" x2="750" y2="290" stroke="#30363d" stroke-width="1"/>
-        <polygon points="750,286 750,294 762,290" fill="#30363d"/>
-        <text x="400" y="285" fill="#8b949e" font-size="11" text-anchor="middle">time &rarr; build in worktrees &rarr; test &rarr; keep what you like</text>
+        <line x1="50" y1="290" x2="750" y2="290" stroke="#484f58" stroke-width="1.5"/>
+        <polygon points="750,285 750,295 763,290" fill="#484f58"/>
+        <text x="400" y="284" fill="#adbac7" font-size="15" text-anchor="middle">time &rarr; build in worktrees &rarr; test &rarr; keep what you like</text>
       </svg>
       <div class="speaker-notes">This is what your git history looks like when you work this way.</div>
     </section>
 
     <!-- Slide 20: Common pitfalls -->
-    <section class="slide">
+    <section class="slide content">
+      <p class="eyebrow">Parallel</p>
       <h3>Common pitfalls</h3>
-      <div style="display:flex; flex-direction:column; gap:1.2rem; max-width:800px; width:100%; margin-top:1.5rem;">
-        <div style="display:flex; align-items:flex-start; gap:1rem; background:rgba(248,81,73,0.06); border:1px solid rgba(248,81,73,0.2); border-radius:8px; padding:1rem 1.2rem;">
+      <div style="display:flex; flex-direction:column; gap:1.2rem; max-width:800px; width:100%; margin-top:2rem;">
+        <div style="display:flex; align-items:flex-start; gap:1rem; background:rgba(248,81,73,0.06); border:1px solid rgba(248,81,73,0.25); border-radius:8px; padding:1.2rem 1.5rem;">
           <span style="font-size:1.5rem; flex-shrink:0;">&#9888;</span>
           <div style="text-align:left;">
             <p style="color:var(--accent5); font-weight:600; font-size:clamp(1rem,1.6vw,1.2rem); margin-bottom:0.3rem;">Don't edit shared files across worktrees</p>
-            <p style="font-size:clamp(0.85rem,1.3vw,1rem);">Shared config, types, or entry points edited by multiple agents = merge conflicts. Give each agent its own files.</p>
+            <p style="font-size:clamp(0.95rem,1.3vw,1.1rem);">Shared config, types, or entry points edited by multiple agents = merge conflicts. Give each agent its own files.</p>
           </div>
         </div>
-        <div style="display:flex; align-items:flex-start; gap:1rem; background:rgba(240,136,62,0.06); border:1px solid rgba(240,136,62,0.2); border-radius:8px; padding:1rem 1.2rem;">
+        <div style="display:flex; align-items:flex-start; gap:1rem; background:rgba(240,136,62,0.06); border:1px solid rgba(240,136,62,0.25); border-radius:8px; padding:1.2rem 1.5rem;">
           <span style="font-size:1.5rem; flex-shrink:0;">&#9200;</span>
           <div style="text-align:left;">
             <p style="color:var(--accent4); font-weight:600; font-size:clamp(1rem,1.6vw,1.2rem); margin-bottom:0.3rem;">Start hard tasks first</p>
-            <p style="font-size:clamp(0.85rem,1.3vw,1rem);">Complex features need more wall-clock time. Launch them in Wave 1 so they run while you tackle easier tasks.</p>
+            <p style="font-size:clamp(0.95rem,1.3vw,1.1rem);">Complex features need more wall-clock time. Launch them in Wave 1 so they run while you tackle easier tasks.</p>
           </div>
         </div>
-        <div style="display:flex; align-items:flex-start; gap:1rem; background:rgba(88,166,255,0.06); border:1px solid rgba(88,166,255,0.2); border-radius:8px; padding:1rem 1.2rem;">
+        <div style="display:flex; align-items:flex-start; gap:1rem; background:rgba(88,166,255,0.06); border:1px solid rgba(88,166,255,0.25); border-radius:8px; padding:1.2rem 1.5rem;">
           <span style="font-size:1.5rem; flex-shrink:0;">&#128269;</span>
           <div style="text-align:left;">
             <p style="color:var(--accent); font-weight:600; font-size:clamp(1rem,1.6vw,1.2rem); margin-bottom:0.3rem;">Review before merging</p>
-            <p style="font-size:clamp(0.85rem,1.3vw,1rem);">Agents make mistakes too. Treat each worktree branch like a PR — read the diff, run the tests, then merge.</p>
+            <p style="font-size:clamp(0.95rem,1.3vw,1.1rem);">Agents make mistakes too. Treat each worktree branch like a PR — read the diff, run the tests, then merge.</p>
           </div>
         </div>
       </div>
@@ -1156,32 +1420,35 @@ my-project/
 
     <!-- Slide 21: Act Title -->
     <section class="slide act-title">
+      <div class="act-numeral">03</div>
       <h2>Agent Teams &amp;<br>When to Use What</h2>
+      <p class="act-promise">When to reach for which tool.</p>
       <div class="speaker-notes">Final concept section before the workshop.</div>
     </section>
 
     <!-- Slide 22: What are agent teams? -->
-    <section class="slide">
+    <section class="slide content">
+      <p class="eyebrow">Teams</p>
       <h3>What are agent teams?</h3>
-      <p style="margin-bottom:1.5rem; color:var(--text);">Claude Code coordinates a <span class="accent">team lead</span> + <span class="accent2">teammates</span></p>
+      <p style="margin:0.5rem 0 2rem; color:var(--text);">Claude Code coordinates a <span class="accent">team lead</span> + <span class="accent2">teammates</span></p>
       <div class="arch-grid" style="grid-template-columns:1fr; justify-items:center; gap:0.5rem;">
         <div class="arch-box lead" style="width:220px;">
           <span style="font-weight:700; color:var(--accent);">Team Lead</span><br>
-          <span style="font-size:0.8rem; color:var(--text-muted);">Creates tasks, coordinates</span>
+          <span style="font-size:0.9rem; color:var(--text-muted);">Creates tasks, coordinates</span>
         </div>
         <div class="arrow-down">&darr;</div>
         <div style="display:flex; gap:1rem; flex-wrap:wrap; justify-content:center;">
           <div class="arch-box teammate" style="width:160px;">
             <span style="font-weight:600; color:var(--accent2);">Teammate 1</span><br>
-            <span style="font-size:0.75rem; color:var(--text-muted);">Own context</span>
+            <span style="font-size:0.9rem; color:var(--text-muted);">Own context</span>
           </div>
           <div class="arch-box teammate" style="width:160px;">
             <span style="font-weight:600; color:var(--accent2);">Teammate 2</span><br>
-            <span style="font-size:0.75rem; color:var(--text-muted);">Own context</span>
+            <span style="font-size:0.9rem; color:var(--text-muted);">Own context</span>
           </div>
           <div class="arch-box teammate" style="width:160px;">
             <span style="font-weight:600; color:var(--accent2);">Teammate 3</span><br>
-            <span style="font-size:0.75rem; color:var(--text-muted);">Own context</span>
+            <span style="font-size:0.9rem; color:var(--text-muted);">Own context</span>
           </div>
         </div>
         <div class="arrow-down">&darr;</div>
@@ -1193,9 +1460,10 @@ my-project/
     </section>
 
     <!-- Slide 23: Subagents vs Agent Teams -->
-    <section class="slide">
+    <section class="slide content">
+      <p class="eyebrow">Teams</p>
       <h3>Subagents vs Agent Teams</h3>
-      <table>
+      <table style="margin-top:1.5rem;">
         <thead>
           <tr>
             <th></th>
@@ -1240,9 +1508,10 @@ my-project/
     </section>
 
     <!-- Slide 24: Architecture comparison -->
-    <section class="slide">
+    <section class="slide content">
+      <p class="eyebrow">Teams</p>
       <h3>Architecture comparison</h3>
-      <div class="side-by-side">
+      <div class="side-by-side" style="margin-top:2rem;">
         <div>
           <h3 class="accent">Subagent Model</h3>
           <div style="display:flex; flex-direction:column; align-items:center; gap:0.5rem;">
@@ -1277,64 +1546,68 @@ my-project/
     </section>
 
     <!-- Slide 25: Honest take -->
-    <section class="slide">
-      <h3>My honest take</h3>
+    <section class="slide content">
       <div class="stagger">
+        <p class="eyebrow">Teams</p>
+        <h3>My honest take</h3>
         <p style="font-size:clamp(1.1rem,2vw,1.5rem); color:var(--text);">I use agent teams to <span class="accent">execute implementation plans quicker</span></p>
-        <p style="font-size:clamp(1.1rem,2vw,1.5rem); color:var(--text);">Give the lead agent a plan &rarr; it <span class="accent2">decomposes, delegates, and coordinates</span></p>
-        <p style="font-size:clamp(1.1rem,2vw,1.5rem); color:var(--text);">Teammates work <span class="accent3">in parallel</span> on different parts of the plan</p>
-        <p style="font-size:clamp(1.1rem,2vw,1.5rem); color:var(--text);">For larger cross-feature work &rarr; <span class="accent4">worktrees give you more control</span></p>
+        <p style="font-size:clamp(1.1rem,2vw,1.5rem); color:var(--text);">Give the lead agent a plan &rarr; it <span class="accent">decomposes, delegates, and coordinates</span></p>
+        <p style="font-size:clamp(1.1rem,2vw,1.5rem); color:var(--text);">Teammates work <span class="accent">in parallel</span> on different parts of the plan</p>
+        <p style="font-size:clamp(1.1rem,2vw,1.5rem); color:var(--text);">For larger cross-feature work &rarr; <span class="accent">worktrees give you more control</span></p>
       </div>
       <div class="speaker-notes">Agent teams are my go-to for executing plans within a single feature. For bigger cross-feature work, worktrees give more control.</div>
     </section>
 
     <!-- Slide 26: Where agent teams struggle -->
-    <section class="slide">
+    <section class="slide content">
+      <p class="eyebrow">Teams</p>
       <h3>Where agent teams struggle</h3>
-      <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; max-width:850px; width:100%; margin-top:1.5rem;">
-        <div style="background:var(--bg-alt); border:1px solid var(--border); border-radius:8px; padding:1rem 1.2rem; text-align:left;">
-          <p style="color:var(--accent5); font-weight:600; font-size:clamp(0.9rem,1.4vw,1.1rem); margin-bottom:0.4rem;">Cross-feature orchestration</p>
-          <p style="font-size:clamp(0.8rem,1.2vw,0.95rem);">Teams work well within one feature, but coordinating across multiple features with dependencies is hard.</p>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; max-width:850px; width:100%; margin-top:2rem;">
+        <div class="card">
+          <p style="color:var(--accent5); font-weight:600; font-size:clamp(1rem,1.4vw,1.2rem); margin-bottom:0.4rem;">Cross-feature orchestration</p>
+          <p style="font-size:clamp(0.95rem,1.2vw,1.1rem);">Teams work well within one feature, but coordinating across multiple features with dependencies is hard.</p>
         </div>
-        <div style="background:var(--bg-alt); border:1px solid var(--border); border-radius:8px; padding:1rem 1.2rem; text-align:left;">
-          <p style="color:var(--accent5); font-weight:600; font-size:clamp(0.9rem,1.4vw,1.1rem); margin-bottom:0.4rem;">No session resumption</p>
-          <p style="font-size:clamp(0.8rem,1.2vw,0.95rem);">If you close the session, in-process teammates are lost. You can't pick up where you left off.</p>
+        <div class="card">
+          <p style="color:var(--accent5); font-weight:600; font-size:clamp(1rem,1.4vw,1.2rem); margin-bottom:0.4rem;">No session resumption</p>
+          <p style="font-size:clamp(0.95rem,1.2vw,1.1rem);">If you close the session, in-process teammates are lost. You can't pick up where you left off.</p>
         </div>
-        <div style="background:var(--bg-alt); border:1px solid var(--border); border-radius:8px; padding:1rem 1.2rem; text-align:left;">
-          <p style="color:var(--accent5); font-weight:600; font-size:clamp(0.9rem,1.4vw,1.1rem); margin-bottom:0.4rem;">Task status lag</p>
-          <p style="font-size:clamp(0.8rem,1.2vw,0.95rem);">The shared task list doesn't always reflect real-time progress. Teammates may duplicate work.</p>
+        <div class="card">
+          <p style="color:var(--accent5); font-weight:600; font-size:clamp(1rem,1.4vw,1.2rem); margin-bottom:0.4rem;">Task status lag</p>
+          <p style="font-size:clamp(0.95rem,1.2vw,1.1rem);">The shared task list doesn't always reflect real-time progress. Teammates may duplicate work.</p>
         </div>
-        <div style="background:var(--bg-alt); border:1px solid var(--border); border-radius:8px; padding:1rem 1.2rem; text-align:left;">
-          <p style="color:var(--accent5); font-weight:600; font-size:clamp(0.9rem,1.4vw,1.1rem); margin-bottom:0.4rem;">One team at a time</p>
-          <p style="font-size:clamp(0.8rem,1.2vw,0.95rem);">You can't run multiple teams in parallel. For that, use worktrees with separate sessions.</p>
+        <div class="card">
+          <p style="color:var(--accent5); font-weight:600; font-size:clamp(1rem,1.4vw,1.2rem); margin-bottom:0.4rem;">One team at a time</p>
+          <p style="font-size:clamp(0.95rem,1.2vw,1.1rem);">You can't run multiple teams in parallel. For that, use worktrees with separate sessions.</p>
         </div>
       </div>
-      <p style="margin-top:1.2rem; font-family:var(--font-mono); font-size:clamp(0.8rem,1.2vw,0.95rem); color:var(--accent4);">Still experimental — expect rough edges</p>
+      <p style="margin-top:1.2rem; font-family:var(--font-mono); font-size:clamp(0.95rem,1.2vw,1.05rem); color:var(--accent4);">Still experimental — expect rough edges</p>
       <div class="speaker-notes">Don't oversell. These are real limitations.</div>
     </section>
 
-    <!-- Slide 29: The Spectrum -->
-    <section class="slide">
+    <!-- Slide 29: The Spectrum (H4) -->
+    <section class="slide content">
+      <p class="eyebrow">Teams</p>
       <h3>The spectrum</h3>
-      <div class="spectrum" style="margin-top:2rem;">
-        <div class="spectrum-item" style="background:rgba(88,166,255,0.1); border:1px solid rgba(88,166,255,0.3); border-radius:8px 0 0 8px;">
+      <div class="spectrum">
+        <div class="spectrum-item">
           <div class="label">Single Agent</div>
           <div class="sublabel">Simple tasks</div>
         </div>
-        <div class="spectrum-item" style="background:rgba(63,185,80,0.15); border:2px solid var(--accent2); position:relative;">
+        <div class="spectrum-item here">
           <div class="you-are-here">YOU ARE HERE</div>
           <div class="label" style="color:var(--accent2);">Worktrees +<br>Parallel Sessions</div>
           <div class="sublabel">Today's focus</div>
         </div>
-        <div class="spectrum-item" style="background:rgba(210,168,255,0.1); border:1px solid rgba(210,168,255,0.3);">
+        <div class="spectrum-item">
           <div class="label">Agent Teams</div>
           <div class="sublabel">Planning acceleration</div>
         </div>
-        <div class="spectrum-item" style="background:rgba(240,136,62,0.1); border:1px solid rgba(240,136,62,0.3); border-radius:0 8px 8px 0;">
+        <div class="spectrum-item">
           <div class="label">Full Orchestration</div>
           <div class="sublabel">Dynamic Workflows &middot; Gastown &middot; Citadel</div>
         </div>
       </div>
+      <div class="spectrum-track"></div>
       <div class="speaker-notes">Position what we've covered on the spectrum. The worktree approach in the middle is where I spend most of my time — it's the sweet spot for my workflow.</div>
     </section>
 
@@ -1342,23 +1615,27 @@ my-project/
 
     <!-- Hooks 1: Act Title -->
     <section class="slide act-title">
+      <div class="act-numeral">04</div>
       <h2>Hooks: Automate &amp; Enforce</h2>
+      <p class="act-promise">Make the right thing happen, every time.</p>
       <div class="speaker-notes">The new pillar. Worktrees and agents are about parallelism; hooks are about making each session automatically do the right thing.</div>
     </section>
 
     <!-- Hooks 2: What is a hook? -->
-    <section class="slide">
+    <section class="slide content">
+      <p class="eyebrow">Hooks</p>
       <h3>What is a hook?</h3>
-      <p class="big-text">Claude Code runs <span class="accent">your shell command</span> at lifecycle events.</p>
-      <p style="margin-top:1.5rem; font-size:clamp(1.1rem,2vw,1.5rem); color:var(--text);">A hook can <span class="accent2">observe</span>, <span class="accent3">inject context</span>, or <span class="accent5">block</span> an action.</p>
+      <p class="big-text" style="margin-top:1rem;">Claude Code runs <span class="accent">your shell command</span> at lifecycle events.</p>
+      <p style="margin-top:1.5rem; font-size:clamp(1.1rem,2vw,1.5rem); color:var(--text);">A hook can <span class="accent">observe</span>, <span class="accent">inject context</span>, or <span class="accent5">block</span> an action.</p>
       <p style="margin-top:1.5rem; font-size:clamp(1rem,1.7vw,1.3rem); color:var(--text-muted);">Instructions are <span class="accent4">suggestions</span>. Hooks are <span class="accent2">guarantees</span> — they always happen, whether or not Claude remembers.</p>
       <div class="speaker-notes">The simplest mental model: at certain moments, Claude shells out to a script you control, hands it JSON, and reacts to what the script says. Land the thesis: hooks are for determinism — things that always happen, rather than things you hope the model chooses to do.</div>
     </section>
 
     <!-- Hooks 3: The event lifecycle -->
-    <section class="slide">
+    <section class="slide content">
+      <p class="eyebrow">Hooks</p>
       <h3>The event lifecycle</h3>
-      <table>
+      <table style="margin-top:1.5rem;">
         <thead><tr><th>Event</th><th>Use it to&hellip;</th></tr></thead>
         <tbody>
           <tr><td><code>PreToolUse</code></td><td>Gate or deny a tool before it runs</td></tr>
@@ -1376,9 +1653,10 @@ my-project/
     </section>
 
     <!-- Hooks 4: The contract -->
-    <section class="slide">
+    <section class="slide content">
+      <p class="eyebrow">Hooks</p>
       <h3>The contract</h3>
-      <pre><code><span class="comment"># stdin: the event as JSON</span>
+      <pre style="margin-top:1.5rem;"><code><span class="comment"># stdin: the event as JSON</span>
 { <span class="string">"hook_event_name"</span>: <span class="string">"PostToolUse"</span>,
   <span class="string">"tool_name"</span>: <span class="string">"Edit"</span>,
   <span class="string">"tool_input"</span>: { <span class="string">"file_path"</span>: <span class="string">"src/app.ts"</span> } }
@@ -1395,9 +1673,10 @@ exit 2   <span class="comment"># PreToolUse: block + show stderr to Claude</span
     </section>
 
     <!-- Hooks 5: Real-world anchor -->
-    <section class="slide">
+    <section class="slide content">
+      <p class="eyebrow">Hooks</p>
       <h3>You've already seen one</h3>
-      <p style="font-size:clamp(1.1rem,2vw,1.5rem); color:var(--text);">The <span class="accent">Agent Orchestrator</span> status you watched all session is driven by a hook.</p>
+      <p style="margin-top:0.5rem; font-size:clamp(1.1rem,2vw,1.5rem); color:var(--text);">The <span class="accent">Agent Orchestrator</span> status you watched all session is driven by a hook.</p>
       <pre style="margin-top:1.5rem;"><code><span class="comment"># ~/.claude/settings.json (simplified)</span>
 <span class="string">"Notification"</span>, <span class="string">"Stop"</span>, <span class="string">"PreToolUse"</span>
    &rarr; agent-orchestrator-notify.sh
@@ -1407,47 +1686,50 @@ exit 2   <span class="comment"># PreToolUse: block + show stderr to Claude</span
     </section>
 
     <!-- Hooks 6: Gotchas & safety -->
-    <section class="slide">
+    <section class="slide content">
+      <p class="eyebrow">Hooks</p>
       <h3>Gotchas &amp; safety</h3>
-      <ul style="margin-top:1rem;">
+      <ul style="margin-top:1.5rem;">
         <li>Hooks run <span class="accent5">arbitrary commands with your credentials</span> — review before wiring one in</li>
         <li>They fire on <span class="accent4">every matching event</span> — keep them fast</li>
         <li><span class="accent">Scope the matcher</span> tightly so they only run when relevant</li>
-        <li>Test against a sample payload <span class="accent2">before</span> keeping one</li>
-        <li>They buy <span class="accent3">determinism, not keystrokes</span> — fired at the wrong moment they just burn context</li>
+        <li>Test against a sample payload <span class="accent">before</span> keeping one</li>
+        <li>They buy <span class="accent">determinism, not keystrokes</span> — fired at the wrong moment they just burn context</li>
       </ul>
       <div class="callout" style="margin-top:1.5rem;">
-        <p style="font-size:clamp(0.9rem,1.5vw,1.1rem);"><span class="accent4" style="font-weight:600;">The upside:</span> hooks turn soft policy ("don't commit secrets") into hard enforcement. Auto mode gives you a classifier-run version of this for permissions out of the box — guards you write remain the hard floor.</p>
+        <p style="font-size:clamp(0.9rem,1.5vw,1.1rem);"><span class="accent" style="font-weight:600;">The upside:</span> hooks turn soft policy ("don't commit secrets") into hard enforcement. Auto mode gives you a classifier-run version of this for permissions out of the box — guards you write remain the hard floor.</p>
       </div>
       <div class="speaker-notes">Be honest about the risk: a hook is code that runs automatically with your access. The payoff is real enforcement — exactly what we'll build next. Honest caveat worth naming: Armin Ronacher famously got "no efficiency gains" from hooks because they fired at the wrong granularity and wasted context. Today's lab hooks dodge that critique deliberately — single file, best-effort, exit 0.</div>
     </section>
 
-    <!-- Hooks 7: Pick the right layer -->
-    <section class="slide">
+    <!-- Hooks 7: Pick the right layer (C12) -->
+    <section class="slide content">
+      <p class="eyebrow">Hooks</p>
       <h3>Pick the right layer</h3>
-      <p style="margin-bottom:1.5rem; color:var(--text-muted);">Where should a rule live? Push it as far down the stack as it deserves:</p>
-      <div style="display:flex; flex-direction:column; gap:1rem; max-width:850px; width:100%;">
-        <div style="display:flex; align-items:center; gap:1.2rem; background:rgba(88,166,255,0.06); border:1px solid rgba(88,166,255,0.2); border-radius:8px; padding:1rem 1.5rem; text-align:left;">
+      <p style="margin:0.5rem 0 1.75rem; color:var(--text-muted);">Where should a rule live? Push it as far down the stack as it deserves:</p>
+      <div style="display:flex; flex-direction:column; gap:0.9rem; max-width:900px; width:100%;">
+        <div style="display:flex; align-items:center; gap:1.2rem; background:rgba(88,166,255,0.05); border:1px solid rgba(88,166,255,0.2); border-radius:8px; padding:1rem 1.5rem; text-align:left;">
           <span style="font-family:var(--font-mono); font-size:clamp(0.95rem,1.6vw,1.2rem); font-weight:700; color:var(--accent); min-width:160px;">CLAUDE.md</span>
-          <span style="font-size:clamp(0.85rem,1.3vw,1rem);">Judgment &amp; conventions. Keep it under ~200 lines, and treat it as a living file — every time Claude gets something wrong, add the rule.</span>
+          <span style="font-size:clamp(0.95rem,1.3vw,1.1rem);">Judgment &amp; conventions. Keep it under ~200 lines, and treat it as a living file — every time Claude gets something wrong, add the rule.</span>
         </div>
-        <div style="display:flex; align-items:center; gap:1.2rem; background:rgba(210,168,255,0.06); border:1px solid rgba(210,168,255,0.2); border-radius:8px; padding:1rem 1.5rem; text-align:left;">
-          <span style="font-family:var(--font-mono); font-size:clamp(0.95rem,1.6vw,1.2rem); font-weight:700; color:var(--accent3); min-width:160px;">Skills</span>
-          <span style="font-size:clamp(0.85rem,1.3vw,1rem);">Repeatable workflows, loaded on demand. ~8&ndash;12 well-chosen skills is the sweet spot before the context tax bites.</span>
+        <div style="margin-left:2.5rem; display:flex; align-items:center; gap:1.2rem; background:rgba(88,166,255,0.1); border:1px solid rgba(88,166,255,0.3); border-radius:8px; padding:1rem 1.5rem; text-align:left;">
+          <span style="font-family:var(--font-mono); font-size:clamp(0.95rem,1.6vw,1.2rem); font-weight:700; color:var(--accent); min-width:160px;">&darr; Skills</span>
+          <span style="font-size:clamp(0.95rem,1.3vw,1.1rem);">Repeatable workflows, loaded on demand. ~8&ndash;12 well-chosen skills is the sweet spot before the context tax bites.</span>
         </div>
-        <div style="display:flex; align-items:center; gap:1.2rem; background:rgba(63,185,80,0.06); border:1px solid rgba(63,185,80,0.2); border-radius:8px; padding:1rem 1.5rem; text-align:left;">
-          <span style="font-family:var(--font-mono); font-size:clamp(0.95rem,1.6vw,1.2rem); font-weight:700; color:var(--accent2); min-width:160px;">Hooks</span>
-          <span style="font-size:clamp(0.85rem,1.3vw,1rem);">Guarantees. Anything that must <em>always</em> happen — formatting, guards, notifications — belongs here, not in prose.</span>
+        <div style="margin-left:5rem; display:flex; align-items:center; gap:1.2rem; background:rgba(88,166,255,0.16); border:1px solid rgba(88,166,255,0.4); border-radius:8px; padding:1rem 1.5rem; text-align:left;">
+          <span style="font-family:var(--font-mono); font-size:clamp(0.95rem,1.6vw,1.2rem); font-weight:700; color:var(--accent); min-width:160px;">&darr; Hooks</span>
+          <span style="font-size:clamp(0.95rem,1.3vw,1.1rem);">Guarantees. Anything that must <em>always</em> happen — formatting, guards, notifications — belongs here, not in prose.</span>
         </div>
       </div>
-      <p style="margin-top:1.5rem; font-size:clamp(1rem,1.8vw,1.4rem); color:var(--text); font-weight:600;">Instructions <span class="accent5">drift</span>. Hooks <span class="accent2">don't</span>.</p>
+      <p style="margin-top:1.75rem; font-size:clamp(1rem,1.8vw,1.4rem); color:var(--text); font-weight:600;">Instructions <span class="accent5">drift</span>. Hooks <span class="accent2">don't</span>.</p>
       <div class="speaker-notes">Bloated CLAUDE.md is the community's #1 anti-pattern — past a few hundred lines adherence quietly collapses. Push automation down: prose for judgment, skills for workflows, hooks for enforcement. For bigger rule sets, .claude/rules/ supports path-scoped files that only load when matching files are touched.</div>
     </section>
 
     <!-- Slide 29b: Recap -->
-    <section class="slide">
+    <section class="slide content">
+      <p class="eyebrow">Recap</p>
       <h3>If you remember three things</h3>
-      <div class="stagger" style="margin-top:1.5rem; max-width:950px;">
+      <div class="stagger" style="margin-top:1.5rem; max-width:1150px;">
         <p style="font-size:clamp(1.4rem,2.6vw,2.2rem); color:var(--text);"><span class="accent" style="font-weight:700;">Worktrees isolate</span> — parallel agents can't trample each other</p>
         <p style="font-size:clamp(1.4rem,2.6vw,2.2rem); color:var(--text);"><span class="accent2" style="font-weight:700;">Decomposition parallelises</span> — independent tasks, independent files</p>
         <p style="font-size:clamp(1.4rem,2.6vw,2.2rem); color:var(--text);"><span class="accent3" style="font-weight:700;">Hooks guarantee</span> — instructions drift, hooks don't</p>
@@ -1472,39 +1754,41 @@ exit 2   <span class="comment"># PreToolUse: block + show stderr to Claude</span
         <p style="font-size:clamp(1.2rem,2vw,1.6rem); color:var(--text);">You'll build <span class="accent">3 Claude Code hooks</span> in parallel worktrees</p>
       </div>
       <div style="display:flex; gap:1.5rem; margin-top:2.5rem; flex-wrap:wrap; justify-content:center;">
-        <div style="background:rgba(88,166,255,0.08); border:1px solid rgba(88,166,255,0.25); border-radius:8px; padding:0.8rem 1.2rem; text-align:center;">
+        <div style="background:rgba(88,166,255,0.08); border:1px solid rgba(88,166,255,0.25); border-radius:8px; padding:0.8rem 1.4rem; text-align:center;">
           <p style="font-size:clamp(1.5rem,3vw,2.5rem); font-weight:700; color:var(--accent);">3</p>
-          <p style="font-size:0.85rem; color:var(--text-muted);">Hooks to build</p>
+          <p style="font-size:0.95rem; color:var(--text-muted);">hooks to build</p>
         </div>
-        <div style="background:rgba(210,168,255,0.08); border:1px solid rgba(210,168,255,0.25); border-radius:8px; padding:0.8rem 1.2rem; text-align:center;">
-          <p style="font-size:clamp(1.5rem,3vw,2.5rem); font-weight:700; color:var(--accent3);">3</p>
-          <p style="font-size:0.85rem; color:var(--text-muted);">Parallel worktrees</p>
+        <div style="background:rgba(88,166,255,0.08); border:1px solid rgba(88,166,255,0.25); border-radius:8px; padding:0.8rem 1.4rem; text-align:center;">
+          <p style="font-size:clamp(1.5rem,3vw,2.5rem); font-weight:700; color:var(--accent);">3</p>
+          <p style="font-size:0.95rem; color:var(--text-muted);">worktrees</p>
         </div>
-        <div style="background:rgba(63,185,80,0.08); border:1px solid rgba(63,185,80,0.25); border-radius:8px; padding:0.8rem 1.2rem; text-align:center;">
-          <p style="font-size:clamp(1.5rem,3vw,2.5rem); font-weight:700; color:var(--accent2);">&check;</p>
-          <p style="font-size:0.85rem; color:var(--text-muted);">Keep what you like</p>
+        <div style="background:rgba(88,166,255,0.08); border:1px solid rgba(88,166,255,0.25); border-radius:8px; padding:0.8rem 1.4rem; text-align:center;">
+          <p style="font-size:clamp(1.5rem,3vw,2.5rem); font-weight:700; color:var(--accent);">1</p>
+          <p style="font-size:0.95rem; color:var(--text-muted);">rule: keep what you like</p>
         </div>
       </div>
       <div class="speaker-notes">Bridge to the hands-on section. The numbers give a quick sense of scope.</div>
     </section>
 
     <!-- Slide 32: Workshop overview -->
-    <section class="slide">
+    <section class="slide content">
+      <p class="eyebrow">The lab</p>
       <h3>What you're building</h3>
-      <p style="margin-bottom:1rem; color:var(--text);">Three independent hooks, each its own self-contained script file</p>
+      <p style="margin:0.5rem 0 1.5rem; color:var(--text);">Three independent hooks, each its own self-contained script file</p>
       <ul style="margin-top:1rem;">
         <li><code>format-on-save</code> — <span class="accent">PostToolUse</span>: format the file Claude just edited</li>
-        <li><code>codacy-analyze-on-save</code> — <span class="accent2">PostToolUse</span>: run Codacy on the edited file, surface issues back to Claude</li>
+        <li><code>codacy-analyze-on-save</code> — <span class="accent">PostToolUse</span>: run Codacy on the edited file, surface issues back to Claude</li>
         <li><code>worktree-session-primer</code> — <span class="accent3">SessionStart</span>: inject worktree context + copy <code>.env</code></li>
-        <li>Independent files &rarr; <span class="accent5">clean parallel work</span>; keep the ones you like</li>
+        <li>Independent files &rarr; <span class="accent2">clean parallel work</span>; keep the ones you like</li>
       </ul>
       <div class="speaker-notes">Quick preview of what they'll build.</div>
     </section>
 
     <!-- Slide 32b: How the hands-on runs -->
-    <section class="slide">
+    <section class="slide content">
+      <p class="eyebrow">The lab</p>
       <h3>How the hands-on runs</h3>
-      <table class="workshop-timeline">
+      <table class="workshop-timeline" style="margin-top:1.5rem;">
         <tbody>
           <tr><td>1</td><td>Setup</td><td>Clone, install jq + codacy-cli, run test/run-tests.sh</td></tr>
           <tr><td>2</td><td>Plan</td><td>Read EPIC.md, set up a worktree per hook</td></tr>
@@ -1516,55 +1800,59 @@ exit 2   <span class="comment"># PreToolUse: block + show stderr to Claude</span
       <div class="speaker-notes">Walk the phases in order. Don't rush the plan step — decomposition is the highest-leverage part. Keep is two steps: copy the script AND paste its header-comment snippet into ~/.claude/settings.json — the script alone won't fire. Mention you'll be walking around to help.</div>
     </section>
 
-    <!-- Slide 34: Quick start -->
-    <section class="slide">
+    <!-- Slide 33: Quick start (C11) -->
+    <section class="slide content">
+      <p class="eyebrow">The lab</p>
       <h3>Quick start</h3>
-      <pre><code><span class="cmd">git</span> clone https://github.com/stantonSB/AgentDemo.git
+      <pre style="margin-top:1.5rem;"><code><span class="cmd">git</span> clone https://github.com/stantonSB/AgentDemo.git
 <span class="cmd">cd</span> AgentDemo/claude-hooks-workshop
-<span class="cmd">claude</span> <span class="flag">--worktree</span>                      <span class="comment"># one per hook — repeat in 2 more terminals</span></code></pre>
-      <div class="callout" style="margin-top:1.5rem; border-left-color:var(--accent2);">
+<span class="cmd">claude</span> <span class="flag">--worktree</span>  <span class="comment"># one per hook — repeat in 2 more terminals</span></code></pre>
+      <div class="callout good" style="margin-top:1.5rem;">
         <p style="font-size:clamp(0.9rem,1.4vw,1.1rem);"><span class="accent2" style="font-weight:600;">Then:</span> read <code>EPIC.md</code> for the three hook specs. The worked example (<code>hooks/tool-logger.sh</code>) shows the full pattern — copy its shape.</p>
       </div>
       <div style="display:flex; gap:1rem; margin-top:1.2rem; justify-content:center; flex-wrap:wrap;">
-        <span style="font-family:var(--font-mono); font-size:0.85rem; background:var(--bg-alt); border:1px solid var(--border); padding:0.4rem 1rem; border-radius:6px; color:var(--text-muted);">jq &check;</span>
-        <span style="font-family:var(--font-mono); font-size:0.85rem; background:var(--bg-alt); border:1px solid var(--border); padding:0.4rem 1rem; border-radius:6px; color:var(--text-muted);">codacy-cli &check;</span>
-        <span style="font-family:var(--font-mono); font-size:0.85rem; background:var(--bg-alt); border:1px solid var(--border); padding:0.4rem 1rem; border-radius:6px; color:var(--text-muted);">Claude Code v2.1.32+ &check;</span>
+        <span style="font-family:var(--font-mono); font-size:0.95rem; background:var(--bg-alt); border:1px solid var(--border); padding:0.4rem 1rem; border-radius:6px; color:var(--text-body);">jq &check;</span>
+        <span style="font-family:var(--font-mono); font-size:0.95rem; background:var(--bg-alt); border:1px solid var(--border); padding:0.4rem 1rem; border-radius:6px; color:var(--text-body);">codacy-cli &check;</span>
+        <span style="font-family:var(--font-mono); font-size:0.95rem; background:var(--bg-alt); border:1px solid var(--border); padding:0.4rem 1rem; border-radius:6px; color:var(--text-body);">Claude Code v2.1.32+ &check;</span>
       </div>
-      <p style="margin-top:1rem; font-size:clamp(0.8rem,1.2vw,0.95rem); color:var(--text-muted);">Bonus while agents work: run <code>/statusline</code> — Claude generates a status line showing model, session cost, and context remaining.</p>
+      <p style="margin-top:1rem; font-size:clamp(0.95rem,1.3vw,1.1rem); color:var(--text-muted);">Bonus while agents work: run <code>/statusline</code> — Claude generates a status line showing model, session cost, and context remaining.</p>
       <div class="speaker-notes">Straight to parallel: clone, cd, then claude --worktree once per hook in separate terminals — the goal is parallel branches running within minutes. EPIC.md has the specs; tool-logger.sh is the reference pattern. The prerequisite badges remind them what they need installed. The /statusline aside is a 30-second delight — Claude writes the script for you.</div>
     </section>
 
-    <!-- Slide 34: Planning before building -->
-    <section class="slide">
+    <!-- Slide 34: Planning before building (D1) -->
+    <section class="slide content">
+      <p class="eyebrow">The lab</p>
       <h3>Plan before you build</h3>
-      <ol style="text-align:left; max-width:44rem; margin:0 auto; list-style:none; counter-reset:steps; padding:0;">
+      <ol style="text-align:left; max-width:48rem; margin:1.5rem auto 0; list-style:none; counter-reset:steps; padding:0;">
         <li style="margin-bottom:1rem; padding-left:2.2rem; position:relative;">
           <span style="position:absolute; left:0; top:0.1em; font-weight:700; color:var(--accent); font-size:1.2em;">1.</span>
           <span class="accent" style="font-weight:600;">Brainstorm</span> — decompose the EPIC into parallel features
-          <pre style="margin-top:0.4rem;"><code><span class="prompt">&gt;</span> <span class="string">"Read EPIC.md and brainstorm how to split the work into parallel features"</span></code></pre>
+          <pre style="margin-top:0.4rem; white-space:pre-wrap;"><code><span class="prompt">&gt;</span> <span class="string">"Read EPIC.md and brainstorm how to split
+   the work into parallel features"</span></code></pre>
         </li>
         <li style="margin-bottom:1rem; padding-left:2.2rem; position:relative;">
-          <span style="position:absolute; left:0; top:0.1em; font-weight:700; color:var(--accent2); font-size:1.2em;">2.</span>
-          <span class="accent2" style="font-weight:600;">Create plans</span> — write an implementation plan for each feature
-          <pre style="margin-top:0.4rem;"><code><span class="prompt">&gt;</span> <span class="string">"Write an implementation plan for the format-on-save hook"</span></code></pre>
+          <span style="position:absolute; left:0; top:0.1em; font-weight:700; color:var(--accent); font-size:1.2em;">2.</span>
+          <span class="accent" style="font-weight:600;">Create plans</span> — write an implementation plan for each feature
+          <pre style="margin-top:0.4rem; white-space:pre-wrap;"><code><span class="prompt">&gt;</span> <span class="string">"Write an implementation plan for the
+   format-on-save hook"</span></code></pre>
         </li>
         <li style="margin-bottom:1rem; padding-left:2.2rem; position:relative;">
-          <span style="position:absolute; left:0; top:0.1em; font-weight:700; color:var(--accent3); font-size:1.2em;">3.</span>
-          <span class="accent3" style="font-weight:600;">Review plans</span> — merge plan PRs to main, review before implementing
+          <span style="position:absolute; left:0; top:0.1em; font-weight:700; color:var(--accent); font-size:1.2em;">3.</span>
+          <span class="accent" style="font-weight:600;">Review plans</span> — merge plan PRs to main, review before implementing
         </li>
       </ol>
-      <div class="callout" style="margin-top:1.2rem; max-width:44rem; border-left-color:var(--accent4); text-align:left;">
-        <p style="font-size:clamp(0.85rem,1.3vw,1rem);"><span class="accent4" style="font-weight:600;">Pro tip:</span> Ask Claude to generate an implementation prompt for each plan. Once plans are merged to main, copy those prompts into fresh sessions with <code>claude --worktree</code> to kick off parallel agent teams.</p>
+      <div class="callout" style="margin-top:1.2rem; max-width:48rem; text-align:left;">
+        <p style="font-size:clamp(0.9rem,1.3vw,1.05rem);"><span class="accent" style="font-weight:600;">Pro tip:</span> Ask Claude to generate an implementation prompt for each plan. Once plans are merged to main, copy those prompts into fresh sessions with <code>claude --worktree</code> to kick off parallel agent teams.</p>
       </div>
-      <div class="callout" style="margin-top:0.8rem; max-width:44rem; border-left-color:var(--accent2); text-align:left;">
-        <p style="font-size:clamp(0.85rem,1.3vw,1rem);"><span class="accent2" style="font-weight:600;">Running behind?</span> Ready-made plans (with kickoff prompts) are committed in <code>plans/</code> — skip straight to <code>claude --worktree</code>.</p>
+      <div class="callout good" style="margin-top:0.8rem; max-width:48rem; text-align:left;">
+        <p style="font-size:clamp(0.9rem,1.3vw,1.05rem);"><span class="accent2" style="font-weight:600;">Running behind?</span> Ready-made plans (with kickoff prompts) are committed in <code>plans/</code> — skip straight to <code>claude --worktree</code>.</p>
       </div>
       <div class="speaker-notes">Planning phase is critical — brainstorm the decomposition, write plans, review them, then hand off to parallel agents. The prompt-copy trick avoids context pollution between planning and implementation. Time fallback: pre-baked plans with kickoff prompts are committed in plans/ — if the session is running long, point people there and go straight to implementation.</div>
     </section>
 
     <!-- Slide 35: Go! -->
     <section class="slide" style="background:linear-gradient(135deg, var(--bg) 0%, #0a1628 100%);">
-      <h1 style="font-size:clamp(4rem,8vw,8rem); background:linear-gradient(135deg, var(--accent2), var(--accent)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;">Go build.</h1>
+      <h1 style="font-size:clamp(4rem,8vw,8rem); background:linear-gradient(135deg, var(--accent), var(--accent3)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;">Go build.</h1>
       <p class="subtitle" style="margin-top:1rem;">Read EPIC.md. Build 3 hooks in parallel. Keep what you like.</p>
       <p style="margin-top:1.5rem; font-family:var(--font-mono); font-size:clamp(0.85rem,1.3vw,1rem); color:var(--text-muted);">Take-home: claude-hooks-workshop/CHEATSHEET.md</p>
       <div class="speaker-notes">Release them. Walk around and help.</div>
@@ -1597,23 +1885,16 @@ exit 2   <span class="comment"># PreToolUse: block + show stderr to Claude</span
       </ul>
     </div>
 
-    <!-- 2: Sequential execution -->
+    <!-- 2: Sequential vs parallel (merged) -->
     <div class="notes-content" data-slide="2">
       <div class="key-point">This is how most people work with Claude Code today — one task at a time.</div>
+      <div class="key-point">Batch independent tasks into waves — run a wave, merge, review, then launch the next. Speedup depends on how cleanly tasks separate.</div>
       <h4>Talking points</h4>
       <ul>
         <li>Walk through the timeline: task A finishes, then B starts, then C…</li>
         <li>"Even though Claude is fast, you're bottlenecked by serialisation"</li>
         <li>The human is the scheduler — context-switching between reviewing and prompting</li>
         <li>Total wall-clock time = sum of all tasks</li>
-      </ul>
-    </div>
-
-    <!-- 3: Parallel execution in waves -->
-    <div class="notes-content" data-slide="3">
-      <div class="key-point">Batch independent tasks into waves — run a wave, merge, review, then launch the next. Speedup depends on how cleanly tasks separate.</div>
-      <h4>Talking points</h4>
-      <ul>
         <li>Point to the diagram: "Wave 1 runs 4 tasks simultaneously. Wall-clock time = longest task, not the sum"</li>
         <li>After wave 1 completes, merge results, then launch wave 2</li>
         <li>Key insight: you need tasks that DON'T depend on each other — we'll cover decomposition later</li>
@@ -2033,12 +2314,12 @@ exit 2   <span class="comment"># PreToolUse: block + show stderr to Claude</span
         if (i === current) s.classList.add('active');
         else if (i === prevIndex && prevIndex < current) s.classList.add('prev');
       });
+      counter.textContent = `${current + 1} / ${slides.length}`;
+      progress.style.width = `${((current + 1) / slides.length) * 100}%`;
       // Sync notes panel
       notesContents.forEach(n => n.classList.remove('active'));
       const activeNote = notesContents[current];
       if (activeNote) activeNote.classList.add('active');
-      counter.textContent = `${current + 1} / ${slides.length}`;
-      progress.style.width = `${((current + 1) / slides.length) * 100}%`;
     }
 
     document.addEventListener('keydown', (e) => {
