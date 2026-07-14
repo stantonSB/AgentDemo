@@ -26,6 +26,11 @@ Each hook is a **self-contained single file** under `hooks/`. A worked example,
   ```
 - Test locally: `cat test/payloads/<file>.json | hooks/<name>.sh`.
 
+> Payload note: the committed payloads use a placeholder `cwd` (e.g. `/tmp/example-repo`) with a
+> repo-relative `file_path`. Run hooks from the `claude-hooks-workshop` root (as `run-tests.sh`
+> does) and use `file_path` as given — don't resolve it against the payload `cwd`. In real events
+> `file_path` is absolute.
+
 ## How to build (per hook)
 
 1. `claude --worktree` to start a session in a fresh worktree.
